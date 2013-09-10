@@ -1,0 +1,14 @@
+CommunityProfile <-
+function(FUN, NorP, q.seq, ..., CheckArguments = TRUE) 
+{
+  if (CheckArguments) {
+    CheckentropartArguments()
+  }
+
+  # Profil de diversité phylogénétique
+  return (list(x=q.seq,
+               y=sapply(q.seq, function(q) FUN(NorP, q, ..., CheckArguments = FALSE))
+              )
+         )
+  
+}
