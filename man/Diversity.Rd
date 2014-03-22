@@ -37,7 +37,7 @@ bcDiversity(Ns, q, Correction = "Best", CheckArguments = TRUE)
   A number equal to the calculated diversity.
 }
 \references{
-  Marcon, E., Scotti, I., Herault, B., Rossi, V. and Lang, G. (in revision). Generalization of the partitioning of Shannon diversity. \emph{PLOS One}.
+  Marcon, E., Scotti, I., Herault, B., Rossi, V. and Lang, G. (2014). Generalization of the partitioning of Shannon diversity. \emph{PLOS One} 9(3): e90289.
 }
 \author{
   Eric Marcon <Eric.Marcon@ecofog.gf>

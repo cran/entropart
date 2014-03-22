@@ -19,7 +19,7 @@ bcShannon(Ns, Correction = "Best", CheckArguments = TRUE)
     A numeric vector containing species abundances.
   }
   \item{Correction}{
-    A string containing one of the possible corrections: \code{"None"} (no correction), \code{"ChaoShen"}, \code{"Grassberger"}, \code{"Grassberger2003"}, \code{"Schurmann"}, \code{"Holste"}, \code{"Bonachela"} or \code{"Best"}, the default value.
+    A string containing one of the possible corrections: \code{"None"} (no correction), \code{"ChaoShen"}, \code{"Grassberger"}, \code{"Grassberger2003"}, \code{"Schurmann"}, \code{"Holste"}, \code{"Bonachela"}, \code{"ChaoWangJost"} or \code{"Best"}, the default value. Currently, \code{"Best"} is \code{"ChaoWangJost"}.
   }
   \item{CheckArguments}{
     Logical; if \code{TRUE}, the function arguments are verified. Should be set to \code{FALSE} to save time when the arguments have been checked elsewhere.
@@ -27,8 +27,10 @@ bcShannon(Ns, Correction = "Best", CheckArguments = TRUE)
 }
 \details{
   Bias correction requires the number of individuals to estimate sample \code{\link{Coverage}}. Use \code{bcShannon} and choose the \code{Correction}.
-  Correction techniques are from Chao and Shen (2003), Grassberger (1988), Grassberger (2003), Schurmann (2003), Holste et al. (1998), Bonachela et al. (2008).  
-  Currently, the \code{"Best"} correction is the max value of \code{"ChaoShen"} and \code{"Grassberger"} (Marcon et al., submitted).
+  
+  Correction techniques are from Chao and Shen (2003), Grassberger (1988), Grassberger (2003), Schurmann (2003), Holste et al. (1998), Bonachela et al. (2008), Chao, Wang  and Jost (2013).
+  
+  Using \code{\link{MetaCommunity}} mutual information, Chao, Wang  and Jost (2013) calculate unbiased Shannon beta entropy (see the last example below) with better results than the Chao and Shen estimator, but community weights cannot be arbitrary: they must be proportional to the number of individuals.
 }
 \value{
   A number equal to the calculated entropy.
@@ -37,6 +39,8 @@ bcShannon(Ns, Correction = "Best", CheckArguments = TRUE)
   Bonachela, J. A., Hinrichsen, H. and Munoz, M. A. (2008). Entropy estimates of small data sets. \emph{Journal of Physics A: Mathematical and Theoretical} 41(202001): 1-9.
   
   Chao, A. and Shen, T. J. (2003). Nonparametric estimation of Shannon's index of diversity when there are unseen species in sample. \emph{Environmental and Ecological Statistics} 10(4): 429-443.
+
+  Chao, A., Wang, Y. T. and Jost, L. (2013). Entropy and the species accumulation curve: a novel entropy estimator via discovery rates of new species. \emph{Methods in Ecology and Evolution} 4(11):1091-1100.
   
   Grassberger, P. (1988). Finite sample corrections to entropy and dimension estimates. \emph{Physics Letters A} 128(6-7): 369-373.
   
@@ -67,5 +71,11 @@ bcShannon(Ns, Correction = "Best", CheckArguments = TRUE)
   # Ns is the vector of abundances of the metacommunity
   Ns <- Paracou618.MC$Ns
   # Calculate an unbiased estimator of Shannon entropy
-  bcShannon(Ns)  
+  bcShannon(Ns)
+  
+  # Use metacommunity data to calculate unbiased Shannon beta as mutual information
+  (bcShannon(Paracou618.MC$Ns) + bcShannon(colSums(Paracou618.MC$Nsi))
+    - bcShannon(Paracou618.MC$Nsi))
+  # Compare with Chao and Shen correction (works for Tsallis entropy in general)
+  summary(BetaEntropy(Paracou618.MC, 1))
 }

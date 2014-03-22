@@ -45,7 +45,7 @@ DivPart(q, MC, Biased = TRUE, Correction = "Best", Tree = NULL,
   \item{object}{
     A \code{MCdiversity} object to be summarized.
   }
-  \item{...}{
+  \item{\dots}{
     Additional arguments to be passed to the generic methods.
   }
 }
@@ -78,9 +78,9 @@ DivPart(q, MC, Biased = TRUE, Correction = "Best", Tree = NULL,
 \references{
   Marcon, E., Herault, B., Baraloto, C. and Lang, G. (2012). The Decomposition of Shannon's Entropy and a Confidence Interval for Beta Diversity. \emph{Oikos} 121(4): 516-522.
   
-  Marcon, E., Scotti, I., Herault, B., Rossi, V. and Lang, G. (in revision). Generalization of the partitioning of Shannon diversity. \emph{PLOS One}.
+  Marcon, E., Scotti, I., Herault, B., Rossi, V. and Lang, G. (2014). Generalization of the partitioning of Shannon diversity. \emph{PLOS One} 9(3): e90289.
   
-  Marcon, E., Herault, B. (in prep). Partitioning phylodiversity. \emph{Methods in Ecology and Evolution}.
+  Marcon, E., Herault, B. (2014). Decomposing  Phylodiversity. \emph{HAL} hal-00946177(version 1).
 }
 \author{
   Eric Marcon <Eric.Marcon@ecofog.gf> and Bruno Herault <Bruno.Herault@ecofog.gf>

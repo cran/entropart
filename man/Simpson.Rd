@@ -26,13 +26,17 @@ bcSimpson(Ns, Correction = "Lande", CheckArguments = TRUE)
   }
 }
 \details{
-  Lande's correction has been derived (Lande, 1996; Good, 1953) especially for Simpson entropy, while other corrections are for generalized Tsallis entropy.
+  Lande's correction has been derived (Lande, 1996; Good, 1953) especially for Simpson entropy, while other corrections are for generalized Tsallis entropy. It is identical to the unbiased estimator proposed by Simpson, although arguments were different.
   Bias correction requires the number of individuals to estimate sample \code{\link{Coverage}}. Use \code{bcSimpson} and choose the \code{Correction}.
 }
 \value{
   A number equal to the calculated entropy.
 }
 \references{
+  Good, I. J. (1953). On the Population Frequency of Species and the Estimation of Population Parameters. \emph{Biometrika} 40(3/4): 237-264.
+
+  Lande, R. (1996). Statistics and partitioning of species diversity, and similarity among multiple communities. \emph{Oikos} 76: 5-13.
+
   Simpson, E. H. (1949). Measurement of diversity. \emph{Nature} 163(4148): 688.
 }
 \author{

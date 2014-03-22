@@ -1,5 +1,5 @@
 MetaCommunity <-
-function(Abundances, Weights)
+function(Abundances, Weights = rep(1, ncol(Abundances)))
 {
   Nspecies <- length(Abundances[, 1])
   if (is.factor(Abundances[,1])) {
@@ -8,9 +8,22 @@ function(Abundances, Weights)
     Ncommunities <- length(Abundances[1, ])-1
   } else {
     FirstColumnOfData <- 1
-    SpeciesNames <- as.factor(rownames(Abundances))
+    if (is.null(rownames(Abundances))) {
+      # Create species names
+      SpeciesNames <- as.factor(paste("sp", 1:(nrow(Abundances)), sep=""))
+    } else {
+      # Read species names
+      SpeciesNames <- as.factor(rownames(Abundances))
+    }
     Ncommunities <- length(Abundances[1, ])
   }
+  
+  # Community names
+  if (is.null(colnames(Abundances))) {
+    # Create community names
+    colnames(Abundances) <- paste("P", 1:(ncol(Abundances)), sep="")
+  }
+  
   # Matrix containing p_si
   Nsi <- as.matrix(Abundances[, FirstColumnOfData:length(Abundances[1, ])])
   dimnames(Nsi)[[1]] <- SpeciesNames
@@ -20,7 +33,9 @@ function(Abundances, Weights)
   } else {
     Wi <- Weights$Weights/sum(Weights$Weights)
   }
+  
   # Name the weight vector
-  names(Wi) <- colnames(Nsi)
+  names(Wi) <- colnames(Nsi)  
+  
   Preprocess.MC(Nsi, Wi)
 }

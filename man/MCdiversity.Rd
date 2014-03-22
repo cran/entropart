@@ -21,7 +21,7 @@ is.MCdiversity(x)
   \item{object}{
     A \code{MCdiversity} object to be summarized.
   }
-  \item{...}{
+  \item{\dots}{
     Additional arguments to be passed to the generic methods.
   }
 }

@@ -5,6 +5,9 @@ Hqz <- function(Ps, q, Z, CheckArguments = TRUE)
   if (dim(Z)[1] != length(Ps))
     # The matrix is square (this has been checked)
     stop("The matrix dimension must equal the probability vector length.")
+  # Ps may be a matrix with a single line or column. A vector is expected.
+  if (is.matrix(Ps))
+    Ps <- as.vector(Ps)
   # Matrix and Ps may be named. If the matrix has names, they are identical in rows and columns (this has been checked)
   if (!is.null(colnames(Z)) & !is.null(names(Ps))) {
     # If the matrix and the probability vector are named, names must be identical
@@ -29,7 +32,7 @@ Hqz <- function(Ps, q, Z, CheckArguments = TRUE)
     # Force 0^(q-1)=0
     Zpqm1[Zp == 0] <- 0
     # Calculate Hqz
-    Entropy <- (1-(Ps %*% Zpqm1)^(q-1))/(q-1)
+    Entropy <- (1-(Ps %*% Zpqm1))/(q-1)
   }
   # Return the value of diversity, as a number rather than a 1x1 matrix
   return (as.numeric(Entropy))

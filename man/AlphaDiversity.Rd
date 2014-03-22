@@ -38,9 +38,9 @@ AlphaDiversity(MC, q, Correction = "Best", Tree = NULL, Normalize = TRUE,
   An \code{\link{MCdiversity}} object containing diversity values of each community and of the metacommunity.
 }
 \references{
-  Marcon, E., Scotti, I., Herault, B., Rossi, V. and Lang, G. (in revision). Generalization of the partitioning of Shannon diversity. \emph{PLOS One}.
+  Marcon, E., Scotti, I., Herault, B., Rossi, V. and Lang, G. (2014). Generalization of the partitioning of Shannon diversity. \emph{PLOS One} 9(3): e90289.
   
-  Marcon, E., Herault, B. (in prep). Partitioning phylodiversity. \emph{Methods in Ecology and Evolution}.
+  Marcon, E., Herault, B. (2014). Decomposing  Phylodiversity. \emph{HAL} hal-00946177(version 1).
 }
 \author{
   Eric Marcon <Eric.Marcon@ecofog.gf>

@@ -41,5 +41,7 @@ Originality.Species(Tree, q, CheckArguments = TRUE)
   # Calculate Originality of a species according to a simple functional tree, q=1
   (Frequencies <- Originality.Species(EightSpTree, 1))
   # Plot the result
-  dotchart.phylog(EightSpTree, Frequencies)
+  if (require(ade4, quietly = TRUE)) {
+    dotchart.phylog(EightSpTree, Frequencies)
+  }
 }

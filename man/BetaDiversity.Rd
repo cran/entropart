@@ -34,15 +34,15 @@ BetaDiversity(MC, q, Correction = "Best", Tree = NULL, Normalize = TRUE,
 \details{
   Entropy is calculated by \code{\link{BetaEntropy}} and transformed into diversity.
   
-  Diversity values of communities are not defined: community entropies are averaged to obtain the metacommunity entropy wich is transformed into diversity (Marcon et al., in revision).
+  Diversity values of communities are not defined: community entropies are averaged to obtain the metacommunity entropy wich is transformed into diversity (Marcon et al., 2014).
 }
 \value{
   An \code{\link{MCdiversity}} object containing diversity value of the metacommunity.
 }
 \references{
-  Marcon, E., Scotti, I., Herault, B., Rossi, V. and Lang, G. (in revision). Generalization of the partitioning of Shannon diversity. \emph{PLOS One}.
+  Marcon, E., Scotti, I., Herault, B., Rossi, V. and Lang, G. (2014). Generalization of the partitioning of Shannon diversity. \emph{PLOS One} 9(3): e90289.
   
-  Marcon, E., Herault, B. (in prep). Partitioning phylodiversity. \emph{Methods in Ecology and Evolution}.
+  Marcon, E., Herault, B. (2014). Decomposing  Phylodiversity. \emph{HAL} hal-00946177(version 1).
 }
 \author{
   Eric Marcon <Eric.Marcon@ecofog.gf>

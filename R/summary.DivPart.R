@@ -1,14 +1,14 @@
 summary.DivPart <-
 function(object, ...) {
   
-  cat("Diversity partitioning of order", object$Order, "of MetaCommunity", object$MetaCommunity)
+  cat("Diversity partitioning of order", object$Order, "of MetaCommunity", object$MetaCommunity, fill=TRUE)
   if (!object$Biased)  
     cat(" with correction:", object$Correction)
   cat("\n")
   
   if (!is.null(object$Tree)) {
-    cat("Phylogenetic or functional diversity was calculated according to the tree", object$Tree, "\n")
-    cat("Diversity is", ifelse(object$Normalized, "", "not"), "normalized\n")
+    cat("Phylogenetic or functional diversity was calculated according to the tree", object$Tree, "\n", fill=TRUE)
+    cat("Diversity is", ifelse(object$Normalized, "", "not"), "normalized\n", fill=TRUE)
   }
   cat("Alpha diversity of communities:", "\n")
   print(object$CommunityAlphaDiversities)

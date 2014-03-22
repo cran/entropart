@@ -7,7 +7,7 @@
   Cuts the tree into slices separated by nodes, applies the function to each slice and returns the weighted (by slice lengths) sum of the results.
 }
 \usage{
-PhyloApply(Tree, FUN, NorP, Normalize = TRUE, ..., CheckArguments = TRUE)
+PhyloApply(Tree, FUN, NorP, Normalize = TRUE, \dots, CheckArguments = TRUE)
 }
 \arguments{
   \item{Tree}{
@@ -23,7 +23,7 @@ PhyloApply(Tree, FUN, NorP, Normalize = TRUE, ..., CheckArguments = TRUE)
     If \code{TRUE} (default), the \code{Total} value returned by \code{Function} is normalized by the height of the tree (it is the weighted average value of the result in each slice).\cr
     If \code{FALSE}, it is the unnormalized weighted sum of the results.
   }
-  \item{...}{
+  \item{\dots}{
     Further arguments to pass to \code{Function}.
   }
   \item{CheckArguments}{
@@ -47,7 +47,7 @@ PhyloApply(Tree, FUN, NorP, Normalize = TRUE, ..., CheckArguments = TRUE)
   \item{Total}{A value equal the total value, multiplied by the tree height if \code{Normalize} is FALSE.}
 }
 \references{
-  Marcon, E., Herault, B. (in prep). Partitioning phylodiversity. \emph{Methods in Ecology and Evolution}.
+  Marcon, E., Herault, B. (2014). Decomposing  Phylodiversity. \emph{HAL} hal-00946177(version 1).
 }
 \author{
   Eric Marcon <Eric.Marcon@ecofog.gf>
@@ -60,7 +60,9 @@ PhyloApply(Tree, FUN, NorP, Normalize = TRUE, ..., CheckArguments = TRUE)
   #      and their taxonomy)
   data(Paracou618)
   # Plot the taxonomy
-  radial.phylog(Paracou618.Taxonomy)
+  if (require(ade4, quietly = TRUE)) {
+    radial.phylog(Paracou618.Taxonomy)
+  }
   # Calculate the mean number of trees (individuals) per species 
   # (Cuts are 1=species, 2=genus, 3=family)
   PhyloApply(Paracou618.Taxonomy, mean, Paracou618.MC$Ns, TRUE)

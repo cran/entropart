@@ -5,7 +5,7 @@ function(FUN, NorP, q.seq, ..., CheckArguments = TRUE)
     CheckentropartArguments()
   }
 
-  # Profil de diversité phylogénétique
+  # Phylogenetic diversity profile
   return (list(x=q.seq,
                y=sapply(q.seq, function(q) FUN(NorP, q, ..., CheckArguments = FALSE))
               )

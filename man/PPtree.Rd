@@ -16,7 +16,7 @@ is.PPtree(x)
   \item{x}{
     An object to be tested or plotted
   }
-  \item{...}{
+  \item{\dots}{
     Additional arguments to be passed to the generic methods.
   }
 }

@@ -61,7 +61,7 @@ AllenH(Ps, q, PhyloTree, Normalize = TRUE, CheckArguments = TRUE)
   AllenH(Paracou618.MC$Ps, 1, Paracou618.Taxonomy, Normalize=TRUE) -> Allen
   Allen
   
-  # Calculate it using PhyloDiversity: more powerful but much slower is the tree has many periods
+  # Calculate it using PhyloEntropy: more powerful but much slower is the tree has many periods
   PhyloEntropy(Paracou618.MC$Ps, 1, Paracou618.Taxonomy, Normalize=TRUE) -> phyE
   summary(phyE)
 }

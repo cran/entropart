@@ -35,7 +35,7 @@ KLq(Ps, Pexp, q, CheckArguments = TRUE)
   
   Kullback, S. and Leibler, R. A. (1951). On Information and Sufficiency. The Annals of Mathematical \emph{Statistics} 22(1): 79-86.
   
-  Marcon, E., Scotti, I., Herault, B., Rossi, V. and Lang, G. (in revision). Generalization of the partitioning of Shannon diversity. \emph{PLOS One}.
+  Marcon, E., Scotti, I., Herault, B., Rossi, V. and Lang, G. (2014). Generalization of the partitioning of Shannon diversity. \emph{PLOS One} 9(3): e90289.
 }
 \author{
   Eric Marcon <Eric.Marcon@ecofog.gf>

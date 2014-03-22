@@ -18,7 +18,7 @@ function(Ns, q, Tree, Normalize = TRUE, Correction = "Best", CheckArguments = TR
   Diversity$Total <- expq(Diversity$Total, q) * Height
   # Complete it
   Diversity$Function <- "bcPhyloDiversity" 
-  Diversity$Distribution <- deparse(substitute(Ps))
+  Diversity$Distribution <- deparse(substitute(Ns))
   Diversity$Tree <- deparse(substitute(Tree))
   Diversity$Type <- "alpha or gamma"
   Diversity$Order <- q

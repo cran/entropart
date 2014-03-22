@@ -45,7 +45,7 @@ is.PhyloEntropy(x)
   \item{object}{
     A \code{PhyloDiversity} object to be summarized.
   }
-  \item{...}{
+  \item{\dots}{
     Additional arguments to be passed to the generic methods.
   }
 }
@@ -76,7 +76,7 @@ is.PhyloEntropy(x)
   \code{PhyloEntropy} objects can be plotted by \code{\link{plot.PhyloValue}} because \code{PhyloEntropy} objects are also of class \code{PhyloValue}.
 }
 \references{
-  Marcon, E., Herault, B. (in prep). Partitioning phylodiversity. \emph{Methods in Ecology and Evolution}.
+  Marcon, E., Herault, B. (2014). Decomposing  Phylodiversity. \emph{HAL} hal-00946177(version 1).
   
   Pavoine, S., Love, M. S. and Bonsall, M. B. (2009). Hierarchical partitioning of evolutionary and ecological patterns in the organization of phylogenetically-structured species assemblages: Application to rockfish (genus: Sebastes) in the Southern California Bight. \emph{Ecology Letters} 12(9): 898-908.
 }

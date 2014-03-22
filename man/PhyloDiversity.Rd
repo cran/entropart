@@ -45,7 +45,7 @@ is.PhyloDiversity(x)
   \item{object}{
     A \code{PhyloDiversity} object to be summarized.
   }
-  \item{...}{
+  \item{\dots}{
     Additional arguments to be passed to the generic methods.
   }
 }
@@ -76,7 +76,7 @@ is.PhyloDiversity(x)
 \references{
   Chao, A., Chiu, C.-H. and Jost, L. (2010). Phylogenetic diversity measures based on Hill numbers. \emph{Philosophical Transactions of the Royal Society B} 365(1558): 3599-609.
   
-  Marcon, E., Herault, B. (in prep). Partitioning phylodiversity. \emph{Methods in Ecology and Evolution}.
+  Marcon, E., Herault, B. (2014). Decomposing  Phylodiversity. \emph{HAL} hal-00946177(version 1).
   
   Pavoine, S., Love, M. S. and Bonsall, M. B. (2009). Hierarchical partitioning of evolutionary and ecological patterns in the organization of phylogenetically-structured species assemblages: Application to rockfish (genus: Sebastes) in the Southern California Bight. \emph{Ecology Letters} 12(9): 898-908.
 }

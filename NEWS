@@ -1,6 +1,44 @@
-  CHANGES IN entropart VERSION 1.1
-  ================================
-	
+  CHANGES IN entropart VERSION 1.1.3
+  ==================================
+
+NEW FEATURES 
+
+  o Paracou618.dist distance matrix between species of Paracou618.MC added. 
+
+
+IMPROVEMENTS
+
+  o Imports directive rather than Depends for ade4.
+  o mergeandlabels does not return warnings any longer (column names are better addressed).
+
+
+BUG CORRECTION
+
+  o Legend was not displayed in plot.DivProfile(..., Which="Communities"). Corrected.
+
+
+  CHANGES IN entropart VERSION 1.1.2
+  ==================================
+  
+NEW FEATURES 
+
+  o Chao, Wang and Jost (2013) bias correction for Shannon entropy added.
+  o EntropyCI function added: Entropy of Monte-Carlo simulated communities.
+  o Tools to manipulate MetaCommunity objects added (see ?MergeMC)
+  o SimTest class added to test a value against a simulated distribution (see ?SimTest).
+  o Vignette added.
+
+
+BUG CORRECTION 
+
+  o Hqz() was erroneous for q!=1. Corrected.
+  o bcPhyloEntropy() and bcPhyloDiversity() returned an incorrect $Distribution component. Corrected.
+  o summary.MCentropy() did not return the name of the tree. Corrected.
+
+
+CHANGES IN entropart VERSION 1.1.1
+==================================
+  
 OVERVIEW 
 
 	o First version.

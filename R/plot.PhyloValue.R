@@ -1,5 +1,5 @@
 plot.PhyloValue <- 
-function (x, xlab = "T", ylab = NULL, main = NULL, ...) {
+function (x, xlab = expression(italic("T")), ylab = NULL, main = NULL, ...) {
   
   Entity <- ""
   # Entity

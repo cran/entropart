@@ -10,8 +10,8 @@
 }
 \usage{
 DivEst(q = 0, MC, Biased = TRUE, Correction = "Best", Tree = NULL, 
-  Normalize = TRUE, Simulations = 0, CheckArguments = TRUE)
-\method{plot}{DivEst}(x, \dots)
+  Normalize = TRUE, Simulations = 100, CheckArguments = TRUE)
+\method{plot}{DivEst}(x, \dots, main = NULL, Which = "All")
 \method{summary}{DivEst}(object, \dots)
 }
 \arguments{
@@ -43,10 +43,16 @@ DivEst(q = 0, MC, Biased = TRUE, Correction = "Best", Tree = NULL,
   \item{x}{
     An object to be tested or plotted.
   }
+  \item{main}{
+    The title of the plot.
+  }
+  \item{Which}{
+    May be \code{"Alpha"}, \code{"Beta"} or \code{"Gamma"} to respectively plot the metacommunity's alpha, beta or gamma diversity. If \code{"All"} (default), all three plots are shown.
+    }
   \item{object}{
     A \code{MCdiversity} object to be summarized.
   }
-  \item{...}{
+  \item{\dots}{
     Additional arguments to be passed to the generic methods.
   }
 }
@@ -66,9 +72,9 @@ DivEst(q = 0, MC, Biased = TRUE, Correction = "Best", Tree = NULL,
 \references{
   Marcon, E., Herault, B., Baraloto, C. and Lang, G. (2012). The Decomposition of Shannon's Entropy and a Confidence Interval for Beta Diversity. \emph{Oikos} 121(4): 516-522.
   
-  Marcon, E., Scotti, I., Herault, B., Rossi, V. and Lang, G. (in revision). Generalization of the partitioning of Shannon diversity. \emph{PLOS One}.
+  Marcon, E., Scotti, I., Herault, B., Rossi, V. and Lang, G. (2014). Generalization of the partitioning of Shannon diversity. \emph{PLOS One} 9(3): e90289.
 
-  Marcon, E., Herault, B. (in prep). Partitioning phylodiversity. \emph{Methods in Ecology and Evolution}.
+  Marcon, E., Herault, B. (2014). Decomposing  Phylodiversity. \emph{HAL} hal-00946177(version 1).
 }
 \author{
   Eric Marcon <Eric.Marcon@ecofog.gf> and Bruno Herault <Bruno.Herault@ecofog.gf>

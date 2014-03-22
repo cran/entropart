@@ -21,7 +21,7 @@ is.MCentropy(x)
   \item{object}{
     A \code{MCentropy} object to be summarized.
   }
-  \item{...}{
+  \item{\dots}{
     Additional arguments to be passed to the generic methods.
   }
 }

@@ -1,5 +1,5 @@
 DivEst <-
-function(q = 0, MC, Biased = TRUE, Correction = "Best", Tree = NULL, Normalize = TRUE, Simulations = 0, CheckArguments = TRUE) 
+function(q = 0, MC, Biased = TRUE, Correction = "Best", Tree = NULL, Normalize = TRUE, Simulations = 100, CheckArguments = TRUE) 
 {
   if (CheckArguments)
     CheckentropartArguments()

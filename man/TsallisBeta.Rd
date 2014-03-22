@@ -35,7 +35,7 @@ bcTsallisBeta(Ns, Nexp = NULL, q, Correction = "Best", CheckArguments = TRUE)
   }
 }
 \details{
-  The derivation of Tsallis beta entropy can be found in Marcon et al. (in prep).
+  The derivation of Tsallis beta entropy can be found in Marcon et al. (2014).
   
   Bias correction requires the number of individuals to estimate sample \code{\link{Coverage}}. Use \code{bcTsallisBeta} and choose the \code{Correction}.
 
@@ -47,7 +47,7 @@ bcTsallisBeta(Ns, Nexp = NULL, q, Correction = "Best", CheckArguments = TRUE)
 \references{
     Jost (2007), Partitioning diversity into independent alpha and beta components. \emph{Ecology} 88(10): 2427-2439.
 
-  Marcon, E., Scotti, I., Herault, B., Rossi, V. and Lang, G. (in revision). Generalization of the partitioning of Shannon diversity. \emph{PLOS One}.
+  Marcon, E., Scotti, I., Herault, B., Rossi, V. and Lang, G. (2014). Generalization of the partitioning of Shannon diversity. \emph{PLOS One} 9(3): e90289.
 }
 \author{
   Eric Marcon <Eric.Marcon@ecofog.gf>

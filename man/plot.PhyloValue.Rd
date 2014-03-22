@@ -7,7 +7,7 @@
   Plots entropy or diversity against the height of the phylogenetic or functional tree.
 }
 \usage{
-\method{plot}{PhyloValue}(x, xlab = "T", ylab = NULL, main = NULL, \dots)
+\method{plot}{PhyloValue}(x, xlab = expression(italic("T")), ylab = NULL, main = NULL, \dots)
 }
 \arguments{
   \item{x}{
@@ -22,7 +22,7 @@
   \item{main}{
     The main title of the plot. if \code{NULL} (by default), a default value is used.
   }
-  \item{...}{
+  \item{\dots}{
     Additional arguments to be passed to \code{\link{plot}}.
   }
 }

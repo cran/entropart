@@ -11,7 +11,8 @@
 \usage{
 DivProfile(q.seq = seq(0, 2, 0.1), MC, Biased = TRUE, Correction = "Best", 
   Tree = NULL, Normalize = TRUE, CheckArguments = TRUE)
-\method{plot}{DivProfile}(x, \dots)
+\method{plot}{DivProfile}(x, \dots, main = NULL, xlab = "Order of Diversity",
+  ylab = NULL, Which = "All")
 \method{summary}{DivProfile}(object, \dots)
 }
 \arguments{
@@ -42,10 +43,22 @@ DivProfile(q.seq = seq(0, 2, 0.1), MC, Biased = TRUE, Correction = "Best",
   \item{x}{
     An object to be tested or plotted.
   }
+  \item{main}{
+    The main title of the plot. Ignored if \code{Which = "All"}.
+  }
+  \item{xlab}{
+    The x axis label of the plots.
+  }
+  \item{ylab}{
+    The y axis label of the plot. Ignored if \code{Which = "All"}.
+  }
+  \item{Which}{
+    May be \code{"Communities"}, \code{"Alpha"}, \code{"Beta"} or \code{"Gamma"} to respectively plot the alpha diversity of communities or the metacommunity's alpha, beta or gamma diversity. If \code{"All"} (default), all four plots are shown.
+  }
   \item{object}{
     A \code{MCdiversity} object to be summarized.
   }
-  \item{...}{
+  \item{\dots}{
     Additional arguments to be passed to the generic methods.
   }
 }
@@ -66,9 +79,11 @@ DivProfile(q.seq = seq(0, 2, 0.1), MC, Biased = TRUE, Correction = "Best",
     \item{Correction}{The estimation bias correction used to calculate diversity.}
     \item{Tree}{The phylogenetic or functional tree used to calculate phylodiversity.}
     \item{Normalized}{Logical. Indicates whether phylodiversity is normalized or proportional to the height of the tree.}
+    \item{CommunityAlphaDiversities}{A matrix containing the alpha diversity of each community.}
     \item{TotalAlphaDiversity}{A vector containing the alpha diversity of communities for each order.}
     \item{BetaDiversity}{A vector containing the beta diversity of communities for each order.}
     \item{GammaDiversity}{A vector containing the gamma diversity of the metacommunity for each order.}
+    \item{CommunityAlphaEntropies}{A matrix containing the alpha entropy of each community.}
     \item{TotalAlphaEntropy}{A vector containing the alpha entropy of communities for each order.}
     \item{BetaEntropy}{A vector containing the beta entropy of communities for each order.}
     \item{GammaEntropy}{A vector containing the gamma entropy of the metacommunity for each order.}
@@ -76,8 +91,8 @@ DivProfile(q.seq = seq(0, 2, 0.1), MC, Biased = TRUE, Correction = "Best",
   \code{DivProfile} objects can be summarized and plotted.
 }
 \references{
-  Marcon, E., Scotti, I., Herault, B., Rossi, V. and Lang, G. (in revision). Generalization of the partitioning of Shannon diversity. \emph{PLOS One}.
-  Marcon, E., Herault, B. (in prep). Partitioning phylodiversity. \emph{Methods in Ecology and Evolution}.
+  Marcon, E., Scotti, I., Herault, B., Rossi, V. and Lang, G. (2014). Generalization of the partitioning of Shannon diversity. \emph{PLOS One} 9(3): e90289.
+  Marcon, E., Herault, B. (2014). Decomposing  Phylodiversity. \emph{HAL} hal-00946177(version 1).
 }
 \author{
   Eric Marcon <Eric.Marcon@ecofog.gf> and Bruno Herault <Bruno.Herault@ecofog.gf>

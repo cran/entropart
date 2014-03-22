@@ -26,6 +26,16 @@ function() {
     }
   }
 
+  # MClist
+  if (!is.na(names(Args["MClist"]))) {
+    MClist <- eval(expression(MClist), parent.frame())
+    if (!is.list(MClist)) {
+      ErrorMessage("MClist must be a list.", MClist)
+    if (any(!unlist(lapply(MClist, function(x) is.MetaCommunity(x)))))
+      ErrorMessage("All elements of MClist must be of class MEtaCommunity.", MClist)
+    }
+  }
+
   # q 
   if (!is.na(names(Args["q"]))) {
     q <- eval(expression(q), parent.frame())
@@ -48,15 +58,23 @@ function() {
       ErrorMessage("Normalize must be TRUE or FALSE.", Normalize)  
     }
   }
+
+  # nPoints
+  if (!is.na(names(Args["nPoints"]))) {
+    nPoints <- eval(expression(nPoints), parent.frame())
+    if (!is.numeric(nPoints) | length(nPoints)!=1)
+      ErrorMessage("nPoints must be a number.", nPoints)
+    if (any(nPoints < 1))
+      ErrorMessage("nPoints must be at least 1.", nPoints)
+  }
   
   # Ns 
   if (!is.na(names(Args["Ns"]))) {
     Ns <- eval(expression(Ns), parent.frame())
     if (!is.numeric(Ns))
       ErrorMessage("Ns must be numeric.", Ns)
-    if (any(Ns < 0)) {
+    if (any(Ns < 0))
       ErrorMessage("All abundance values must be positive.", Ns)
-    }
   }
   # Nexp 
   if (!is.na(names(Args["Nexp"]))) {
@@ -129,6 +147,17 @@ function() {
     }
   }
   
+  # Simulations 
+  if (!is.na(names(Args["Simulations"]))) {
+    Simulations <- eval(expression(Simulations), parent.frame())
+    if (!is.numeric(Simulations))
+      ErrorMessage("Simulations must be numeric.", Simulations)
+    if (!is.vector(Simulations) | length(Simulations) > 1)
+      ErrorMessage("Simulations must be a single number.", q.seq)
+    if (any(Simulations < 1))
+      ErrorMessage("Simulations must be at least 1.", Simulations)
+  }
+
   # Tree 
   if (!is.na(names(Args["Tree"]))) {
     Tree <- eval(expression(Tree), parent.frame())
@@ -153,6 +182,39 @@ function() {
     }  
   }
   
+  # RealValue
+  if (!is.na(names(Args["RealValue"]))) {
+    RealValue <- eval(expression(RealValue), parent.frame())
+    if (!is.numeric(RealValue) | length(RealValue)!=1) {
+      ErrorMessage("RealValue must be a number.", RealValue)
+    }
+  }
+  # SimulatedValues
+  if (!is.na(names(Args["SimulatedValues"]))) {
+    SimulatedValues <- eval(expression(SimulatedValues), parent.frame())
+    if (!is.vector(SimulatedValues)) {
+      ErrorMessage("SimulatedValues must be a numeric vector.", SimulatedValues)
+    }
+  }
+
+  # Weights
+  if (!is.na(names(Args["Weights"]))) {
+    Weights <- eval(expression(Weights), parent.frame())
+    if (!is.vector(Weights)) {
+      ErrorMessage("Weights must be a numeric vector.", Weights)
+    if (any(Weights < 0))
+      ErrorMessage("All weights must be positive.", Weights)
+    }
+  }
+
+  # xy 
+  if (!is.na(names(Args["xy"]))) {
+    xy <- eval(expression(xy), parent.frame())
+    if (!is.numeric(xy) | length(xy)!=2) {
+      ErrorMessage("xy must be a numeric vector of length 2.", xy)
+    }
+  }
+
   # Z
   if (!is.na(names(Args["Z"]))) {
     Z <- eval(expression(Z), parent.frame())

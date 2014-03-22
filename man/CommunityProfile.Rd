@@ -7,7 +7,7 @@
   Calculates the diversity or entropy profile of a community, applying a community function to a vector of orders.
 }
 \usage{
-CommunityProfile(FUN, NorP, q.seq, ..., CheckArguments = TRUE)
+CommunityProfile(FUN, NorP, q.seq, \dots, CheckArguments = TRUE)
 }
 \arguments{
   \item{FUN}{
@@ -19,7 +19,7 @@ CommunityProfile(FUN, NorP, q.seq, ..., CheckArguments = TRUE)
   \item{q.seq}{
     A numeric vector.
   }
-  \item{...}{
+  \item{\dots}{
     Additional arguments to be passed to \code{FUN}.
   }
   \item{CheckArguments}{
@@ -47,5 +47,5 @@ CommunityProfile(FUN, NorP, q.seq, ..., CheckArguments = TRUE)
   plot(Profile, type="l", main="Paracou Plots Diversity", xlab="q", ylab="Diversity")
   # Compare to non bias-corrected diversity
   lines(CommunityProfile(Diversity, Paracou618.MC$Ps, seq(0, 2, 0.1)), lty=3)
-  legend("topright", c("Biased", "Bias Corrected"), lty=c(1,3), inset=0.01)
+  legend("topright", c("Bias Corrected", "Biased"), lty=c(1,3), inset=0.01)
 }

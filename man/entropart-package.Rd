@@ -14,8 +14,8 @@
   \tabular{ll}{
     Package: \tab entropart\cr
     Type: \tab Package\cr
-    Version: \tab 1.1.1\cr
-    Date: \tab 2013-09-10\cr
+    Version: \tab 1.1.3\cr
+    Date: \tab 2014-03-20\cr
     License: \tab GNU General Public License\cr
   }
 
@@ -67,11 +67,9 @@
   Bruno Herault
 }
 \references{
-  Marcon, E. and Herault, B. (in prep). entropart, an R package to partition diversity. \emph{Methods in Ecology and Evolution}.
+  Marcon, E. and Herault, B. (2014). Decomposing  Phylodiversity. \emph{HAL} hal-00946177(version 1).
   
-  Marcon, E. and Herault, B. (in prep). Partitioning phylodiversity. \emph{Methods in Ecology and Evolution}.
-  
-  Marcon, E., Scotti, I., Herault, B., Rossi, V. and Lang G. (in revision) Generalization of the partitioning of Shannon diversity. \emph{PLOS One}.
+  Marcon, E., Scotti, I., Herault, B., Rossi, V. and Lang G. (2014). Generalization of the partitioning of Shannon diversity. \emph{PLOS One} 9(3): e90289.
   
   Marcon, E., Herault, B., Baraloto, C. and Lang, G. (2012). The Decomposition of Shannon's Entropy and a Confidence Interval for Beta Diversity. \emph{Oikos} 121(4): 516-522.
 }

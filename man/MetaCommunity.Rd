@@ -7,10 +7,10 @@
   Metacommunity class
 }
 \description{
-    Methods for objects of type "\code{MetaCommunity}".
+  Methods for objects of type "\code{MetaCommunity}".
 }
 \usage{
-MetaCommunity(Abundances, Weights)
+MetaCommunity(Abundances, Weights = rep(1, ncol(Abundances)))
 is.MetaCommunity(x)
 \method{summary}{MetaCommunity}(object, \dots)
 \method{plot}{MetaCommunity}(x, \dots)
@@ -20,7 +20,7 @@ is.MetaCommunity(x)
   A dataframe containing the number of observations (lines are species, columns are communities). The first column of the dataframe may contain the species names.
   }
   \item{Weights}{
-  A vector of positive numbers equal to community weights or a dataframe containing a vector named \code{Weights}. It does not have to be normalized.
+  A vector of positive numbers equal to community weights or a dataframe containing a vector named \code{Weights}. It does not have to be normalized. Weights are equal by default.
   }
   \item{x}{
     An object to be tested or plotted.
@@ -28,7 +28,7 @@ is.MetaCommunity(x)
   \item{object}{
     A \code{MetaCommunity} object to be summarized.
   }
-  \item{...}{
+  \item{\dots}{
     Additional arguments to be passed to the generic methods.
   }
 }

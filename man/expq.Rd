@@ -26,7 +26,7 @@ expq(x, q)
   A vector of the same length as \code{x} containing the transformed values.
 }
 \references{
-  Marcon, E., Scotti, I., Herault, B., Rossi, V. and Lang, G. (in revision). Generalization of the partitioning of Shannon diversity. \emph{PLOS One}.
+  Marcon, E., Scotti, I., Herault, B., Rossi, V. and Lang, G. (2014). Generalization of the partitioning of Shannon diversity. \emph{PLOS One} 9(3): e90289.
   
   Tsallis, C. (1994). What are the numbers that experiments provide? \emph{Quimica Nova} 17(6): 468-471.
 }
