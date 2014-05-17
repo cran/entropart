@@ -8,8 +8,8 @@
   Calculates the generalized diversity of order \eqn{q} of a probability vector.
 }
 \usage{
-Diversity(Ps, q, CheckArguments = TRUE)
-bcDiversity(Ns, q, Correction = "Best", CheckArguments = TRUE)
+Diversity(Ps, q = 1, CheckArguments = TRUE)
+bcDiversity(Ns, q = 1, Correction = "Best", CheckArguments = TRUE)
 }
 \arguments{
   \item{Ps}{
@@ -19,10 +19,10 @@ bcDiversity(Ns, q, Correction = "Best", CheckArguments = TRUE)
     A numeric vector containing species abundances.
   }
   \item{q}{
-    A number.
+    A number: the order of diversity. Default is 1.
   }
   \item{Correction}{
-    A string containing one of the possible corrections: \code{"None"} (no correction), \code{"ChaoShen"}, \code{"Grassberger"}, \code{"Holste"}, \code{"Bonachela"} or \code{"Best"}, the default value.
+    A string containing one of the possible corrections: \code{"None"} (no correction), \code{"ChaoShen"}, \code{"Grassberger"}, \code{"Holste"}, \code{"Bonachela"}, \code{"ZhangGrabchak"} or \code{"Best"}, the default value.
   }
   \item{CheckArguments}{
     Logical; if \code{TRUE}, the function arguments are verified. Should be set to \code{FALSE} to save time when the arguments have been checked elsewhere.

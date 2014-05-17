@@ -7,14 +7,14 @@
   Calculates the originality of species according to the order of diversity.
 }
 \usage{
-Originality.Species(Tree, q, CheckArguments = TRUE)
+Originality.Species(Tree, q = 2, CheckArguments = TRUE)
 }
 \arguments{
   \item{Tree}{
     An object of class \code{\link{hclust}} or \code{\link{phylog}}. The tree must be ultrametric.
   }
   \item{q}{
-    A number.
+    A number: the order of diversity. Default is 2 for Rao quadratic entropy.
   }
   \item{CheckArguments}{
     Logical; if \code{TRUE}, the function arguments are verified. Should be set to \code{FALSE} to save time when the arguments have been checked elsewhere.

@@ -1,5 +1,5 @@
 TsallisBeta <-
-function(Ps, Pexp = NULL, q, CheckArguments = TRUE) 
+function(Ps, Pexp = NULL, q = 1, CheckArguments = TRUE) 
 {
   if (CheckArguments)
     CheckentropartArguments()

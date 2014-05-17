@@ -10,8 +10,8 @@
   Calculates the phylogenetic entropy of order \eqn{q} of a probability vector.
 }
 \usage{
-PhyloEntropy(Ps, q, Tree, Normalize = TRUE, CheckArguments = TRUE)
-bcPhyloEntropy(Ns, q, Tree, Normalize = TRUE, Correction = "Best", 
+PhyloEntropy(Ps, q = 1, Tree, Normalize = TRUE, CheckArguments = TRUE)
+bcPhyloEntropy(Ns, q = 1, Tree, Normalize = TRUE, Correction = "Best", 
   CheckArguments = TRUE)
 is.PhyloEntropy(x)
 \method{summary}{PhyloEntropy}(object, \dots)
@@ -24,7 +24,7 @@ is.PhyloEntropy(x)
     A numeric vector containing species abundances.
   }
   \item{q}{
-    A number.
+    A number: the order of entropy. Default is 1.
   }
   \item{Tree}{
     An object of class \code{\link{hclust}} or \code{\link{phylog}}. The tree must be ultrametric.

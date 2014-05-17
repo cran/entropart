@@ -9,14 +9,14 @@
   Partitions the diversity of a metacommunity into alpha and beta components.
 }
 \usage{
-DivPart(q, MC, Biased = TRUE, Correction = "Best", Tree = NULL,
-  Normalize = TRUE, CheckArguments = TRUE)
+DivPart(q = 1, MC, Biased = TRUE, Correction = "Best", Tree = NULL,
+  Normalize = TRUE, Z = NULL, CheckArguments = TRUE)
 \method{plot}{DivPart}(x, \dots)
 \method{summary}{DivPart}(object, \dots)
 }
 \arguments{
   \item{q}{
-    A number: the order of diversity.
+    A number: the order of diversity. Default is 1.
   }
   \item{MC}{
     A \code{\link{MetaCommunity}} object.
@@ -36,6 +36,9 @@ DivPart(q, MC, Biased = TRUE, Correction = "Best", Tree = NULL,
     If \code{TRUE} (default), diversity is not affected by the height of the tree.\cr
     If \code{FALSE}, diversity is proportional to the height of the tree.
   }
+  \item{Z}{
+    A relatedness matrix, \emph{i.e.} a square matrix whose terms are all positive, strictly positive on the diagonal. Generally, the matrix is a similarity matrix, \emph{i.e.} the diagonal terms equal 1 and other terms are between 0 and 1.
+  }
   \item{CheckArguments}{
     Logical; if \code{TRUE}, the function arguments are verified. Should be set to \code{FALSE} to save time when the arguments have been checked elsewhere.
   }
@@ -50,28 +53,30 @@ DivPart(q, MC, Biased = TRUE, Correction = "Best", Tree = NULL,
   }
 }
 \details{
-  \code{DivPart} partitions the diversity of the metacommunity into alpha and beta components. It supports estimation-bias correction (Marcon et al., submitted).
+  \code{DivPart} partitions the diversity of the metacommunity into alpha and beta components. It supports estimation-bias correction.
   
-  If \code{Tree} is provided, the phylogenetic diversity is calculated.
+  If \code{Tree} is provided, the phylogenetic diversity is calculated else if \code{Z} is not \code{NULL}, then similarity-based entropy is calculated.
   
   Beta diversity/entropy is calculated from Gamma and Alpha when bias correction is required, so community values are not available.
 }
 \value{
   A \code{DivPart} object. It is a list:
-    \item{MetaCommunity}{The name of the \code{\link{MetaCommunity}} object containing inventory data.}
-    \item{Order}{The value of \code{q}.}
-    \item{Biased}{Logical. If \code{FALSE}, bias corrected values of diversity have been computed.}
-    \item{Correction}{The estimation bias correction used to calculate diversity.}
-    \item{Tree}{The phylogenetic or functional tree used to calculate phylodiversity.}
-    \item{Normalized}{Logical. Indicates whether phylodiversity is normalized or proportional to the height of the tree.}
-    \item{TotalAlphaDiversity}{The alpha diversity of communities.}
-    \item{BetaDiversity}{The beta diversity of communities.}
-    \item{GammaDiversity}{The gamma diversity of the metacommunity.}
-    \item{CommunityAlphaDiversities}{A vector containing the alpha diversity of each community.}
-    \item{TotalAlphaEntropy}{The alpha entropy of communities.}
-    \item{BetaEntropy}{The beta entropy of communities.}
-    \item{GammaEntropy}{The gamma entropy of the metacommunity.}
-    \item{CommunityAlphaEntropies}{A vector containing the alpha entropy of each community.}
+  \item{MetaCommunity}{The name of the \code{\link{MetaCommunity}} object containing inventory data.}
+  \item{Order}{The value of \code{q}.}
+  \item{Biased}{Logical. If \code{FALSE}, bias corrected values of diversity have been computed.}
+  \item{Correction}{The estimation bias correction used to calculate diversity.}
+  \item{Method}{The method used to calculate entropy ("HCDT", "Similarity-based").}
+  \item{Tree}{The phylogenetic or functional tree used to calculate phylodiversity.}
+   \item{Normalized}{Logical. Indicates whether phylodiversity is normalized or proportional to the height of the tree.}
+  \item{Z}{The matrix used to calculate similarity-based entropy.}
+  \item{TotalAlphaDiversity}{The alpha diversity of communities.}
+  \item{BetaDiversity}{The beta diversity of communities.}
+  \item{GammaDiversity}{The gamma diversity of the metacommunity.}
+  \item{CommunityAlphaDiversities}{A vector containing the alpha diversity of each community.}
+  \item{TotalAlphaEntropy}{The alpha entropy of communities.}
+  \item{BetaEntropy}{The beta entropy of communities.}
+  \item{GammaEntropy}{The gamma entropy of the metacommunity.}
+  \item{CommunityAlphaEntropies}{A vector containing the alpha entropy of each community.}
   
   \code{DivPart} objects can be summarized and plotted.
 }
@@ -81,6 +86,8 @@ DivPart(q, MC, Biased = TRUE, Correction = "Best", Tree = NULL,
   Marcon, E., Scotti, I., Herault, B., Rossi, V. and Lang, G. (2014). Generalization of the partitioning of Shannon diversity. \emph{PLOS One} 9(3): e90289.
   
   Marcon, E., Herault, B. (2014). Decomposing  Phylodiversity. \emph{HAL} hal-00946177(version 1).
+
+  Marcon, E. and Zhang, Z. (2014). The decomposition of similarity-based diversity and its bias correction. \emph{HAL} hal-00989454(version 1).
 }
 \author{
   Eric Marcon <Eric.Marcon@ecofog.gf> and Bruno Herault <Bruno.Herault@ecofog.gf>

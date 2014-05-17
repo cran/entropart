@@ -1,5 +1,5 @@
 DivEst <-
-function(q = 0, MC, Biased = TRUE, Correction = "Best", Tree = NULL, Normalize = TRUE, Simulations = 100, CheckArguments = TRUE) 
+function(q = 0, MC, Biased = TRUE, Correction = "Best", Tree = NULL, Normalize = TRUE, Z = NULL, Simulations = 100, CheckArguments = TRUE) 
 {
   if (CheckArguments)
     CheckentropartArguments()
@@ -13,7 +13,7 @@ function(q = 0, MC, Biased = TRUE, Correction = "Best", Tree = NULL, Normalize =
   }  
 
   # Estimation from data
-  RealEst <- DivPart(q, MC, Biased, Correction, ppTree, Normalize)
+  RealEst <- DivPart(q, MC, Biased, Correction, ppTree, Normalize, Z, CheckArguments=FALSE)
 
   # RedrawSpecies resamples a community according to species abundances.
   RedrawSpecies<- function(SpeciesAbundances){
@@ -23,8 +23,9 @@ function(q = 0, MC, Biased = TRUE, Correction = "Best", Tree = NULL, Normalize =
   # SimulateEntropy resamples all communities and calculates entropy
   SimulateEntropy <- function(Progression) {
     SimNsi <- apply(MC$Nsi, 2, RedrawSpecies)
+    rownames(SimNsi) <- rownames(MC$Nsi) 
     SimMC <- Preprocess.MC(SimNsi, MC$Wi)
-    NewSim <- DivPart(q, SimMC, Biased, Correction)
+    NewSim <- DivPart(q, SimMC, Biased, Correction, Tree, Normalize, Z, CheckArguments=FALSE)
     # update progress bar
     setTxtProgressBar(ProgressBar, Progression)
     c(NewSim$TotalAlphaEntropy, NewSim$TotalBetaEntropy, NewSim$GammaEntropy)

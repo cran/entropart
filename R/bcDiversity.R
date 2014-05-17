@@ -1,5 +1,5 @@
 bcDiversity <-
-function(Ns, q, Correction="Best", CheckArguments = TRUE) 
+function(Ns, q = 1, Correction = "Best", CheckArguments = TRUE) 
 {
   if (CheckArguments)
     CheckentropartArguments()

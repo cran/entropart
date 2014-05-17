@@ -1,5 +1,5 @@
 bcShannonBeta <-
-function(Ns, Nexp, Correction="Best", CheckArguments = TRUE) 
+function(Ns, Nexp, Correction = "Best", CheckArguments = TRUE) 
 {
   if (CheckArguments)
     CheckentropartArguments()

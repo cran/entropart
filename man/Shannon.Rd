@@ -19,7 +19,7 @@ bcShannon(Ns, Correction = "Best", CheckArguments = TRUE)
     A numeric vector containing species abundances.
   }
   \item{Correction}{
-    A string containing one of the possible corrections: \code{"None"} (no correction), \code{"ChaoShen"}, \code{"Grassberger"}, \code{"Grassberger2003"}, \code{"Schurmann"}, \code{"Holste"}, \code{"Bonachela"}, \code{"ChaoWangJost"} or \code{"Best"}, the default value. Currently, \code{"Best"} is \code{"ChaoWangJost"}.
+    A string containing one of the possible corrections: \code{"None"} (no correction), \code{"ChaoShen"}, \code{"Grassberger"}, \code{"Grassberger2003"}, \code{"Schurmann"}, \code{"Holste"}, \code{"Bonachela"}, \code{"ZhangHz"}, \code{"ChaoWangJost"} or \code{"Best"}, the default value. Currently, \code{"Best"} is \code{"ChaoWangJost"}.
   }
   \item{CheckArguments}{
     Logical; if \code{TRUE}, the function arguments are verified. Should be set to \code{FALSE} to save time when the arguments have been checked elsewhere.
@@ -28,7 +28,7 @@ bcShannon(Ns, Correction = "Best", CheckArguments = TRUE)
 \details{
   Bias correction requires the number of individuals to estimate sample \code{\link{Coverage}}. Use \code{bcShannon} and choose the \code{Correction}.
   
-  Correction techniques are from Chao and Shen (2003), Grassberger (1988), Grassberger (2003), Schurmann (2003), Holste et al. (1998), Bonachela et al. (2008), Chao, Wang  and Jost (2013).
+  Correction techniques are from Chao and Shen (2003), Grassberger (1988), Grassberger (2003), Schurmann (2003), Holste \emph{et al.} (1998), Bonachela \emph{et al.} (2008), Zhang (2012), Chao, Wang  and Jost (2013).
   
   Using \code{\link{MetaCommunity}} mutual information, Chao, Wang  and Jost (2013) calculate unbiased Shannon beta entropy (see the last example below) with better results than the Chao and Shen estimator, but community weights cannot be arbitrary: they must be proportional to the number of individuals.
 }
@@ -53,6 +53,8 @@ bcShannon(Ns, Correction = "Best", CheckArguments = TRUE)
   Schurmann, T. (2004). Bias analysis in entropy estimation. \emph{Journal of Physics A: Mathematical and Theoretical} 37(27): L295-L301.
   
   Tsallis, C. (1988). Possible generalization of Boltzmann-Gibbs statistics. \emph{Journal of Statistical Physics} 52(1): 479-487.
+  
+  Zhang, Z. (2012). Entropy Estimation in Turing's Perspective. \emph{Neural Computation} 24(5): 1368-1389.
 }
 \author{
   Eric Marcon <Eric.Marcon@ecofog.gf>

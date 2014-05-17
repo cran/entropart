@@ -1,5 +1,5 @@
 Diversity <-
-function(Ps, q, CheckArguments = TRUE) 
+function(Ps, q = 1, CheckArguments = TRUE) 
 {
   if (CheckArguments)
     CheckentropartArguments()

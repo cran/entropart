@@ -7,18 +7,18 @@
   Calculates the unbiased Tsallis entropy of order \eqn{q} of a metacommunity.
 }
 \usage{
-GammaEntropy(MC, q, Correction = "Best", Tree = NULL, Normalize = TRUE, 
-  CheckArguments = TRUE)
+GammaEntropy(MC, q = 1, Correction = "Best", Tree = NULL, Normalize = TRUE, 
+  Z = NULL, CheckArguments = TRUE)
 }
 \arguments{
   \item{MC}{
     A \code{\link{MetaCommunity}} object.
   }
   \item{q}{
-    A number: the order of diversity.
+    A number: the order of entropy. Default is 1.
   }
   \item{Correction}{
-    A string containing one of the possible corrections: \code{"ChaoShen"}, \code{"Grassberger"}, \code{"Holste"}, \code{"Bonachela"} or \code{"Best"}, the default value.
+    A string containing one of the possible corrections accepted by the bias-corrected entropy function (see details) or \code{"None"} or \code{"Best"}, the default value.
   }
   \item{Tree}{
     An object of class \code{\link{hclust}} or \code{\link{phylog}}. The tree must be ultrametric.
@@ -27,31 +27,25 @@ GammaEntropy(MC, q, Correction = "Best", Tree = NULL, Normalize = TRUE,
     If \code{TRUE} (default), the entropy returned by the function is normalized by the height of the tree (it is the weighted average value of the entropy in each slice).\cr
     If \code{FALSE}, it is the unnormalized weighted sum of the results.
   }
+  \item{Z}{
+    A relatedness matrix, \emph{i.e.} a square matrix whose terms are all positive, strictly positive on the diagonal. Generally, the matrix is a similarity matrix, \emph{i.e.} the diagonal terms equal 1 and other terms are between 0 and 1.
+  }
   \item{CheckArguments}{
     Logical; if \code{TRUE}, the function arguments are verified. Should be set to \code{FALSE} to save time when the arguments have been checked elsewhere.
   }
 }
 \details{
-  If \code{Tree} is \code{NULL}, then generalized entropy is calculated by \code{\link{bcTsallis}}, else phylogenetic entropy is calculated by \code{\link{bcPhyloEntropy}}.
-  
-  Correction techniques are from Chao and Shen (2003), Grassberger (1988), Holste et al. (1998), Bonachela et al. (2008).
-  Currently, the \code{"Best"} correction is the max value of \code{"ChaoShen"} and \code{"Grassberger"} (Marcon et al., submitted).
+  If \code{Tree} is not \code{NULL}, then phylogenetic entropy is calculated by \code{\link{bcPhyloEntropy}} else if \code{Z} is not \code{NULL}, then similarity-based entropy is calculated by \code{\link{bcHqz}}, else neutral entropy is calculated by \code{\link{bcTsallis}}, else .
 }
 \value{
   A number equal to the calculated entropy.
 }
 \references{
-  Bonachela, J. A., Hinrichsen, H. and Munoz, M. A. (2008). Entropy estimates of small data sets. \emph{Journal of Physics A: Mathematical and Theoretical} 41(202001): 1-9.
-  
-  Chao, A. and Shen, T. J. (2003). Nonparametric estimation of Shannon's index of diversity when there are unseen species in sample. \emph{Environmental and Ecological Statistics} 10(4): 429-443.
-  
-  Grassberger, P. (1988). Finite sample corrections to entropy and dimension estimates. \emph{Physics Letters A} 128(6-7): 369-373.
-  
-  Holste, D., Grosse, I. and Herzel, H. (1998). Bayes' estimators of generalized entropies. \emph{Journal of Physics A: Mathematical and General} 31(11): 2551-2566.
-  
   Marcon, E., Scotti, I., Herault, B., Rossi, V. and Lang, G. (2014). Generalization of the partitioning of Shannon diversity. \emph{PLOS One} 9(3): e90289.
   
   Marcon, E., Herault, B. (2014). Decomposing  Phylodiversity. \emph{HAL} hal-00946177(version 1).
+
+  Marcon, E. and Zhang, Z. (2014). The decomposition of similarity-based diversity and its bias correction. \emph{HAL} hal-00989454(version 1).
 }
 \author{
   Eric Marcon <Eric.Marcon@ecofog.gf>

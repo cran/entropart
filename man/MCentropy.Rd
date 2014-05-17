@@ -28,11 +28,13 @@ is.MCentropy(x)
 \value{
   Meta-community entropy objects are lists containing:
   \item{MetaCommunity}{The name of the \code{\link{MetaCommunity}} object containing inventory data.}
+  \item{Method}{The method used to calculate entropy ("HCDT", "Similarity-based").}
   \item{Type}{The type of entropy ("alpha", "beta" or "gamma").}
   \item{Order}{The order of entropy \eqn{q}.}
   \item{Correction}{The estimation bias correction used to calculate entropy.}
   \item{Tree}{The phylogenetic or functional tree used to calculate phyloentropy.}
   \item{Normalized}{Logical. Indicates whether phyloentropy is normalized or proportional to the height of the tree.}
+  \item{Z}{The matrix used to calculate similarity-based entropy.}
   \item{Weights}{A vector containing the weights of communities.}
   \item{Communities}{A vector containing the entropy of communities.}
   \item{Total}{The total entropy.}

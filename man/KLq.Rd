@@ -7,7 +7,7 @@
   Calculates the generalized Kullback-Leibler divergence between an observed and an expected probability distribution.
 }
 \usage{
-KLq(Ps, Pexp, q, CheckArguments = TRUE)
+KLq(Ps, Pexp, q = 1, CheckArguments = TRUE)
 }
 \arguments{
   \item{Ps}{
@@ -17,7 +17,7 @@ KLq(Ps, Pexp, q, CheckArguments = TRUE)
     The expected probability vector.
   }
   \item{q}{
-    A number.
+    A number: the order of entropy. Default is 1.
   }
   \item{CheckArguments}{
     Logical; if \code{TRUE}, the function arguments are verified. Should be set to \code{FALSE} to save time when the arguments have been checked elsewhere.

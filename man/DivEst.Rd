@@ -10,7 +10,7 @@
 }
 \usage{
 DivEst(q = 0, MC, Biased = TRUE, Correction = "Best", Tree = NULL, 
-  Normalize = TRUE, Simulations = 100, CheckArguments = TRUE)
+  Normalize = TRUE, Z = NULL, Simulations = 100, CheckArguments = TRUE)
 \method{plot}{DivEst}(x, \dots, main = NULL, Which = "All")
 \method{summary}{DivEst}(object, \dots)
 }
@@ -33,6 +33,9 @@ DivEst(q = 0, MC, Biased = TRUE, Correction = "Best", Tree = NULL,
   \item{Normalize}{
     If \code{TRUE} (default), diversity is not affected by the height of the tree..\cr
     If \code{FALSE}, diversity is proportional to the height of the tree.
+  }
+  \item{Z}{
+    A relatedness matrix, \emph{i.e.} a square matrix whose terms are all positive, strictly positive on the diagonal. Generally, the matrix is a similarity matrix, \emph{i.e.} the diagonal terms equal 1 and other terms are between 0 and 1.
   }
   \item{Simulations}{
     The number of simulations to build confidence intervals.
@@ -59,9 +62,9 @@ DivEst(q = 0, MC, Biased = TRUE, Correction = "Best", Tree = NULL,
 \details{
   \code{Divest} estimates the diversity of the metacommunity and partitions it into alpha and beta components.
   
-  If \code{Tree} is provided, the phylogenetic diversity is calculated.
+  If \code{Tree} is provided, the phylogenetic diversity is calculated else if \code{Z} is not \code{NULL}, then similarity-based entropy is calculated.
   
-  Confidence intervals are calculated by Monte-Carlo simulations, drawing simulated communities from a multinomial law following observed frequencies (Marcon et al, 2012 ; submitted)
+  Confidence intervals are calculated by Monte-Carlo simulations, drawing simulated communities from a multinomial law following observed frequencies (Marcon et al, 2012 ; 2014)
 }
 \value{
   A \code{Divest} object which is a \code{\link{DivPart}} object with an additional item in its list:
@@ -75,6 +78,8 @@ DivEst(q = 0, MC, Biased = TRUE, Correction = "Best", Tree = NULL,
   Marcon, E., Scotti, I., Herault, B., Rossi, V. and Lang, G. (2014). Generalization of the partitioning of Shannon diversity. \emph{PLOS One} 9(3): e90289.
 
   Marcon, E., Herault, B. (2014). Decomposing  Phylodiversity. \emph{HAL} hal-00946177(version 1).
+
+  Marcon, E. and Zhang, Z. (2014). The decomposition of similarity-based diversity and its bias correction. \emph{HAL} hal-00989454(version 1).
 }
 \author{
   Eric Marcon <Eric.Marcon@ecofog.gf> and Bruno Herault <Bruno.Herault@ecofog.gf>

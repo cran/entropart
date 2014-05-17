@@ -1,5 +1,5 @@
 ChaoPD <-
-function(Ps, q, PhyloTree, Normalize = TRUE, CheckArguments = TRUE) 
+function(Ps, q = 1, PhyloTree, Normalize = TRUE, CheckArguments = TRUE) 
 {
   if (CheckArguments)
     CheckentropartArguments()

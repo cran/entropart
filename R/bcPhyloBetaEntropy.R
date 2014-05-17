@@ -1,5 +1,5 @@
 bcPhyloBetaEntropy <-
-function(Ns, Nexp, q, Tree, Normalize = TRUE, Correction = "Best", CheckArguments = TRUE) 
+function(Ns, Nexp, q = 1, Tree, Normalize = TRUE, Correction = "Best", CheckArguments = TRUE) 
 {
   if (CheckArguments)
     CheckentropartArguments()

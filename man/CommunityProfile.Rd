@@ -7,7 +7,7 @@
   Calculates the diversity or entropy profile of a community, applying a community function to a vector of orders.
 }
 \usage{
-CommunityProfile(FUN, NorP, q.seq, \dots, CheckArguments = TRUE)
+CommunityProfile(FUN, NorP, q.seq = seq(0, 2, 0.1), \dots, CheckArguments = TRUE)
 }
 \arguments{
   \item{FUN}{
@@ -17,7 +17,7 @@ CommunityProfile(FUN, NorP, q.seq, \dots, CheckArguments = TRUE)
     A numeric vector or a two-column matrix. Contains either abundances or probabilities. Two-column matrices should contain the observed abundances (or probabilities) in the first column and the expected ones in the second column, to allow using beta diversity functions.
   }
   \item{q.seq}{
-    A numeric vector.
+    A numeric vector: the sequence of divrsity orders to address. Default is from 0 to 2.
   }
   \item{\dots}{
     Additional arguments to be passed to \code{FUN}.

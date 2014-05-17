@@ -10,8 +10,8 @@
   Calculates the phylogenetic diversity of order \eqn{q} of a probability vector.
 }
 \usage{
-PhyloDiversity(Ps, q, Tree, Normalize = TRUE, CheckArguments = TRUE)
-bcPhyloDiversity(Ns, q, Tree, Normalize = TRUE, Correction = "Best",
+PhyloDiversity(Ps, q = 1, Tree, Normalize = TRUE, CheckArguments = TRUE)
+bcPhyloDiversity(Ns, q = 1, Tree, Normalize = TRUE, Correction = "Best",
   CheckArguments = TRUE)
 is.PhyloDiversity(x)
 \method{summary}{PhyloDiversity}(object, \dots)
@@ -24,7 +24,7 @@ is.PhyloDiversity(x)
     A numeric vector containing species abundances.
   }
   \item{q}{
-    A number.
+    A number: the order of diversity. Default is 1.
   }
   \item{Tree}{
     An object of class \code{\link{hclust}} or \code{\link{phylog}}. The tree must be ultrametric.

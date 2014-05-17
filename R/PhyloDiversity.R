@@ -1,5 +1,5 @@
 PhyloDiversity <-
-function(Ps, q, Tree, Normalize = TRUE, CheckArguments = TRUE) 
+function(Ps, q = 1, Tree, Normalize = TRUE, CheckArguments = TRUE) 
 {
   if (CheckArguments)
     CheckentropartArguments()

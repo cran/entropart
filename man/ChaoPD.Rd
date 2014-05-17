@@ -7,14 +7,14 @@
   Calculates the phylogenetic diversity of order \eqn{q} of a probability vector.
 }
 \usage{
-ChaoPD(Ps, q, PhyloTree, Normalize = TRUE, CheckArguments = TRUE)
+ChaoPD(Ps, q = 1, PhyloTree, Normalize = TRUE, CheckArguments = TRUE)
 }
 \arguments{
   \item{Ps}{
     A probability vector, summing to 1.
   }
   \item{q}{
-    A number.
+    A number: the order of diversity. Default is 1.
   }
   \item{PhyloTree}{
     An object of class \code{\link{hclust}} or \code{\link{phylog}}. The tree is not necessarily ultrametric. Computation is must faster if the tree is \code{\link{phylog}} or \code{\link{PPtree}}

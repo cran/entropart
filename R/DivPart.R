@@ -1,5 +1,5 @@
 DivPart <-
-function(q, MC, Biased = TRUE, Correction = "Best", Tree = NULL, Normalize = TRUE, CheckArguments = TRUE) 
+function(q = 1, MC, Biased = TRUE, Correction = "Best", Tree = NULL, Normalize = TRUE, Z = NULL, CheckArguments = TRUE) 
 {
   if (CheckArguments)
     CheckentropartArguments()
@@ -14,12 +14,12 @@ function(q, MC, Biased = TRUE, Correction = "Best", Tree = NULL, Normalize = TRU
 
   # Alpha and beta entropy of communities
   if (Biased) {
-    AlphaEntropy <- AlphaEntropy(MC, q, "None", ppTree, Normalize)
-    GammaEntropy <- GammaEntropy(MC, q, "None", ppTree, Normalize)
-    BetaEntropy  <- BetaEntropy (MC, q, "None", ppTree, Normalize)
+    AlphaEntropy <- AlphaEntropy(MC, q, "None", ppTree, Normalize, Z, CheckArguments=FALSE)
+    GammaEntropy <- GammaEntropy(MC, q, "None", ppTree, Normalize, Z, CheckArguments=FALSE)
+    BetaEntropy  <- BetaEntropy (MC, q, "None", ppTree, Normalize, Z, CheckArguments=FALSE)
   } else {
-    AlphaEntropy <- AlphaEntropy(MC, q, Correction, ppTree, Normalize)
-    GammaEntropy <- GammaEntropy(MC, q, Correction, ppTree, Normalize)
+    AlphaEntropy <- AlphaEntropy(MC, q, Correction, ppTree, Normalize, Z, CheckArguments=FALSE)
+    GammaEntropy <- GammaEntropy(MC, q, Correction, ppTree, Normalize, Z, CheckArguments=FALSE)
     # beta is calculated as gamma-alpha to ensure continuity. Community beta entropy is not calculated.
     BetaEntropy  <- list(Communities = NA, Total = GammaEntropy - AlphaEntropy$Total)      
   }
@@ -46,6 +46,12 @@ function(q, MC, Biased = TRUE, Correction = "Best", Tree = NULL, Normalize = TRU
     ))
   if(!is.null(Tree))
     DivPart$Tree <- deparse(substitute(Tree)) 
+  if(is.null(Z)) {
+    DivPart$Method <- "HCDT"
+  } else {
+    DivPart$Method <- "Similarity-based"
+    DivPart$Z <- deparse(substitute(Z))  
+  }
   class(DivPart) <- "DivPart"
   
   return (DivPart)

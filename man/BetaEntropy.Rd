@@ -7,18 +7,18 @@
   Calculates the unbiased beta entropy of order \eqn{q} between communities.
 }
 \usage{
-BetaEntropy(MC, q, Correction = "Best", Tree = NULL, Normalize = TRUE, 
-  CheckArguments = TRUE)
+BetaEntropy(MC, q = 1, Correction = "Best", Tree = NULL, Normalize = TRUE, 
+  Z = NULL, CheckArguments = TRUE)
 }
 \arguments{
   \item{MC}{
     A \code{\link{MetaCommunity}} object.
   }
   \item{q}{
-    A number: the order of diversity.
+    A number: the order of diversity. Default is 1 for Shannon entropy.
   }
   \item{Correction}{
-    A string containing one of the possible corrections accepted by \code{\link{bcTsallisBeta}}. \code{"Best"} is the default value.
+    A string containing one of the possible corrections accepted by the bias-corrected entropy function (see details) or \code{"None"} or \code{"Best"}, the default value.
   }
   \item{Tree}{
     An object of class \code{\link{hclust}} or \code{\link{phylog}}. The tree must be ultrametric.
@@ -27,12 +27,15 @@ BetaEntropy(MC, q, Correction = "Best", Tree = NULL, Normalize = TRUE,
     If \code{TRUE} (default), the entropy returned by the function is normalized by the height of the tree (it is the weighted average value of the entropy in each slice).\cr
     If \code{FALSE}, it is the unnormalized weighted sum of the results.
   }
+  \item{Z}{
+    A relatedness matrix, \emph{i.e.} a square matrix whose terms are all positive, strictly positive on the diagonal. Generally, the matrix is a similarity matrix, \emph{i.e.} the diagonal terms equal 1 and other terms are between 0 and 1.
+  }
   \item{CheckArguments}{
     Logical; if \code{TRUE}, the function arguments are verified. Should be set to \code{FALSE} to save time when the arguments have been checked elsewhere.
   }
 }
 \details{
-  If \code{Tree} is \code{NULL}, then generalized entropy is calculated by \code{\link{bcTsallisBeta}}, else phylogenetic entropy is calculated by \code{\link{bcPhyloBetaEntropy}}.
+  If \code{Tree} is not \code{NULL}, then phylogenetic entropy is calculated by \code{\link{bcPhyloBetaEntropy}} else if \code{Z} is not \code{NULL}, then similarity-based entropy is calculated by \code{\link{bcHqzBeta}}, else neutral entropy is calculated by \code{\link{bcTsallisBeta}}, else .
   
   The unbiased beta entropy of each community is calculated and summed according to community weights.
 
@@ -43,6 +46,10 @@ BetaEntropy(MC, q, Correction = "Best", Tree = NULL, Normalize = TRUE,
 }
 \references{
   Marcon, E., Scotti, I., Herault, B., Rossi, V. and Lang, G. (2014). Generalization of the partitioning of Shannon diversity. \emph{PLOS One} 9(3): e90289.
+  
+  Marcon, E., Herault, B. (2014). Decomposing  Phylodiversity. \emph{HAL} hal-00946177(version 1).
+
+  Marcon, E. and Zhang, Z. (2014). The decomposition of similarity-based diversity and its bias correction. \emph{HAL} hal-00989454(version 1).
 }
 \author{
   Eric Marcon <Eric.Marcon@ecofog.gf>

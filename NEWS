@@ -1,3 +1,27 @@
+  CHANGES IN entropart VERSION 1.2.0
+  ==================================
+
+NEW FEATURES 
+
+  o Full support of similarity-based diversity added 
+
+IMPROVEMENTS
+
+  o Default values for arguments added whenever possible.
+
+
+  CHANGES IN entropart VERSION 1.1.4
+  ==================================
+
+NEW FEATURES 
+
+  o Zhang(2012) bias correction for Shannon entropy added. 
+  o Zhang and Grabchak (2014) bias correction for Tsallis entropy added. 
+
+BUG CORRECTION 
+
+  o Divest() always calculated neutral diversity of simulated communities so the confidence interval was erroneous for phylodiversity. Corrected.
+
   CHANGES IN entropart VERSION 1.1.3
   ==================================
 

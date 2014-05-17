@@ -1,5 +1,5 @@
 DivProfile <-
-function(q.seq = seq(0, 2, .1), MC, Biased = TRUE, Correction = "Best", Tree = NULL, Normalize = TRUE, CheckArguments = TRUE) 
+function(q.seq = seq(0, 2, .1), MC, Biased = TRUE, Correction = "Best", Tree = NULL, Normalize = TRUE, Z = NULL, CheckArguments = TRUE) 
 {
   if (CheckArguments)
     CheckentropartArguments()
@@ -13,7 +13,7 @@ function(q.seq = seq(0, 2, .1), MC, Biased = TRUE, Correction = "Best", Tree = N
   }  
 
   # Calculate diversity profile
-  Diversity.seq <- sapply(q.seq, DivPart, MC = MC, Biased = Biased, Correction = Correction, Tree = ppTree, Normalize = Normalize, CheckArguments =FALSE)
+  Diversity.seq <- sapply(q.seq, DivPart, MC = MC, Biased = Biased, Correction = Correction, Tree = ppTree, Normalize = Normalize, Z=Z, CheckArguments =FALSE)
 
   # Rearrange complex structures
   Dalpha <- unlist(Diversity.seq["CommunityAlphaDiversities", ])
@@ -39,6 +39,12 @@ function(q.seq = seq(0, 2, .1), MC, Biased = TRUE, Correction = "Best", Tree = N
                     )
   if(!is.null(Tree))
     DivProfile$Tree <- deparse(substitute(Tree)) 
+  if(is.null(Z)) {
+    DivProfile$Method <- "HCDT"
+  } else {
+    DivProfile$Method <- "Similarity-based"
+    DivProfile$Z <- deparse(substitute(Z))  
+  }
   class(DivProfile) <- "DivProfile"
     
   return (DivProfile)

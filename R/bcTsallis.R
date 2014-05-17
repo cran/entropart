@@ -1,13 +1,32 @@
 bcTsallis <-
-function(Ns, q, Correction="Best", CheckArguments = TRUE) 
+function(Ns, q = 1, Correction = "Best", CheckArguments = TRUE) 
 {
   if (CheckArguments)
     CheckentropartArguments()
   
   # No correction
   if (Correction == "None") {
-    return(Tsallis(Ns/sum(Ns), q))
-  }   
+    return(Tsallis(Ns/sum(Ns), q, CheckArguments = FALSE))
+  }
+
+  # Eliminate 0
+  Ns <- Ns[Ns > 0]
+  N <- sum(Ns)
+
+  # Common code for ZhangGrabchak
+  if (Correction == "ZhangGrabchak") {
+    Ps <- Ns/N
+    V <- 1:(N-1)
+    # p_V_Ns is an array, containing (1 - (n_s-1)/(n-j)) for each species (lines) and all j from 1 to n-1
+    p_V_Ns <- outer(Ns, V, function(Ns, j) 1- (Ns-1)/(N-j))
+    # Useful values are products from j=1 to v, so prepare cumulative products
+    p_V_Ns <- apply(p_V_Ns, 1, cumprod)
+    # Sum of products weighted by w_v
+    S_v <- function(s) {
+      Usedv <- 1:(N-Ns[s])
+      return(sum(w_v[Usedv]*p_V_Ns[Usedv, s]))
+    }
+  }
   
   # Shannon
   if (q == 1) {
@@ -16,14 +35,24 @@ function(Ns, q, Correction="Best", CheckArguments = TRUE)
       Grassberger <- bcShannon(Ns, Correction="Grassberger", CheckArguments=FALSE)
       return(max(ChaoShen, Grassberger))
     } else {
-      return (bcShannon(Ns, Correction=Correction, CheckArguments=FALSE))
+      if (Correction == "ZhangGrabchak") {
+        # Weights
+        w_v <- 1/V
+        return(sum(Ps*sapply(1:length(Ns), S_v)))
+      } else {
+        return (bcShannon(Ns, Correction=Correction, CheckArguments=FALSE)) 
+      }
     }
   }
   
   # Not Shannon
-  # Eliminate 0
-  Ns <- Ns[Ns > 0]
-  N <- sum(Ns)
+  if (Correction == "ZhangGrabchak") {
+    # Weights
+    i <- 1:N
+    w_vi <- (i-q)/i
+    w_v <- cumprod(w_vi)
+    return(sum(Ps*sapply(1:length(Ns), S_v))/(1-q))
+  }
   SampleCoverage <- Coverage(Ns, CheckArguments=FALSE)
   if (Correction == "ChaoShen" | Correction == "Best" | Correction == "HTGrassberger") {
     CPs <- SampleCoverage*Ns/N 

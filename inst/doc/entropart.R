@@ -10,7 +10,7 @@ options(prompt = "R> ", continue = "+  ", width = 70, useFancyQuotes = FALSE)
 ###################################################
 ### code chunk number 2: MetaCommunity
 ###################################################
-library(entropart)
+library("entropart")
 (df <- data.frame(C1 = c(10, 10, 10, 10), C2 = c(0, 20, 35, 5), C3 = c(25, 15, 0, 2), row.names = c("sp1", "sp2", "sp3", "sp4")))
 w <- c(1, 2, 1)
 MC <- MetaCommunity(Abundances = df, Weights = w)
@@ -32,7 +32,7 @@ MC$Ps
 ###################################################
 ### code chunk number 5: data
 ###################################################
-data(Paracou618)
+data("Paracou618")
 summary(Paracou618.MC)
 
 
@@ -170,7 +170,7 @@ summary(BetaEntropy(Paracou618.MC, q = 2, Tree = Paracou618.Taxonomy, Correction
 ###################################################
 ### code chunk number 25: divc
 ###################################################
-library(ade4)
+library("ade4")
 divc(as.data.frame(Paracou618.MC$Wi), disc(as.data.frame(Paracou618.MC$Nsi), Paracou618.Taxonomy$Wdist))
 
 
@@ -179,7 +179,7 @@ divc(as.data.frame(Paracou618.MC$Wi), disc(as.data.frame(Paracou618.MC$Nsi), Par
 ###################################################
 DistanceMatrix <- as.matrix(Paracou618.dist)
 Z <- 1 - DistanceMatrix/max(DistanceMatrix)
-Dqz(Paracou618.MC$Ps, q = 2, Z)
+bcDqz(Paracou618.MC$Ns, q = 2, Z)
 
 
 ###################################################
@@ -197,7 +197,14 @@ lnq(Dqz(Paracou618.MC$Ps, q = 2, Z), q = 2)
 
 
 ###################################################
-### code chunk number 29: EntropyCI
+### code chunk number 29: AlphaEntropy
+###################################################
+e <- AlphaEntropy(Paracou618.MC, q = 1, Z = Z)
+summary(e)
+
+
+###################################################
+### code chunk number 30: EntropyCI
 ###################################################
 SimulatedDiversity <- expq(EntropyCI(FUN = bcTsallis, Simulations = 1000, Ns = Paracou618.MC$Ns, q = 2), q = 2)
 bcDiversity(Paracou618.MC$Ns, q = 2)

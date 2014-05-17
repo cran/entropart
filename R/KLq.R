@@ -1,5 +1,5 @@
 KLq <-
-function(Ps, Pexp, q, CheckArguments = TRUE) 
+function(Ps, Pexp, q = 1, CheckArguments = TRUE) 
 {
   if (CheckArguments)
     CheckentropartArguments()

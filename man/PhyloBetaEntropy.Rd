@@ -8,8 +8,8 @@
   Calculates the phylogenetic beta entropy of order \eqn{q} of a a community belonging to a metacommunity.
 }
 \usage{
-PhyloBetaEntropy(Ps, Pexp, q, Tree, Normalize = TRUE, CheckArguments = TRUE)
-bcPhyloBetaEntropy(Ns, Nexp, q, Tree, Normalize = TRUE, Correction = "Best", 
+PhyloBetaEntropy(Ps, Pexp, q = 1, Tree, Normalize = TRUE, CheckArguments = TRUE)
+bcPhyloBetaEntropy(Ns, Nexp, q = 1, Tree, Normalize = TRUE, Correction = "Best", 
   CheckArguments = TRUE)
 }
 \arguments{
@@ -26,7 +26,7 @@ bcPhyloBetaEntropy(Ns, Nexp, q, Tree, Normalize = TRUE, Correction = "Best",
     A numeric vector containing species abundances of the metacommunity.
   }
   \item{q}{
-    A number.
+    A number: the order of entropy. Default is 1.
   }
   \item{Tree}{
     An object of class \code{\link{hclust}} or \code{\link{phylog}}. The tree must be ultrametric.

@@ -1,5 +1,5 @@
 GammaDiversity <-
-function(MC, q, Correction = "Best", Tree = NULL, Normalize = TRUE, CheckArguments = TRUE) 
+function(MC, q = 1, Correction = "Best", Tree = NULL, Normalize = TRUE, Z = NULL, CheckArguments = TRUE) 
 {
   if (CheckArguments) 
     CheckentropartArguments()
@@ -10,7 +10,7 @@ function(MC, q, Correction = "Best", Tree = NULL, Normalize = TRUE, CheckArgumen
   } else {
     Height <- ppTree$Height
   }  
-  GammaEntropy <- GammaEntropy(MC, q, Correction, Tree, Normalize=TRUE)
+  GammaEntropy <- GammaEntropy(MC, q, Correction, ppTree, Z, Normalize=TRUE, CheckArguments=FALSE)
   
   return(expq(GammaEntropy, q) * Height)  
 }

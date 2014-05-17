@@ -1,5 +1,5 @@
 PhyloBetaEntropy <-
-function(Ps, Pexp, q, Tree, Normalize = TRUE, CheckArguments = TRUE) 
+function(Ps, Pexp, q = 1, Tree, Normalize = TRUE, CheckArguments = TRUE) 
 {
   if (CheckArguments)
     CheckentropartArguments()

@@ -14,10 +14,18 @@ function() {
 
   ErrorMessage <- function(Message, Argument) {
     cat(paste(ErrorFunction, Message, deparse(substitute(Argument)), "cannot be:\n"))
-    print(Argument)
+    print(head(Argument))
     stop("Check the function arguments.", call. = FALSE)
   }
 
+  # Correction 
+  if (!is.na(names(Args["Correction"]))) {
+    Correction <- eval(expression(Correction), parent.frame())
+    if (!is.character(Correction)) {
+      ErrorMessage("Correction must be a string.", Correction)
+    }
+  }
+  
   # MC 
   if (!is.na(names(Args["MC"]))) {
     MC <- eval(expression(MC), parent.frame())
@@ -25,14 +33,14 @@ function() {
       ErrorMessage("MC must be a MetaCommunity object.", MC)
     }
   }
-
+  
   # MClist
   if (!is.na(names(Args["MClist"]))) {
     MClist <- eval(expression(MClist), parent.frame())
     if (!is.list(MClist)) {
       ErrorMessage("MClist must be a list.", MClist)
     if (any(!unlist(lapply(MClist, function(x) is.MetaCommunity(x)))))
-      ErrorMessage("All elements of MClist must be of class MEtaCommunity.", MClist)
+      ErrorMessage("All elements of MClist must be of class MetaCommunity.", MClist)
     }
   }
 
