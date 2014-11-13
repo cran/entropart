@@ -20,11 +20,11 @@ function(Ns, q = 1, Correction = "Best", CheckArguments = TRUE)
     # p_V_Ns is an array, containing (1 - (n_s-1)/(n-j)) for each species (lines) and all j from 1 to n-1
     p_V_Ns <- outer(Ns, V, function(Ns, j) 1- (Ns-1)/(N-j))
     # Useful values are products from j=1 to v, so prepare cumulative products
-    p_V_Ns <- apply(p_V_Ns, 1, cumprod)
+    p_V_Ns <- t(apply(p_V_Ns, 1, cumprod))
     # Sum of products weighted by w_v
     S_v <- function(s) {
       Usedv <- 1:(N-Ns[s])
-      return(sum(w_v[Usedv]*p_V_Ns[Usedv, s]))
+      return(sum(w_v[Usedv]*p_V_Ns[s, Usedv]))
     }
   }
   
@@ -48,7 +48,7 @@ function(Ns, q = 1, Correction = "Best", CheckArguments = TRUE)
   # Not Shannon
   if (Correction == "ZhangGrabchak") {
     # Weights
-    i <- 1:N
+    i <- 1:(N-1)
     w_vi <- (i-q)/i
     w_v <- cumprod(w_vi)
     return(sum(Ps*sapply(1:length(Ns), S_v))/(1-q))

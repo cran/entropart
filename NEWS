@@ -1,3 +1,32 @@
+  CHANGES IN entropart VERSION 1.2.1
+  ==================================
+
+NEW FEATURES 
+
+  o Zhang and Grabchak (2014) bias correction for Shannon beta entropy added.
+  o Unbiased estimator of Rao's entropy added (bcRao).
+
+BUG CORRECTION 
+
+  o DqZ() and Hqz() returned an error if all probability values were 0 except one.
+
+IMPROVEMENTS
+
+  o Improved readability of error messages for bad arguments.
+  o Improved formating of summmary.DivPart(). Lines were too long.
+  o Improved legend for the x-axis of plot.DivPart ("alpha and gamma" instead of "alpha/gamma").
+  o Improved support of PhyloValue objects (summary added).
+  o Improved help for MetaCommunity.
+
+
+  CHANGES IN entropart VERSION 1.2.0
+  ==================================
+
+BUG CORRECTION 
+
+  o ChaoPD() returned an incorrect value when q=0 and some probabilities =0
+
+
   CHANGES IN entropart VERSION 1.2.0
   ==================================
 

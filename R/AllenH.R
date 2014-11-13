@@ -34,7 +34,7 @@ function(Ps, q = 1, PhyloTree, Normalize = TRUE, CheckArguments = TRUE)
   # Eliminate "Root"
   Branches <- Branches[-length(Branches)]
   # Get unnormalized probabilities p(b)
-  Branches[names(Ps)]=Ps
+  Branches[names(Ps)] <- Ps
   for (NodeName in names(phyTree$nodes[-length(phyTree$nodes)])) {
     Branches[NodeName] <- sum(Branches[phyTree$parts[[NodeName]]])
   }

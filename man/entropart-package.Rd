@@ -3,10 +3,10 @@
 \alias{entropart}
 \docType{package}
 \title{
-  Entropy partitioning to measure diversity
+  Entropy Partitioning to Measure Diversity
 }
 \description{
-  This package provides a full set of functions to calculate alpha, beta and gamma diversity of communities, including phylogenetic diversity.
+  Functions to calculate alpha, beta and gamma diversity of communities, including phylogenetic and functional diversity.
   
   Estimation-bias corrections are available.
 }
@@ -14,8 +14,8 @@
   \tabular{ll}{
     Package: \tab entropart\cr
     Type: \tab Package\cr
-    Version: \tab 1.2.0\cr
-    Date: \tab 2014-05-16\cr
+    Version: \tab 1.2.1\cr
+    Date: \tab 2014-11-12\cr
     License: \tab GNU General Public License\cr
   }
 

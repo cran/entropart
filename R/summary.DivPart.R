@@ -7,11 +7,11 @@ function(object, ...) {
   cat("\n")
   
   if (!is.null(object$Tree)) {
-    cat("Phylogenetic or functional diversity was calculated according to the tree", object$Tree, "\n", fill=TRUE)
+    cat("Phylogenetic or functional diversity was calculated\naccording to the tree", object$Tree, "\n", fill=TRUE)
     cat("Diversity is", ifelse(object$Normalized, "", "not"), "normalized\n", fill=TRUE)
   }
   if (!is.null(object$Z)) {
-    cat("Phylogenetic or functional entropy was calculated according to the similarity matrix", object$Z, "\n", fill=TRUE)
+    cat("Phylogenetic or functional entropy was calculated\naccording to the similarity matrix", object$Z, "\n", fill=TRUE)
   }
 
   cat("Alpha diversity of communities:", "\n")

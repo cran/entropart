@@ -19,8 +19,8 @@ function(object, ...) {
   cat("Gamma diversity of the metacommunity:", "\n")
   print(object$GammaDiversity)
   
-  cat("Quantiles of simulations (alpha, beta and gamma diviersity):\n")
-  quant <- c(0, 0.1, 0.5, 0.1, seq(0.25, 0.75, 0.25), 0.9, 0.95, 0.99, 1)
+  cat("Quantiles of simulations (alpha, beta and gamma diversity):\n")
+  quant <- c(0, 0.01, 0.025, 0.05, 0.1, seq(0.25, 0.75, 0.25), 0.9, 0.95, 0.975, 0.99, 1)
   print(quantile(object$SimulatedDiversity["Alpha", ], probs = quant))
   print(quantile(object$SimulatedDiversity["Beta", ], probs = quant))
   print(quantile(object$SimulatedDiversity["Gamma", ], probs = quant))

@@ -60,11 +60,12 @@ is.MetaCommunity(x)
   Files can be read and data imported by code such as:
   
   \preformatted{
-  Abundances <- read.csv(file="Abundances.csv")
+  Abundances <- read.csv(file="Abundances.csv", row.names = 1)
   Weights <- read.csv(file="Weights.csv")
   MC <- MetaCommunity(Abundances, Weights)
   }
 
+  The number of individuals of the meta-community \code{$N} is not explicitly specified. It is calculated as the number of individuals of the lower-weighted community divided by its weight. For example, if the community with the smallest weight (5\%) contains 100 individuals, the total number of individuals is set to 2000. The number of individuals per species of the meta-community \code{$Ns} is the product of \code{$N} and \code{$Ps}. In the special case where weights are proportional to the number of individuals of communities, the resulting number of individuals of the meta-community is simply the sum of the number of individuals of communities. In other cases, the numbers of individuals of the meta-community may not be integers. This does not appear to be a problem.
 }
 \value{
 An object of class \strong{MetaCommunity} is a list:
@@ -98,6 +99,6 @@ An object of class \strong{MetaCommunity} is a list:
     BCI.df <- as.data.frame(t(BCI))
     # Create a metacommunity object from a matrix of abundances and a vector of weights
     # (here, all plots have a weight equal to 1)
-    MC <- MetaCommunity(BCI.df, rep(1,50))
+    MC <- MetaCommunity(BCI.df)
   }
 }

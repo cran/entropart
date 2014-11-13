@@ -70,11 +70,11 @@ DivPart(q = 1, MC, Biased = TRUE, Correction = "Best", Tree = NULL,
    \item{Normalized}{Logical. Indicates whether phylodiversity is normalized or proportional to the height of the tree.}
   \item{Z}{The matrix used to calculate similarity-based entropy.}
   \item{TotalAlphaDiversity}{The alpha diversity of communities.}
-  \item{BetaDiversity}{The beta diversity of communities.}
+  \item{TotalBetaDiversity}{The beta diversity of communities.}
   \item{GammaDiversity}{The gamma diversity of the metacommunity.}
   \item{CommunityAlphaDiversities}{A vector containing the alpha diversity of each community.}
   \item{TotalAlphaEntropy}{The alpha entropy of communities.}
-  \item{BetaEntropy}{The beta entropy of communities.}
+  \item{TotalBetaEntropy}{The beta entropy of communities.}
   \item{GammaEntropy}{The gamma entropy of the metacommunity.}
   \item{CommunityAlphaEntropies}{A vector containing the alpha entropy of each community.}
   

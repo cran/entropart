@@ -19,7 +19,7 @@ function(Ps, q = 1, PhyloTree, Normalize = TRUE, CheckArguments = TRUE)
     }
   }
   
-  # Verifiy all species are inthe tree
+  # Verifiy all species are in the tree
   SpeciesNotFound <- setdiff(names(Ps), names(phyTree$leaves))
   if (length(SpeciesNotFound) > 0) {
     stop(paste("Species not found in the tree: ", SpeciesNotFound, collapse = "; "))
@@ -47,6 +47,10 @@ function(Ps, q = 1, PhyloTree, Normalize = TRUE, CheckArguments = TRUE)
   # Normalize to get l(b)
   Tbar <- mean(phyTree$droot[names(phyTree$leaves)])
   Lengths <- Lengths/Tbar
+
+  # Eliminate zeros
+  Lengths <- Lengths[Branches != 0]
+  Branches <- Branches[Branches != 0]
 
   # Return normalized diversity
   if (q == 1) {

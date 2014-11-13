@@ -25,14 +25,14 @@ bcShannonBeta(Ns, Nexp, Correction = "Best", CheckArguments = TRUE)
     A numeric vector containing species abundances of the metacommunity.
   }
   \item{Correction}{
-   A string containing one of the possible corrections: currently, only \code{"ChaoShen"}, identical to \code{"Best"}.
+   A string containing one of the possible corrections: currently, \code{"ChaoShen"} (Marcon \emph{et al.}, 2012) equivalent to \code{"Best"}, and \code{"ZhangGrabchak"} (Zhang and Grabchak, 2014).
   }
   \item{CheckArguments}{
     Logical; if \code{TRUE}, the function arguments are verified. Should be set to \code{FALSE} to save time when the arguments have been checked elsewhere.
   }
 }
 \details{
-  The derivation of Shannon beta entropy can be found in Marcon et al. (2012).
+  The derivation of Shannon beta entropy can be found in Marcon \emph{et al.} (2012).
   
   Bias correction requires the number of individuals to estimate sample \code{\link{Coverage}}. Use \code{bcShannonBeta} and choose the \code{Correction}.
 
@@ -42,6 +42,8 @@ bcShannonBeta(Ns, Nexp, Correction = "Best", CheckArguments = TRUE)
 }
 \references{
   Marcon, E., Herault, B., Baraloto, C. and Lang, G. (2012). The Decomposition of Shannon's Entropy and a Confidence Interval for Beta Diversity. \emph{Oikos} 121(4): 516-522.
+  
+  Zhang, Z. and Grabchak M. (2014). Nonparametric Estimation of Kullback-Leibler Divergence. \emph{Neural computation} in press.
 }
 \author{
   Eric Marcon <Eric.Marcon@ecofog.gf>
@@ -63,6 +65,6 @@ bcShannonBeta(Ns, Nexp, Correction = "Best", CheckArguments = TRUE)
   Ns <- Paracou618.MC$Ns
   # Abundances in the first plot
   Ns1 <- Paracou618.MC$Nsi[, 1]
-  # Unbiased Shannon beta entropy of the plot
+  # Reduced-bias estimator of Shannon beta entropy of the plot
   bcShannonBeta(Ns1, Ns)
 }

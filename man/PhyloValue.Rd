@@ -1,13 +1,18 @@
-\name{plot.PhyloValue}
+\name{PhyloValue}
+\alias{PhyloValue}
+\alias{is.PhyloValue}
 \alias{plot.PhyloValue}
+\alias{summary.PhyloValue}
 \title{
-  Plot phylogenetic entropy of diversity.
+  Phylogenetic entropy of diversity.
 }
 \description{
-  Plots entropy or diversity against the height of the phylogenetic or functional tree.
+  Entropy or diversity against the height of the phylogenetic or functional tree.
 }
 \usage{
+is.PhyloValue(x)
 \method{plot}{PhyloValue}(x, xlab = expression(italic("T")), ylab = NULL, main = NULL, \dots)
+\method{summary}{PhyloValue}(object, \dots)
 }
 \arguments{
   \item{x}{
@@ -22,9 +27,15 @@
   \item{main}{
     The main title of the plot. if \code{NULL} (by default), a default value is used.
   }
+  \item{object}{
+    A \code{PhyloValue} object to be summarized.
+  }
   \item{\dots}{
     Additional arguments to be passed to \code{\link{plot}}.
   }
+}
+\details{
+  \code{PhyloValue} objects are the result of \code{\link{PhyloApply}}.
 }
 \author{
   Eric Marcon <Eric.Marcon@ecofog.gf>

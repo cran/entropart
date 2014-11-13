@@ -5,11 +5,11 @@ function (Ns, q = 1, Z = diag(length(Ns)), Correction = "Best", CheckArguments =
     CheckentropartArguments()
   # If names are missing, the probability vector and the similarity vector are assumed to be in the same order
   if (is.null(colnames(Z)) | is.null(names(Ns))) {
-    if (ncol(Z) != length(Ns))
+    if (ncol(as.matrix(Z)) != length(Ns)) # as.matrix(Z) in case it has been reduced to a single value because of zeros
       # The matrix is square (this has been checked)
       stop("The matrix dimension must equal the abundance vector length.")    
     # Eliminate zeros
-    Z <- Z[Ns != 0, Ns != 0]
+    Z <- as.matrix(Z)[Ns != 0, Ns != 0]
     Ns <- Ns[Ns != 0]
   } else { # Matrix and Ns are be named.  
     # Eliminate zeros
@@ -17,7 +17,7 @@ function (Ns, q = 1, Z = diag(length(Ns)), Correction = "Best", CheckArguments =
     if (length(setdiff(names(Ns), colnames(Z))) != 0)
       # The matrix is square (this has been checked)
       stop("Some species are missing in the similarity matrix.")    
-    Z <- Z[names(Ns), names(Ns)]
+    Z <- as.matrix(Z)[names(Ns), names(Ns)]
   }
   
   Ps <- Ns/sum(Ns)

@@ -21,6 +21,8 @@ function(Tree, FUN, NorP, Normalize = TRUE, ..., CheckArguments = TRUE)
       NorPisVector <- (dim(NorP)[2] == 1)
     } 
   }
+  # Save the name of NorP before manipulating it
+  NorPName <- deparse(substitute(NorP))
   if (NorPisVector) {
     NorP <- matrix(NorP, nrow = length(NorP), ncol = 2, dimnames = list(names(NorP), c("NorP", "Dummy")))
   str}
@@ -80,7 +82,7 @@ function(Tree, FUN, NorP, Normalize = TRUE, ..., CheckArguments = TRUE)
   }
   # Return a weighted average of the results in each slice
   Value <- list(
-    Distribution = deparse(substitute(NorP)),
+    Distribution = NorPName,
     Function = deparse(substitute(FUN)),
     Tree = deparse(substitute(Tree)),
     Normalized = Normalize,

@@ -13,8 +13,9 @@ function() {
   Args <- formals(match.fun(ParentFunction))
 
   ErrorMessage <- function(Message, Argument) {
-    cat(paste(ErrorFunction, Message, deparse(substitute(Argument)), "cannot be:\n"))
+    cat(deparse(substitute(Argument)), "cannot be:\n")
     print(head(Argument))
+    cat(paste(ErrorFunction, Message))
     stop("Check the function arguments.", call. = FALSE)
   }
 

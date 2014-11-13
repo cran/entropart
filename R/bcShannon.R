@@ -12,8 +12,8 @@ function(Ns, Correction = "Best", CheckArguments = TRUE)
   # Eliminate 0
   Ns <- Ns[Ns > 0]
   Nrecords <- sum(Ns)
-  SampleCoverage <- Coverage(Ns, CheckArguments=FALSE)
   if (Correction == "ChaoShen") {
+    SampleCoverage <- Coverage(Ns, CheckArguments=FALSE)
     CPs <- Ns/Nrecords*SampleCoverage 
     ChaoShen <- sum(-CPs*log(CPs)/(1-(1-CPs)^Nrecords))
   }
@@ -82,10 +82,10 @@ function(Ns, Correction = "Best", CheckArguments = TRUE)
     # p_V_Ps is an array, containing (1 - p_s - j/n) for each species (lines) and all j from 0 to n-2. Because array indexation starts from 1 in R, j is replaced by j-1.
     p_V_Ps <- outer(Ps, V, function(Ps, j) 1 -Ps -(j-1)/Nrecords)
     # Useful values are products from j=0 to v, so prepare cumulative products
-    p_V_Ps <- apply(p_V_Ps, 1, cumprod)
+    p_V_Ps <- t(apply(p_V_Ps, 1, cumprod))
     # Sum of products, weighted by p_s
     S_s <- function(v) {
-      sum(Ps*p_V_Ps[v, 1:length(Ps)])
+      sum(Ps*p_V_Ps[1:length(Ps), v])
     }
     # Apply S_s to all values of v. Use logs or w_v goes to Inf.
     return(sum(exp(lnw_v + log(sapply(V, S_s)))))

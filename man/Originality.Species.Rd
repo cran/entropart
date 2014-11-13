@@ -21,14 +21,19 @@ Originality.Species(Tree, q = 2, CheckArguments = TRUE)
   }
 }
 \details{
-  The originality of species is their frequency resulting in the maximum value of generalized entropy of order \eqn{q}.
-  Originality was introduced by Pavoine et al. (2005) for Rao quadratic entropy (\eqn{q=2}). It can be calculated exactly by \code{\link{originality}}. For other orders of diversity, numeric optimization is required. 
+  The originality of species is their frequency resulting in the maximum value of generalized entropy of order \eqn{q} (not that of similarity-based diversity) considering an ultrametric tree.
+  
+  Originality was introduced by Pavoine \emph{et al.} (2005) for Rao quadratic entropy (\eqn{q=2}). It can be calculated exactly by \code{\link{originality}}. For other orders of diversity, numeric optimization is required.
+  
+  Leinster (2009) showed that the distribution maximizing \code{\link{Dqz}} does not depend of \eqn{q}. It can be calculated exactly using \code{\link{originality}} after transforming the similarity matrix into a distance matrix, supposing the distance matrix is ultrametric.
 }
 \value{
   A named vector of frequencies.  
 }
 \references{
-  Pavoine, S., Ollier, S. and Dufour, A.-B. (2005). Is the originality of a species measurable? \emph{Ecology Letters} 8: 579-586.
+Leinster, T. (2009) A maximum entropy theorem with applications to the measurement of biodiversity. \emph{ArXiv} 0910.0906: 1-26.
+
+Pavoine, S., Ollier, S. and Dufour, A.B. (2005). Is the originality of a species measurable? \emph{Ecology Letters} 8: 579-586.
 }
 \author{
   Eric Marcon <Eric.Marcon@ecofog.gf>
