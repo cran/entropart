@@ -1,5 +1,6 @@
 \name{DivPart}
 \alias{DivPart}
+\alias{is.DivPart}
 \alias{plot.DivPart}
 \alias{summary.DivPart}
 \title{
@@ -11,6 +12,7 @@
 \usage{
 DivPart(q = 1, MC, Biased = TRUE, Correction = "Best", Tree = NULL,
   Normalize = TRUE, Z = NULL, CheckArguments = TRUE)
+is.DivPart(x)
 \method{plot}{DivPart}(x, \dots)
 \method{summary}{DivPart}(object, \dots)
 }
@@ -67,7 +69,7 @@ DivPart(q = 1, MC, Biased = TRUE, Correction = "Best", Tree = NULL,
   \item{Correction}{The estimation bias correction used to calculate diversity.}
   \item{Method}{The method used to calculate entropy ("HCDT", "Similarity-based").}
   \item{Tree}{The phylogenetic or functional tree used to calculate phylodiversity.}
-   \item{Normalized}{Logical. Indicates whether phylodiversity is normalized or proportional to the height of the tree.}
+  \item{Normalized}{Logical. Indicates whether phylodiversity is normalized or proportional to the height of the tree.}
   \item{Z}{The matrix used to calculate similarity-based entropy.}
   \item{TotalAlphaDiversity}{The alpha diversity of communities.}
   \item{TotalBetaDiversity}{The beta diversity of communities.}
@@ -85,9 +87,9 @@ DivPart(q = 1, MC, Biased = TRUE, Correction = "Best", Tree = NULL,
   
   Marcon, E., Scotti, I., Herault, B., Rossi, V. and Lang, G. (2014). Generalization of the partitioning of Shannon diversity. \emph{PLOS One} 9(3): e90289.
   
-  Marcon, E., Herault, B. (2014). Decomposing  Phylodiversity. \emph{HAL} hal-00946177(version 1).
+  Marcon, E., Herault, B. (2015). Decomposing  Phylodiversity. \emph{Methods in Ecology and Evolution} 6(3): 333-339.
 
-  Marcon, E. and Zhang, Z. (2014). The decomposition of similarity-based diversity and its bias correction. \emph{HAL} hal-00989454(version 1).
+  Marcon, E., Zhang, Z. and Herault, B. (2014). The decomposition of similarity-based diversity and its bias correction. \emph{HAL} hal-00989454(version 1).
 }
 \author{
   Eric Marcon <Eric.Marcon@ecofog.gf> and Bruno Herault <Bruno.Herault@ecofog.gf>

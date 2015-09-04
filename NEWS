@@ -1,3 +1,21 @@
+  CHANGES IN entropart VERSION 1.3.1
+  ==================================
+
+NEW FEATURES 
+
+  o Abundance and probability vector objects. See ?SpeciesDistribution
+  o Hurlbert diversity. See ?Hurlbert
+  o Optimal.Similarity.
+  o Miller-Madow estimator of entropy (Miller, 1955) added in bcShannon().
+  o Chao and Jost (2015) estimator of diversity added in bcTsallis() and bcDiversity(). New "best" estimator.
+  o Chao et al. (2015) probability estimation of observed species. See ?TunedPs
+  o Estimators of the number of species. See ?Richness
+  o Abundance Frequency Count of species. See ?AbdFreqCount
+  o Community profiles can be calculated with confidence intervals. See ?CommunityProfile
+  o Random Communities. See ?rCommunity
+
+
+
   CHANGES IN entropart VERSION 1.2.1
   ==================================
 

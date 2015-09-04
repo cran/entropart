@@ -7,7 +7,8 @@
   Resamples a community by Monte-Carlo simulations of a multinomial distribution and returns a vector of entropy values to calculate confidence intervals.
 }
 \usage{
-EntropyCI(FUN, Simulations = 100, Ns, \dots, CheckArguments = TRUE)
+EntropyCI(FUN, Simulations = 100, Ns, BootstrapMethod = "Chao2015", 
+    \dots, CheckArguments = TRUE)
 }
 \arguments{
   \item{FUN}{
@@ -19,6 +20,9 @@ EntropyCI(FUN, Simulations = 100, Ns, \dots, CheckArguments = TRUE)
   \item{Ns}{
     A numeric vector containing species abundances.
   }
+  \item{BootstrapMethod}{
+    The method used to obtain the probabilities to generate bootstrapped communities from observed abundances. See \code{\link{rCommunity}}.
+  }
   \item{\dots}{
     Additional arguments to be passed to \code{FUN}.
   }
@@ -27,7 +31,7 @@ EntropyCI(FUN, Simulations = 100, Ns, \dots, CheckArguments = TRUE)
   }
 }
 \details{
-  This function is used to obtain the distribution of entropy and eventually calculate confidence intervals. It draws simulated communities according to a multinomial distribution with the same number of individuals and probabilities as the actual community. It calculates the entropy of each simulated community. Last, it recenters the distribution of entropy values arounf the actual value of entropy according to Marcon et al. (2012): the estimation bias of simulated communities entropy can not be corrected analytically, but it does not affect the distribution shape.
+  This function is used to obtain the distribution of entropy and eventually calculate confidence intervals. It draws simulated communities according to a multinomial distribution with the same number of individuals and probabilities as the actual community. It calculates the entropy of each simulated community. Last, it recenters the distribution of entropy values arounf the actual value of entropy according to Marcon \emph{et al.} (2012): the estimation bias of simulated communities entropy can not be corrected analytically, but it does not affect the distribution shape.
   
   Diversity can not be recentered this way so diversity function should not be used. Unexpected results will be obtained if inappropriate functions are used.
 }
@@ -43,13 +47,13 @@ EntropyCI(FUN, Simulations = 100, Ns, \dots, CheckArguments = TRUE)
 \examples{
   # Load Paracou data (number of trees per species in two 1-ha plot of a tropical forest)
   data(Paracou618)
-  # Abundance
-  Ns <- Paracou618.MC$Ns
+  # Abundance (all estimators will include bias corrrection)
+  Ns <- as.AbdVector(Paracou618.MC$Ns)
   q <- 1
   # Estimate entropy and transform it into diversity
-  RealEst <- expq(bcTsallis(Ns, q), q)
+  RealEst <- expq(Tsallis(Ns, q), q)
   # Transform the distribution of Tsallis entropy into diversity
-  SimulatedDiversity <- expq(EntropyCI(bcTsallis, Simulations=1000, Ns, q), q)
+  SimulatedDiversity <- expq(EntropyCI(Tsallis, Simulations=50, Ns, q=q), q)
   # Figure
   plot(density(SimulatedDiversity), col="black", lwd=2, main="", xlab ="Diversity")
   abline(v=RealEst, col="red", lwd=2, lty=2)

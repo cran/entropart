@@ -13,7 +13,7 @@ function(Tree)
     if (inherits(Tree, "hclust")) {
       hTree <- Tree
       # build a phylog object to use $droot later
-      phyTree <- hclust2phylog(Tree)
+      phyTree <- ade4::hclust2phylog(Tree)
     } else {
       stop("Tree must be an object of class phylog or hclust")
     }

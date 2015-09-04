@@ -1,6 +1,10 @@
 \name{HqzBeta}
 \alias{HqzBeta}
 \alias{bcHqzBeta}
+\alias{HqzBeta.ProbaVector}
+\alias{HqzBeta.AbdVector}
+\alias{HqzBeta.integer}
+\alias{HqzBeta.numeric}
 \title{
   Similarity-based beta entropy of a community
 }
@@ -8,9 +12,19 @@
   Calculates the similarity-based beta entropy of order \eqn{q} of a community belonging to a metacommunity.
 }
 \usage{
-HqzBeta(Ps, Pexp = NULL, q = 1, Z = diag(length(Ps)), CheckArguments = TRUE) 
+HqzBeta(NorP, NorPexp = NULL, q = 1, Z = diag(length(Ps)), Correction = "Best", 
+  CheckArguments = TRUE, 
+  Ps = NULL, Ns = NULL, Pexp = NULL, Nexp = NULL)
 bcHqzBeta(Ns, Nexp = NULL, q = 1, Z = diag(length(Ns)), Correction = "Best",
           CheckArguments = TRUE)
+\method{HqzBeta}{ProbaVector}(NorP, NorPexp = NULL, q = 1, Z = diag(length(Ps)), Correction = "Best", 
+  CheckArguments = TRUE, Ps = NULL, Ns = NULL, Pexp = NULL, Nexp = NULL)
+\method{HqzBeta}{AbdVector}(NorP, NorPexp = NULL, q = 1, Z = diag(length(Ps)), Correction = "Best", 
+  CheckArguments = TRUE, Ps = NULL, Ns = NULL, Pexp = NULL, Nexp = NULL)
+\method{HqzBeta}{integer}(NorP, NorPexp = NULL, q = 1, Z = diag(length(Ps)), Correction = "Best", 
+  CheckArguments = TRUE, Ps = NULL, Ns = NULL, Pexp = NULL, Nexp = NULL)
+\method{HqzBeta}{numeric}(NorP, NorPexp = NULL, q = 1, Z = diag(length(Ps)), Correction = "Best", 
+  CheckArguments = TRUE, Ps = NULL, Ns = NULL, Pexp = NULL, Nexp = NULL) 
 }
 \arguments{
   \item{Ps}{
@@ -24,6 +38,12 @@ bcHqzBeta(Ns, Nexp = NULL, q = 1, Z = diag(length(Ns)), Correction = "Best",
   }
   \item{Nexp}{
     A numeric vector containing species abundances of the metacommunity.
+  }
+  \item{NorP}{
+    A numeric vector, an integer vector, an abundance vector (\code{\link{AbdVector}}) or a probability vector (\code{\link{ProbaVector}}). Contains either abundances or probabilities of the community.
+  }
+  \item{NorPexp}{
+    A numeric vector, an integer vector, an abundance vector (\code{\link{AbdVector}}) or a probability vector (\code{\link{ProbaVector}}). Contains either abundances or probabilities of the metacommunity.
   }
   \item{q}{
   A number, the order of diversity. Default is 1.
@@ -39,11 +59,13 @@ bcHqzBeta(Ns, Nexp = NULL, q = 1, Z = diag(length(Ns)), Correction = "Best",
   }
 }
 \details{
-  The derivation of similarity-based beta entropy can be found in Marcon and Zhang (2014).
+  The derivation of similarity-based beta entropy can be found in Marcon \emph{et al.} (2014).
   
   Bias correction requires the number of individuals.
 
   Note that beta entropy value is related to alpha entropy (if \eqn{q} is not 1) and cannot be compared accross communities (Jost, 2007). Beta entropy of a community is not meaningful in general, do rather calculate the \code{\link{BetaDiversity}} of the metacommunity.
+  
+  The functions are designed to be used as simply as possible. \code{HqzBeta} is a generic method. If its first argument is an abundance vector, an integer vector or a numeric vector which does not sum to 1, the bias corrected function \code{bcHqzBeta} is called. Explicit calls to \code{bcHqzBeta} (with bias correction) or to \code{HqzBeta.ProbaVector} (without correction) are possible to avoid ambiguity. The \code{.integer} and \code{.numeric} methods accept \code{Ps} or \code{Ns} arguments instead of \code{NorP} for backward compatibility.
 }
 \value{
   A number equal to the calculated entropy.
@@ -51,7 +73,7 @@ bcHqzBeta(Ns, Nexp = NULL, q = 1, Z = diag(length(Ns)), Correction = "Best",
 \references{
   Jost (2007), Partitioning diversity into independent alpha and beta components. \emph{Ecology} 88(10): 2427-2439.
 
-  Marcon, E. and Zhang, Z. (2014). The decomposition of similarity-based diversity and its bias correction. \emph{HAL} hal-00989454(version 1).
+  Marcon, E., Zhang, Z. and Herault, B. (2014). The decomposition of similarity-based diversity and its bias correction. \emph{HAL} hal-00989454(version 1).
 }
 \author{
   Eric Marcon <Eric.Marcon@ecofog.gf>
@@ -60,13 +82,13 @@ bcHqzBeta(Ns, Nexp = NULL, q = 1, Z = diag(length(Ns)), Correction = "Best",
   # Load Paracou data (number of trees per species in two 1-ha plot of a tropical forest)
   data(Paracou618)
   # Ps is the vector of probabilities
-  Ps <- Paracou618.MC$Ps
+  Ps <- as.ProbaVector(Paracou618.MC$Ps)
   # Probability distribution of the first plot
-  Ps1 <- Paracou618.MC$Psi[, 1]
+  Ps1 <- as.ProbaVector(Paracou618.MC$Psi[, 1])
   # Prepare the similarity matrix
   DistanceMatrix <- as.matrix(Paracou618.dist)
   # Similarity can be 1 minus normalized distances between species
   Z <- 1 - DistanceMatrix/max(DistanceMatrix)
   # Divergence of order 2 between plot 1 and the whole forest
-  HqzBeta(Ps1, Ps, 2, Z)
+  HqzBeta(Ps1, Ps, q=2, Z)
 }

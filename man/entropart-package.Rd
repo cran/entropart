@@ -14,8 +14,8 @@
   \tabular{ll}{
     Package: \tab entropart\cr
     Type: \tab Package\cr
-    Version: \tab 1.2.1\cr
-    Date: \tab 2014-11-12\cr
+    Version: \tab 1.3.1\cr
+    Date: \tab 2014-09-04\cr
     License: \tab GNU General Public License\cr
   }
 
@@ -58,8 +58,7 @@
   such as \code{\link{bcShannon}} (to calculate the unbiased estimator of Shannon entropy of a community) or \code{\link{Diversity}} (to calculate the 
   true diversity of a community).
   
-  Phylogenetic entropy and diversity can be calculated if a phylogenetic (or functional), ultrametric tree is provided. See \code{\link{PhyloEntropy}},
-  \code{\link{Rao}} for examples of entropy and \code{\link{bcPhyloDiversity}} to calculate phylodiversity, with bias correction. Similarity-based diversity is calculated with \code{\link{Dqz}} or (with bias correction) \code{\link{bcDqz}}, based on a   similarity matrix.
+  Phylogenetic entropy and diversity can be calculated if a phylogenetic (or functional), ultrametric tree is provided. See \code{\link{PhyloEntropy}}, \code{\link{Rao}} for examples of entropy and \code{\link{bcPhyloDiversity}} to calculate phylodiversity, with bias correction. Similarity-based diversity is calculated with \code{\link{Dqz}} or (with bias correction) \code{\link{bcDqz}}, based on a similarity matrix.
 
 }
 \author{
@@ -67,9 +66,9 @@
   Bruno Herault
 }
 \references{
-  Marcon, E. and Zhang, Z. (2014). The decomposition of similarity-based diversity and its bias correction. \emph{HAL} hal-00989454(version 1).
+  Marcon, E., Zhang, Z. and Herault, B. (2014). The decomposition of similarity-based diversity and its bias correction. \emph{HAL} hal-00989454(version 1).
     
-  Marcon, E. and Herault, B. (2014). Decomposing  Phylodiversity. \emph{HAL} hal-00946177(version 1).
+  Marcon, E., Herault, B. (2015). Decomposing  Phylodiversity. \emph{Methods in Ecology and Evolution} 6(3): 333-339.
   
   Marcon, E., Scotti, I., Herault, B., Rossi, V. and Lang G. (2014). Generalization of the partitioning of Shannon diversity. \emph{PLOS One} 9(3): e90289.
   

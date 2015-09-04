@@ -1,6 +1,10 @@
 \name{PhyloEntropy}
 \alias{PhyloEntropy}
 \alias{bcPhyloEntropy}
+\alias{PhyloEntropy.ProbaVector}
+\alias{PhyloEntropy.AbdVector}
+\alias{PhyloEntropy.integer}
+\alias{PhyloEntropy.numeric}
 \alias{is.PhyloEntropy}
 \alias{summary.PhyloEntropy}
 \title{
@@ -10,9 +14,18 @@
   Calculates the phylogenetic entropy of order \eqn{q} of a probability vector.
 }
 \usage{
-PhyloEntropy(Ps, q = 1, Tree, Normalize = TRUE, CheckArguments = TRUE)
+PhyloEntropy(NorP, q = 1, Tree, Normalize = TRUE, Correction = "Best", 
+  CheckArguments = TRUE, Ps = NULL, Ns = NULL)
 bcPhyloEntropy(Ns, q = 1, Tree, Normalize = TRUE, Correction = "Best", 
   CheckArguments = TRUE)
+\method{PhyloEntropy}{ProbaVector}(NorP, q = 1, Tree, Normalize = TRUE, Correction = "Best", 
+  CheckArguments = TRUE, Ps = NULL, Ns = NULL)
+\method{PhyloEntropy}{AbdVector}(NorP, q = 1, Tree, Normalize = TRUE, Correction = "Best", 
+  CheckArguments = TRUE, Ps = NULL, Ns = NULL)
+\method{PhyloEntropy}{integer}(NorP, q = 1, Tree, Normalize = TRUE, Correction = "Best", 
+  CheckArguments = TRUE, Ps = NULL, Ns = NULL)
+\method{PhyloEntropy}{numeric}(NorP, q = 1, Tree, Normalize = TRUE, Correction = "Best", 
+  CheckArguments = TRUE, Ps = NULL, Ns = NULL) 
 is.PhyloEntropy(x)
 \method{summary}{PhyloEntropy}(object, \dots)
 }
@@ -22,6 +35,9 @@ is.PhyloEntropy(x)
   }
   \item{Ns}{
     A numeric vector containing species abundances.
+  }
+  \item{NorP}{
+    A numeric vector, an integer vector, an abundance vector (\code{\link{AbdVector}}) or a probability vector (\code{\link{ProbaVector}}). Contains either abundances or probabilities.
   }
   \item{q}{
     A number: the order of entropy. Default is 1.
@@ -43,7 +59,7 @@ is.PhyloEntropy(x)
     An object to be tested or plotted
   }
   \item{object}{
-    A \code{PhyloDiversity} object to be summarized.
+    A \code{PhyloEntropy} object to be summarized.
   }
   \item{\dots}{
     Additional arguments to be passed to the generic methods.
@@ -57,6 +73,8 @@ is.PhyloEntropy(x)
   Intervals separate two cuts in a tree: no node is found at heights contained in an interval.
   
   Bias correction requires the number of individuals to estimate sample \code{\link{Coverage}}. Use \code{bcPhyloEntropy} and choose the \code{Correction}.
+
+  The functions are designed to be used as simply as possible. \code{PhyloEntropy} is a generic method. If its first argument is an abundance vector, an integer vector or a numeric vector which does not sum to 1, the bias corrected function \code{bcPhyloEntropy} is called. Explicit calls to \code{bcPhyloEntropy} (with bias correction) or to \code{PhyloEntropy.ProbaVector} (without correction) are possible to avoid ambiguity. The \code{.integer} and \code{.numeric} methods accept \code{Ps} or \code{Ns} arguments instead of \code{NorP} for backward compatibility.
 }
 \value{
   An object of class \code{PhyloEntropy} is a list:
@@ -76,7 +94,7 @@ is.PhyloEntropy(x)
   \code{PhyloEntropy} objects can be plotted by \code{\link{plot.PhyloValue}} because \code{PhyloEntropy} objects are also of class \code{PhyloValue}.
 }
 \references{
-  Marcon, E., Herault, B. (2014). Decomposing  Phylodiversity. \emph{HAL} hal-00946177(version 1).
+  Marcon, E., Herault, B. (2015). Decomposing  Phylodiversity. \emph{Methods in Ecology and Evolution} 6(3): 333-339.
   
   Pavoine, S., Love, M. S. and Bonsall, M. B. (2009). Hierarchical partitioning of evolutionary and ecological patterns in the organization of phylogenetically-structured species assemblages: Application to rockfish (genus: Sebastes) in the Southern California Bight. \emph{Ecology Letters} 12(9): 898-908.
 }
@@ -91,13 +109,13 @@ is.PhyloEntropy(x)
   #      and their taxonomy)
   data(Paracou618)
   # Ps is the vector of probabilities
-  Ps <- Paracou618.MC$Ps
+  Ps <- as.ProbaVector(Paracou618.MC$Ps)
   # Calculate the phylogenetic Shannon entropy of the plot
   summary(PhyloEntropy(Ps, 1, Paracou618.Taxonomy) -> e)
   plot(e)
   
   # Ns is the vector of abundances of the metacommunity
-  Ns <- Paracou618.MC$Ns
+  Ns <- as.AbdVector(Paracou618.MC$Ns)
   # Calculate the phylogenetic Shannon entropy of the plot
   summary(bcPhyloEntropy(Ns, 1, Paracou618.Taxonomy, Correction = "Best") -> e)
   plot(e)

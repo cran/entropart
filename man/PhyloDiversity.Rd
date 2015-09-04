@@ -1,6 +1,10 @@
 \name{PhyloDiversity}
 \alias{PhyloDiversity}
 \alias{bcPhyloDiversity}
+\alias{PhyloDiversity.ProbaVector}
+\alias{PhyloDiversity.AbdVector}
+\alias{PhyloDiversity.integer}
+\alias{PhyloDiversity.numeric}
 \alias{is.PhyloDiversity}
 \alias{summary.PhyloDiversity}
 \title{
@@ -10,9 +14,18 @@
   Calculates the phylogenetic diversity of order \eqn{q} of a probability vector.
 }
 \usage{
-PhyloDiversity(Ps, q = 1, Tree, Normalize = TRUE, CheckArguments = TRUE)
+PhyloDiversity(NorP, q = 1, Tree, Normalize = TRUE, Correction = "Best", 
+  CheckArguments = TRUE, Ps = NULL, Ns = NULL)
 bcPhyloDiversity(Ns, q = 1, Tree, Normalize = TRUE, Correction = "Best",
   CheckArguments = TRUE)
+\method{PhyloDiversity}{ProbaVector}(NorP, q = 1, Tree, Normalize = TRUE, Correction = "Best", 
+  CheckArguments = TRUE, Ps = NULL, Ns = NULL)
+\method{PhyloDiversity}{AbdVector}(NorP, q = 1, Tree, Normalize = TRUE, Correction = "Best", 
+  CheckArguments = TRUE, Ps = NULL, Ns = NULL)
+\method{PhyloDiversity}{integer}(NorP, q = 1, Tree, Normalize = TRUE, Correction = "Best", 
+  CheckArguments = TRUE, Ps = NULL, Ns = NULL)
+\method{PhyloDiversity}{numeric}(NorP, q = 1, Tree, Normalize = TRUE, Correction = "Best", 
+  CheckArguments = TRUE, Ps = NULL, Ns = NULL) 
 is.PhyloDiversity(x)
 \method{summary}{PhyloDiversity}(object, \dots)
 }
@@ -22,6 +35,9 @@ is.PhyloDiversity(x)
   }
   \item{Ns}{
     A numeric vector containing species abundances.
+  }
+  \item{NorP}{
+    A numeric vector, an integer vector, an abundance vector (\code{\link{AbdVector}}) or a probability vector (\code{\link{ProbaVector}}). Contains either abundances or probabilities.
   }
   \item{q}{
     A number: the order of diversity. Default is 1.
@@ -55,6 +71,8 @@ is.PhyloDiversity(x)
   Diversity is obtained by transforming generalized entropy.
   
   Bias correction requires the number of individuals to estimate sample \code{\link{Coverage}}. Use \code{bcPhyloDiversity} and choose the \code{Correction}.
+
+  The functions are designed to be used as simply as possible. \code{PhyloDiversity} is a generic method. If its first argument is an abundance vector, an integer vector or a numeric vector which does not sum to 1, the bias corrected function \code{bcPhyloDiversity} is called. Explicit calls to \code{bcPhyloDiversity} (with bias correction) or to \code{PhyloDiversity.ProbaVector} (without correction) are possible to avoid ambiguity. The \code{.integer} and \code{.numeric} methods accept \code{Ps} or \code{Ns} arguments instead of \code{NorP} for backward compatibility.
 }
 \value{
   An object of class \code{PhyloDiversity} is a list:
@@ -76,7 +94,7 @@ is.PhyloDiversity(x)
 \references{
   Chao, A., Chiu, C.-H. and Jost, L. (2010). Phylogenetic diversity measures based on Hill numbers. \emph{Philosophical Transactions of the Royal Society B} 365(1558): 3599-609.
   
-  Marcon, E., Herault, B. (2014). Decomposing  Phylodiversity. \emph{HAL} hal-00946177(version 1).
+  Marcon, E., Herault, B. (2015). Decomposing  Phylodiversity. \emph{Methods in Ecology and Evolution} 6(3): 333-339.
   
   Pavoine, S., Love, M. S. and Bonsall, M. B. (2009). Hierarchical partitioning of evolutionary and ecological patterns in the organization of phylogenetically-structured species assemblages: Application to rockfish (genus: Sebastes) in the Southern California Bight. \emph{Ecology Letters} 12(9): 898-908.
 }
@@ -91,13 +109,13 @@ is.PhyloDiversity(x)
   #      and their taxonomy)
   data(Paracou618)
   # Ps is the vector of probabilities
-  Ps <- Paracou618.MC$Ps
+  Ps <- as.ProbaVector(Paracou618.MC$Ps)
   # Calculate the phylogenetic Shannon diversity of the plot
   summary(PhyloDiversity(Ps, 1, Paracou618.Taxonomy) -> d)
   plot(d)
   
   # Ns is the vector of abundances of the metacommunity
-  Ns <- Paracou618.MC$Ns
+  Ns <- as.AbdVector(Paracou618.MC$Ns)
   # Calculate the phylogenetic Shannon diversity of the plot
   summary(bcPhyloDiversity(Ns, 1, Paracou618.Taxonomy, Correction = "Best") -> d)
   plot(d)

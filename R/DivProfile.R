@@ -49,3 +49,73 @@ function(q.seq = seq(0, 2, .1), MC, Biased = TRUE, Correction = "Best", Tree = N
     
   return (DivProfile)
 }
+
+
+is.DivProfile <-
+function (x) 
+{
+  inherits(x, "DivProfile")
+}
+
+
+plot.DivProfile <- 
+function (x, ..., main = NULL, xlab = "Order of Diversity", ylab = NULL, Which = "All") 
+{
+  # Save graphical parameters
+  if (Which == "All") {
+    op <- graphics::par(no.readonly = TRUE)
+    graphics::par(mfrow=c(2, 2))    
+  }
+  if (Which == "All" | (Which == "Alpha" & is.null(main))) main <- "Total Alpha Diversity"
+  if (Which == "All" | (Which == "Alpha" & is.null(ylab))) ylab <- expression(paste(alpha, " diversity"))
+  if (Which == "All" | Which == "Alpha") {
+    graphics::plot(y=x$TotalAlphaDiversity, x=x$Order, type="l", main=main, xlab=xlab, ylab=ylab, ...)
+  }
+  if (Which == "All" | (Which == "Communities" & is.null(main))) main <- "Alpha Diversity of Communities"
+  if (Which == "All" | (Which == "Communities" & is.null(ylab))) ylab <- expression(paste(alpha, " diversity"))
+  if (Which == "All" | Which == "Communities") {
+    graphics::plot(x$CommunityAlphaDiversities[, 1] ~ x$Order, type="n", xlim=c(min(x$Order), max(x$Order)), ylim=c(min(x$CommunityAlphaDiversities), max(x$CommunityAlphaDiversities)), main=main, xlab=xlab, ylab=ylab, ...)
+    for (Community in (1:ncol(x$CommunityAlphaDiversities))) {
+      graphics::lines(x=x$Order, y=x$CommunityAlphaDiversities[, Community], lty=Community)
+    }  
+    if (Which == "Communities") {
+      graphics::legend("topright", colnames(x$CommunityAlphaDiversities), lty=1:ncol(x$CommunityAlphaDiversities), inset=0.01)
+    }
+  }
+  if (Which == "All" | (Which == "Beta" & is.null(main))) main <- "Beta Diversity"
+  if (Which == "All" | (Which == "Beta" & is.null(ylab))) ylab <- expression(paste(beta, " diversity"))
+  if (Which == "All" | Which == "Beta") {
+    graphics::plot(y=x$TotalBetaDiversity, x=x$Order, type="l", main=main, xlab=xlab, ylab=ylab, ...)
+  }
+  if (Which == "All" | (Which == "Gamma" & is.null(main))) main <- "Gamma Diversity"
+  if (Which == "All" | (Which == "Gamma" & is.null(ylab))) ylab <- expression(paste(gamma, " diversity"))
+  if (Which == "All" | Which == "Gamma") {
+    graphics::plot(y=x$GammaDiversity, x=x$Order, type="l", main=main, xlab=xlab, ylab=ylab, ...)
+  }
+  # Restore parameters
+  if (Which == "All") {
+    graphics::par(op)
+  }
+}
+
+
+summary.DivProfile <-
+function(object, ...) 
+{
+  cat("Diversity profile of MetaCommunity", object$MetaCommunity, fill=TRUE)
+  if (!object$Biased)  
+    cat(" with correction:", object$Correction)
+  cat("\n")
+  
+  if (!is.null(object$Tree)) {
+    cat("Phylogenetic or functional diversity was calculated according to the tree", object$Tree, "\n", fill=TRUE)
+    cat("Diversity is", ifelse(object$Normalized, "", "not"), "normalized\n", fill=TRUE)
+  }
+  
+  cat("Diversity against its order:\n")
+  Values <- cbind(object$Order, object$TotalAlphaDiversity, object$TotalBetaDiversity, object$GammaDiversity)
+  colnames(Values) <- c("Order", "Alpha Diversity", "Beta Diversity", "Gamma Diversity")
+  print(Values)
+  
+  return(invisible(NULL))
+}

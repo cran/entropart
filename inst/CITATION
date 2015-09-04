@@ -1,14 +1,14 @@
 citHeader("To cite entropart in publications use this reference:")
 
-citEntry(entry="Manual",
+citEntry(entry="Article",
   title = "entropart, an R package to partition diversity",
   author = personList(as.person("E. Marcon"),as.person("B. Herault")),
-  year = "2013",
-	url = "http://CRAN.R-project.org/package=entropart",        
+  year = "in press",
+  journal = "Journal of Statistical Software",
   textVersion = 
     paste("Marcon, E. and Herault, B.",
-      "(2013)",
+      "(in press)",
       "entropart, an R package to partition diversity",
-      "http://CRAN.R-project.org/package=entropart",
+      "Journal of Statistical Software",
     sep=", ")
   )

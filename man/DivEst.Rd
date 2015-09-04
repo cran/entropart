@@ -1,5 +1,6 @@
 \name{DivEst}
 \alias{DivEst}
+\alias{is.DivEst}
 \alias{plot.DivEst}
 \alias{summary.DivEst}
 \title{
@@ -11,6 +12,7 @@
 \usage{
 DivEst(q = 0, MC, Biased = TRUE, Correction = "Best", Tree = NULL, 
   Normalize = TRUE, Z = NULL, Simulations = 100, CheckArguments = TRUE)
+is.DivEst(x)
 \method{plot}{DivEst}(x, \dots, main = NULL, Which = "All")
 \method{summary}{DivEst}(object, \dots)
 }
@@ -77,9 +79,9 @@ DivEst(q = 0, MC, Biased = TRUE, Correction = "Best", Tree = NULL,
   
   Marcon, E., Scotti, I., Herault, B., Rossi, V. and Lang, G. (2014). Generalization of the partitioning of Shannon diversity. \emph{PLOS One} 9(3): e90289.
 
-  Marcon, E., Herault, B. (2014). Decomposing  Phylodiversity. \emph{HAL} hal-00946177(version 1).
+  Marcon, E., Herault, B. (2015). Decomposing  Phylodiversity. \emph{Methods in Ecology and Evolution} 6(3): 333-339.
 
-  Marcon, E. and Zhang, Z. (2014). The decomposition of similarity-based diversity and its bias correction. \emph{HAL} hal-00989454(version 1).
+  Marcon, E., Zhang, Z. and Herault, B. (2014). The decomposition of similarity-based diversity and its bias correction. \emph{HAL} hal-00989454(version 1).
 }
 \author{
   Eric Marcon <Eric.Marcon@ecofog.gf> and Bruno Herault <Bruno.Herault@ecofog.gf>
@@ -92,7 +94,7 @@ DivEst(q = 0, MC, Biased = TRUE, Correction = "Best", Tree = NULL,
   data(Paracou618)
   # Estimate Shannon diversity.
   Estimation <- DivEst(q = 1, Paracou618.MC, Biased = FALSE, Correction = "Best", 
-    Simulations = 1000)
+    Simulations = 100)
   plot(Estimation)
   summary(Estimation)
 }

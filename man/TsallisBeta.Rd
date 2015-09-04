@@ -1,6 +1,10 @@
 \name{TsallisBeta}
 \alias{TsallisBeta}
 \alias{bcTsallisBeta}
+\alias{TsallisBeta.ProbaVector}
+\alias{TsallisBeta.AbdVector}
+\alias{TsallisBeta.integer}
+\alias{TsallisBeta.numeric}
 \title{
   Tsallis beta entropy of a community
 }
@@ -8,8 +12,17 @@
   Calculates the Tsallis beta entropy of order \eqn{q} of a community belonging to a metacommunity.
 }
 \usage{
-TsallisBeta(Ps, Pexp = NULL, q, CheckArguments = TRUE)
+TsallisBeta(NorP, NorPexp = NULL, q = 1, Correction = "Best", CheckArguments = TRUE, 
+  Ps = NULL, Ns = NULL, Pexp = NULL, Nexp = NULL)
 bcTsallisBeta(Ns, Nexp = NULL, q, Correction = "Best", CheckArguments = TRUE)
+\method{TsallisBeta}{ProbaVector}(NorP, NorPexp = NULL, q = 1, Correction = "Best", CheckArguments = TRUE, 
+  Ps = NULL, Ns = NULL, Pexp = NULL, Nexp = NULL)
+\method{TsallisBeta}{AbdVector}(NorP, NorPexp = NULL, q = 1, Correction = "Best", CheckArguments = TRUE, 
+  Ps = NULL, Ns = NULL, Pexp = NULL, Nexp = NULL)
+\method{TsallisBeta}{integer}(NorP, NorPexp = NULL, q = 1, Correction = "Best", CheckArguments = TRUE, 
+  Ps = NULL, Ns = NULL, Pexp = NULL, Nexp = NULL)
+\method{TsallisBeta}{numeric}(NorP, NorPexp = NULL, q = 1, Correction = "Best", CheckArguments = TRUE, 
+  Ps = NULL, Ns = NULL, Pexp = NULL, Nexp = NULL) 
 }
 \arguments{
   \item{Ps}{
@@ -23,6 +36,12 @@ bcTsallisBeta(Ns, Nexp = NULL, q, Correction = "Best", CheckArguments = TRUE)
   }
   \item{Nexp}{
     A numeric vector containing species abundances of the metacommunity.
+  }
+  \item{NorP}{
+    A numeric vector, an integer vector, an abundance vector (\code{\link{AbdVector}}) or a probability vector (\code{\link{ProbaVector}}). Contains either abundances or probabilities of the community.
+  }
+  \item{NorPexp}{
+    A numeric vector, an integer vector, an abundance vector (\code{\link{AbdVector}}) or a probability vector (\code{\link{ProbaVector}}). Contains either abundances or probabilities of the metacommunity.
   }
   \item{q}{
   A number: the order of entropy. Default is 1 for Shannon entropy.
@@ -40,6 +59,8 @@ bcTsallisBeta(Ns, Nexp = NULL, q, Correction = "Best", CheckArguments = TRUE)
   Bias correction requires the number of individuals to estimate sample \code{\link{Coverage}}. Use \code{bcTsallisBeta} and choose the \code{Correction}.
 
   Note that beta entropy value is related to alpha entropy (if \eqn{q} is not 1) and cannot be compared accross communities (Jost, 2007). Beta entropy of a community is not meaningful in general, do rather calculate the \code{\link{BetaDiversity}} of the metacommunity.
+
+  The functions are designed to be used as simply as possible. \code{TsallisBeta} is a generic method. If its first argument is an abundance vector, an integer vector or a numeric vector which does not sum to 1, the bias corrected function \code{bcTsallisBeta} is called. Explicit calls to \code{bcTsallisBeta} (with bias correction) or to \code{TsallisBeta.ProbaVector} (without correction) are possible to avoid ambiguity. The \code{.integer} and \code{.numeric} methods accept \code{Ps} or \code{Ns} arguments instead of \code{NorP} for backward compatibility.
 }
 \value{
   A number equal to the calculated entropy.

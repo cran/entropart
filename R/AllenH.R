@@ -12,14 +12,14 @@ function(Ps, q = 1, PhyloTree, Normalize = TRUE, CheckArguments = TRUE)
       phyTree <- PhyloTree
     } else {
       if (inherits(PhyloTree, "hclust")) {
-        phyTree <- hclust2phylog(PhyloTree)
+        phyTree <- ade4::hclust2phylog(PhyloTree)
       } else {
         stop("PhyloTree must be an object of class phylog or hclust")
       }
     }
   }
   
-  # Verifiy all species are inthe tree
+  # Verifiy all species are in the tree
   SpeciesNotFound <- setdiff(names(Ps), names(phyTree$leaves))
   if (length(SpeciesNotFound) > 0) {
     stop(paste("Species not found in the tree: ", SpeciesNotFound, collapse = "; "))

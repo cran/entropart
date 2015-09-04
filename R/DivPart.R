@@ -56,3 +56,48 @@ function(q = 1, MC, Biased = TRUE, Correction = "Best", Tree = NULL, Normalize =
   
   return (DivPart)
 }
+
+
+is.DivPart <-
+function (x) 
+{
+  inherits(x, "DivPart")
+}
+
+
+plot.DivPart <- 
+function (x, ...) 
+{
+  graphics::plot(c(0, x$GammaDiversity), c(0, length(x$CommunityAlphaDiversities)), type = "n", xlab = expression(paste(alpha, " and ", gamma, " diversity")), ylab = expression(paste(beta, " diversity")), ...)
+  graphics::rect(0, 0, x$GammaDiversity, 1, lty=2)
+  graphics::rect(0, 0, x$TotalAlphaDiversity, x$TotalBetaDiversity, lty=2)
+}
+
+
+summary.DivPart <-
+function(object, ...) 
+{    
+  cat(object$Method, "diversity partitioning of order", object$Order, "of metaCommunity", object$MetaCommunity, fill=TRUE)
+  if (!object$Biased)  
+    cat(" with correction:", object$Correction)
+  cat("\n")
+  
+  if (!is.null(object$Tree)) {
+    cat("Phylogenetic or functional diversity was calculated\naccording to the tree", object$Tree, "\n", fill=TRUE)
+    cat("Diversity is", ifelse(object$Normalized, "", "not"), "normalized\n", fill=TRUE)
+  }
+  if (!is.null(object$Z)) {
+    cat("Phylogenetic or functional entropy was calculated\naccording to the similarity matrix", object$Z, "\n", fill=TRUE)
+  }
+  
+  cat("Alpha diversity of communities:", "\n")
+  print(object$CommunityAlphaDiversities)
+  cat("Total alpha diversity of the communities:", "\n")
+  print(object$TotalAlphaDiversity)
+  cat("Beta diversity of the communities:", "\n")
+  print(object$TotalBetaDiversity)
+  cat("Gamma diversity of the metacommunity:", "\n")
+  print(object$GammaDiversity)
+  
+  return(invisible(NULL))
+}

@@ -61,7 +61,8 @@ ChaoPD(Ps, q = 1, PhyloTree, Normalize = TRUE, CheckArguments = TRUE)
   ChaoPD(Paracou618.MC$Ps, 2, Paracou618.Taxonomy, Normalize=TRUE) -> ChaoD
   ChaoD
   
-  # Calculate it using PhyloDiversity: more powerful but much slower is the tree has many periods
+  # Calculate it using PhyloDiversity
+  # (more powerful but much slower is the tree has many periods)
   PhyloDiversity(Paracou618.MC$Ps, 2, Paracou618.Taxonomy, Normalize=TRUE) -> phyD
   summary(phyD)
 }

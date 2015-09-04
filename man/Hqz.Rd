@@ -1,6 +1,10 @@
 \name{Hqz}
 \alias{Hqz}
 \alias{bcHqz}
+\alias{Hqz.ProbaVector}
+\alias{Hqz.AbdVector}
+\alias{Hqz.integer}
+\alias{Hqz.numeric}
 \title{
   Similarity-based entropy of a community
 }
@@ -8,8 +12,17 @@
   Calculates the entropy of order \eqn{q} of a probability vector according to a similarity matrix.
 }
 \usage{
-Hqz(Ps, q = 1, Z = diag(length(Ps)), CheckArguments = TRUE)
-bcHqz(Ns, q =1, Z = diag(length(Ns)), Correction = "Best", CheckArguments = TRUE)
+Hqz(NorP, q = 1, Z = diag(length(Ps)), Correction = "Best", 
+  CheckArguments = TRUE, Ps = NULL, Ns = NULL)
+bcHqz(Ns, q = 1, Z = diag(length(Ns)), Correction = "Best", CheckArguments = TRUE)
+\method{Hqz}{ProbaVector}(NorP, q = 1, Z = diag(length(Ps)), Correction = "Best", 
+  CheckArguments = TRUE, Ps = NULL, Ns = NULL)
+\method{Hqz}{AbdVector}(NorP, q = 1, Z = diag(length(Ps)), Correction = "Best", 
+  CheckArguments = TRUE, Ps = NULL, Ns = NULL)
+\method{Hqz}{integer}(NorP, q = 1, Z = diag(length(Ps)), Correction = "Best", 
+  CheckArguments = TRUE, Ps = NULL, Ns = NULL)
+\method{Hqz}{numeric}(NorP, q = 1, Z = diag(length(Ps)), Correction = "Best", 
+  CheckArguments = TRUE, Ps = NULL, Ns = NULL) 
 }
 \arguments{
   \item{Ps}{
@@ -17,6 +30,9 @@ bcHqz(Ns, q =1, Z = diag(length(Ns)), Correction = "Best", CheckArguments = TRUE
   }
   \item{Ns}{
     A numeric vector containing species abundances.
+  }
+  \item{NorP}{
+    A numeric vector, an integer vector, an abundance vector (\code{\link{AbdVector}}) or a probability vector (\code{\link{ProbaVector}}). Contains either abundances or probabilities.
   }
   \item{q}{
     A number: the order of entropy. Default is 1.
@@ -37,9 +53,12 @@ bcHqz(Ns, q =1, Z = diag(length(Ns)), Correction = "Best", CheckArguments = TRUE
   A similarity matrix is used (as for \code{\link{Dqz}}), not a distance matrix as in Ricotta and Szeidl (2006). See the example.
 
   Bias correction requires the number of individuals. Use \code{bcHqz} and choose the \code{Correction}.
-  Correction techniques are from Marcon and Zhang (2014).
+  Correction techniques are from Marcon \emph{et al.} (2014).
   
   Currently, the \code{"Best"} correction is the max value of \code{"ChaoShen"} and \code{"MarconZhang"}.
+
+  The functions are designed to be used as simply as possible. \code{Hqz} is a generic method. If its first argument is an abundance vector, an integer vector or a numeric vector which does not sum to 1, the bias corrected function \code{bcHqz} is called. Explicit calls to \code{bcHqz} (with bias correction) or to \code{Hqz.ProbaVector} (without correction) are possible to avoid ambiguity. The \code{.integer} and \code{.numeric} methods accept \code{Ps} or \code{Ns} arguments instead of \code{NorP} for backward compatibility.
+
 }
 \value{
   A number equal to the calculated entropy.
@@ -47,7 +66,7 @@ bcHqz(Ns, q =1, Z = diag(length(Ns)), Correction = "Best", CheckArguments = TRUE
 \references{
   Leinster, T. and Cobbold, C. (2012). Measuring diversity: the importance of species similarity. \emph{Ecology} 93(3): 477-489.
   
-  Marcon, E. and Zhang, Z. (2014). The decomposition of similarity-based diversity and its bias correction. \emph{HAL} hal-00989454(version 1).
+  Marcon, E., Zhang, Z. and Herault, B. (2014). The decomposition of similarity-based diversity and its bias correction. \emph{HAL} hal-00989454(version 1).
   
   Ricotta, C. and Szeidl, L. (2006). Towards a unifying approach to diversity measures: Bridging the gap between the Shannon entropy and Rao's quadratic index. \emph{Theoretical Population Biology} 70(3): 237-243.
 }

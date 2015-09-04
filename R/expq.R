@@ -11,3 +11,20 @@ function(x, q)
     return (Exponential)
   }
 }
+
+
+expq.CommunityProfile <-
+function(Profile)
+{
+  if (!is.CommunityProfile(Profile))
+    stop("Profile must be a CommunityProfile")
+  
+  CP <- Profile
+  CP$y <- sapply(1:length(CP$x), function(i) expq(CP$y[i], CP$x[i]))
+  if (!is.null(CP$low))
+    CP$low <- sapply(1:length(CP$x), function(i) expq(CP$low[i], CP$x[i]))
+  if (!is.null(CP$high))
+    CP$high <- sapply(1:length(CP$x), function(i) expq(CP$high[i], CP$x[i]))
+  
+  return (CP)
+}

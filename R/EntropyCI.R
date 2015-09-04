@@ -1,5 +1,5 @@
 EntropyCI <-
-function(FUN, Simulations = 100, Ns, ..., CheckArguments = TRUE) 
+function(FUN, Simulations = 100, Ns, BootstrapMethod = "Chao2015", ..., CheckArguments = TRUE) 
 {
   if (CheckArguments) {
     CheckentropartArguments()
@@ -8,18 +8,18 @@ function(FUN, Simulations = 100, Ns, ..., CheckArguments = TRUE)
   RealEst <- FUN(Ns, ..., CheckArguments = FALSE)
   
   # SimulateEntropy resamples the community and calculates FUN
-  SimulateEntropy <- function(Progression) {
+  SimulateEntropy <- function(Progress) {
     # Draw Ns from a multinomial distribution
-    SimNs <- rmultinom(1, sum(Ns), Ns)
+    SimNs <- rCommunity(1, size=sum(Ns), NorP=Ns, BootstrapMethod=BootstrapMethod, CheckArguments = FALSE)
     # FUN(simulated data)
     NewSim <- FUN(SimNs, ..., CheckArguments = FALSE)
     # update progress bar
-    setTxtProgressBar(ProgressBar, Progression)
+    utils::setTxtProgressBar(ProgressBar, Progress)
     return(NewSim)
   }
   
   # Simulate entropy
-  ProgressBar <- txtProgressBar(min=0, max=Simulations)
+  ProgressBar <- utils::txtProgressBar(min=0, max=Simulations)
   # Simulated values
   RawSimulatedEntropy <- sapply(1:Simulations, SimulateEntropy)
   # Recenter entropy

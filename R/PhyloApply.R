@@ -12,7 +12,7 @@ function(Tree, FUN, NorP, Normalize = TRUE, ..., CheckArguments = TRUE)
   }
 
   # NorP may be a vector or a matrix. If it is a vector, double it into a matrix to simplify the code (use rownames)
-  if (is.vector(NorP)) {
+  if (is.vector(NorP) | is.SpeciesDistribution(NorP)) {
     NorPisVector <- TRUE
   } else {
     if (length(dim(NorP)) == 1) {
@@ -25,7 +25,7 @@ function(Tree, FUN, NorP, Normalize = TRUE, ..., CheckArguments = TRUE)
   NorPName <- deparse(substitute(NorP))
   if (NorPisVector) {
     NorP <- matrix(NorP, nrow = length(NorP), ncol = 2, dimnames = list(names(NorP), c("NorP", "Dummy")))
-  str}
+  }
   # NorP should be named. If it is not, but has the same number of elements as the tree, just warn.
   if (is.null(rownames(NorP))) {
     if (nrow(NorP) == length(ppTree$phyTree$leaves)) {
@@ -60,7 +60,7 @@ function(Tree, FUN, NorP, Normalize = TRUE, ..., CheckArguments = TRUE)
   # If there is no rounding error, add one (10 * .Machine$double.eps times the tree height) or cutree will miss some nodes.
   RoundingError <- max(ppTree$hTree$height) * 10 * .Machine$double.eps
   # Cut the tree at each node (eliminate the root). Cut at the values + RoundingError or many nodes will be missed.
-  DatedGroups <- cutree(ppTree$hTree, h=c(0, ppTree$Cuts[-length(ppTree$Cuts)]) + RoundingError)
+  DatedGroups <- stats::cutree(ppTree$hTree, h=c(0, ppTree$Cuts[-length(ppTree$Cuts)]) + RoundingError)
   # DatedGroups is a table. Lines are species, columns are intervals between nodes.
   # Reorder NorP to fit DatedGroups
   NorP <- NorP[intersect(rownames(NorP), dimnames(DatedGroups)[[1]]),]

@@ -1,6 +1,26 @@
+is.MCentropy <-
+function (x)
+{
+  inherits(x, "MCentropy")
+}
+
+
+plot.MCentropy <- 
+function (x, ...) 
+{
+  graphics::barplot(c(x$Communities, 0, x$Total),
+          beside = TRUE,
+          width = c(x$Weights, .5, 1),
+          names.arg = c(names(x$Communities), "", "Metacommunity"),
+          ylab = "Entropy",
+          ...
+  ) 
+}
+
+
 summary.MCentropy <-
-function(object, ...) {
-  
+function(object, ...) 
+{
   cat(object$Method, object$Type, "entropy of order", object$Order, "of metaCommunity", object$MetaCommunity, "with correction:", object$Correction, "\n", fill=TRUE)
   if (!is.null(object$Tree)) {
     cat("Phylogenetic or functional entropy was calculated according to the tree", object$Tree, "\n", fill=TRUE)

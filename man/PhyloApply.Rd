@@ -47,7 +47,7 @@ PhyloApply(Tree, FUN, NorP, Normalize = TRUE, \dots, CheckArguments = TRUE)
   \item{Total}{A value equal the total value, multiplied by the tree height if \code{Normalize} is FALSE.}
 }
 \references{
-  Marcon, E., Herault, B. (2014). Decomposing  Phylodiversity. \emph{HAL} hal-00946177(version 1).
+  Marcon, E., Herault, B. (2015). Decomposing  Phylodiversity. \emph{Methods in Ecology and Evolution} 6(3): 333-339.
 }
 \author{
   Eric Marcon <Eric.Marcon@ecofog.gf>

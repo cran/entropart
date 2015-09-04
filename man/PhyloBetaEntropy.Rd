@@ -1,6 +1,10 @@
 \name{PhyloBetaEntropy}
 \alias{PhyloBetaEntropy}
 \alias{bcPhyloBetaEntropy}
+\alias{PhyloBetaEntropy.ProbaVector}
+\alias{PhyloBetaEntropy.AbdVector}
+\alias{PhyloBetaEntropy.integer}
+\alias{PhyloBetaEntropy.numeric}
 \title{
   Phylogenetic Beta Entropy of a community
 }
@@ -8,9 +12,23 @@
   Calculates the phylogenetic beta entropy of order \eqn{q} of a a community belonging to a metacommunity.
 }
 \usage{
-PhyloBetaEntropy(Ps, Pexp, q = 1, Tree, Normalize = TRUE, CheckArguments = TRUE)
-bcPhyloBetaEntropy(Ns, Nexp, q = 1, Tree, Normalize = TRUE, Correction = "Best", 
-  CheckArguments = TRUE)
+PhyloBetaEntropy(NorP, NorPexp = NULL, q = 1, Tree, Normalize = TRUE, 
+  Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns = NULL, 
+  Pexp = NULL, Nexp = NULL)
+bcPhyloBetaEntropy(Ns, Nexp, q = 1, Tree, Normalize = TRUE, 
+  Correction = "Best", CheckArguments = TRUE)
+\method{PhyloBetaEntropy}{ProbaVector}(NorP, NorPexp = NULL, q = 1, Tree, Normalize = TRUE, 
+  Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns = NULL, 
+  Pexp = NULL, Nexp = NULL)
+\method{PhyloBetaEntropy}{AbdVector}(NorP, NorPexp = NULL, q = 1, Tree, Normalize = TRUE, 
+  Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns = NULL, 
+  Pexp = NULL, Nexp = NULL)
+\method{PhyloBetaEntropy}{integer}(NorP, NorPexp = NULL, q = 1, Tree, Normalize = TRUE, 
+  Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns = NULL, 
+  Pexp = NULL, Nexp = NULL)
+\method{PhyloBetaEntropy}{numeric}(NorP, NorPexp = NULL, q = 1, Tree, Normalize = TRUE, 
+  Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns = NULL, 
+  Pexp = NULL, Nexp = NULL) 
 }
 \arguments{
   \item{Ps}{
@@ -24,6 +42,12 @@ bcPhyloBetaEntropy(Ns, Nexp, q = 1, Tree, Normalize = TRUE, Correction = "Best",
   }
   \item{Nexp}{
     A numeric vector containing species abundances of the metacommunity.
+  }
+  \item{NorP}{
+    A numeric vector, an integer vector, an abundance vector (\code{\link{AbdVector}}) or a probability vector (\code{\link{ProbaVector}}). Contains either abundances or probabilities of the community.
+  }
+  \item{NorPexp}{
+    A numeric vector, an integer vector, an abundance vector (\code{\link{AbdVector}}) or a probability vector (\code{\link{ProbaVector}}). Contains either abundances or probabilities of the metacommunity.
   }
   \item{q}{
     A number: the order of entropy. Default is 1.
@@ -50,14 +74,16 @@ bcPhyloBetaEntropy(Ns, Nexp, q = 1, Tree, Normalize = TRUE, Correction = "Best",
   Bias correction requires the number of individuals to estimate sample \code{\link{Coverage}}. Use \code{bcPhyloBetaEntropy} and choose the \code{Correction}.
   
   Note that beta entropy value is related to alpha entropy (if \eqn{q} is not 1) and cannot be compared accross communities (Jost, 2007). Beta entropy of a community is not meaningful in general, do rather calculate the \code{\link{PhyloDiversity}} of the metacommunity.
+
+  The functions are designed to be used as simply as possible. \code{PhyloBetaEntropy} is a generic method. If its first argument is an abundance vector, an integer vector or a numeric vector which does not sum to 1, the bias corrected function \code{bcPhyloBetaEntropy} is called. Explicit calls to \code{bcPhyloBetaEntropy} (with bias correction) or to \code{PhyloBetaEntropy.ProbaVector} (without correction) are possible to avoid ambiguity. The \code{.integer} and \code{.numeric} methods accept \code{Ps} or \code{Ns} arguments instead of \code{NorP} for backward compatibility.
 }
 \value{
   A \code{\link{PhyloEntropy}} object containing entropy values at each cut of the tree.
 }
 \references{
-    Jost (2007), Partitioning diversity into independent alpha and beta components. \emph{Ecology} 88(10): 2427-2439.
+  Jost (2007), Partitioning diversity into independent alpha and beta components. \emph{Ecology} 88(10): 2427-2439.
 
-  Marcon, E., Herault, B. (2014). Decomposing  Phylodiversity. \emph{HAL} hal-00946177(version 1).
+  Marcon, E., Herault, B. (2015). Decomposing  Phylodiversity. \emph{Methods in Ecology and Evolution} 6(3): 333-339.
   
   Pavoine, S., Love, M. S. and Bonsall, M. B. (2009). Hierarchical partitioning of evolutionary and ecological patterns in the organization of phylogenetically-structured species assemblages: Application to rockfish (genus: Sebastes) in the Southern California Bight. \emph{Ecology Letters} 12(9): 898-908.
 }
@@ -72,17 +98,17 @@ bcPhyloBetaEntropy(Ns, Nexp, q = 1, Tree, Normalize = TRUE, Correction = "Best",
   #      and their taxonomy)
   data(Paracou618)
   # Ps is the vector of probabilities
-  Ps <- Paracou618.MC$Ps
+  Ps <- as.ProbaVector(Paracou618.MC$Ps)
   # Probability distribution of the first plot
-  Ps1 <- Paracou618.MC$Psi[, 1]
+  Ps1 <- as.ProbaVector(Paracou618.MC$Psi[, 1])
   # Calculate the phylogenetic Shannon beta entropy of the plot
   summary(PhyloBetaEntropy(Ps1, Ps, 1, Paracou618.Taxonomy) -> e)
   plot(e)
   
   # Ns is the vector of abundances of the metacommunity
-  Ns <- Paracou618.MC$Ns
+  Ns <- as.AbdVector(Paracou618.MC$Ns)
   # Abundances in the first plot
-  Ns1 <- Paracou618.MC$Nsi[, 1]
+  Ns1 <- as.AbdVector(Paracou618.MC$Nsi[, 1])
   # Calculate the phylogenetic Shannon beta entropy of the plot
   summary(bcPhyloBetaEntropy(Ns1, Ns, 1, Paracou618.Taxonomy, Correction = "Best") -> e)
   plot(e)

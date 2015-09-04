@@ -39,3 +39,43 @@ function(Abundances, Weights = rep(1, ncol(Abundances)))
   
   Preprocess.MC(Nsi, Wi)
 }
+
+
+is.MetaCommunity <-
+function (x) 
+{
+  inherits(x, "MetaCommunity")
+}
+
+
+plot.MetaCommunity <- 
+function (x, ...) 
+{
+  graphics::barplot(cbind(x$Psi,
+                rep(0, x$Nspecies),
+                x$Ps              
+  ),
+  beside = FALSE,
+  width = c(x$Wi, .5, 1),
+  names.arg = c(names(x$Wi), "", "Metacommunity"),
+  ylab = "Species frequencies",
+  ...
+  )
+}
+
+
+summary.MetaCommunity <-
+function(object, ...) 
+{
+  
+  cat("Meta-community (class 'MetaCommunity') made of ", object$N, "individuals in", object$Ncommunities, "communities and", object$Nspecies, "species.", "\n", fill=TRUE)
+  cat(paste("Its sample coverage is ", object$SampleCoverage, "\n"), fill=TRUE)
+  cat("Community weights are:", "\n")
+  print(object$Wi)
+  cat("Community sample numbers of individuals are:", "\n")
+  print(object$Ni)
+  cat("Community sample coverages are:", "\n")
+  print(object$SampleCoverage.communities)
+  
+  return(invisible(NULL))
+}
