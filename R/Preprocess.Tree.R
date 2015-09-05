@@ -26,7 +26,7 @@ function(Tree)
   # Calculate intervals between cuts (add 0 to Cuts to get the first interval)
   Intervals <- diff(c(0, Cuts))
   # Eliminate 0 intervals (when a node contains more than 2 tips), including rounding errors
-  RoundingError <- max(phyTree$droot) * 10 * .Machine$double.eps
+  RoundingError <- max(phyTree$droot)*10*.Machine$double.eps
   Cuts <- Cuts[Intervals > RoundingError]
   Intervals <- Intervals[Intervals > RoundingError]
 

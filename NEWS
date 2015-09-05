@@ -1,4 +1,4 @@
-  CHANGES IN entropart VERSION 1.3.1
+  CHANGES IN entropart VERSION 1.3.2
   ==================================
 
 NEW FEATURES 
@@ -13,6 +13,11 @@ NEW FEATURES
   o Abundance Frequency Count of species. See ?AbdFreqCount
   o Community profiles can be calculated with confidence intervals. See ?CommunityProfile
   o Random Communities. See ?rCommunity
+
+BUG CORRECTION 
+
+  o Applying bcTsallis and similar functions with a probability vector instead of abundance values could cause errors depending in the correction. Correction is now forced to "None" with a warning.
+  o Allowed rounding error was too small on some systems (typically r-patched-solaris-sparc) to recognize probability vectors. The difference between their sum and 1 had to be less than 3 times .Machine$double.eps. Now set to 10 times.
 
 
 

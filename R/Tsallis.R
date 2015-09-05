@@ -56,7 +56,7 @@ function(NorP, q = 1, Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns 
     }
   }
   
-  if (abs(sum(NorP) - 1) < 3*.Machine$double.eps) {
+  if (abs(sum(NorP) - 1) < 10*.Machine$double.eps) {
     # Probabilities sum to 1, allowing rounding error
     return(Tsallis.ProbaVector(NorP, q=q, CheckArguments=CheckArguments))
   } else {
@@ -72,14 +72,25 @@ function(Ns, q = 1, Correction = "Best", CheckArguments = TRUE)
   if (CheckArguments)
     CheckentropartArguments()
   
+  # Eliminate 0
+  Ns <- Ns[Ns > 0]
+  N <- sum(Ns)
+  # Exit if Ns contains a single species
+  if (length(Ns) < 2) {
+    return(0)
+  } else {
+    # Probabilities instead of abundances
+    if (N < 2) {
+      warning("Bias correction attempted with probability data. Correction forced to 'None'")
+      Correction <- "None"
+    }
+  }
+
   # No correction
   if (Correction == "None") {
     return(Tsallis.ProbaVector(Ns/sum(Ns), q, CheckArguments = FALSE))
   }
   
-  # Eliminate 0
-  Ns <- Ns[Ns > 0]
-  N <- sum(Ns)
   
   # Common code for ZhangGrabchak
   if (Correction == "ZhangGrabchak" | Correction == "ChaoWangJost" | Correction == "Best") {

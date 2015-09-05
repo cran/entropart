@@ -35,7 +35,7 @@ function(n, size = sum(NorP), NorP = 1, BootstrapMethod = "Chao2015",
     )
   } else {
     # Subsample
-    if (abs(sum(NorP) - 1) < 3*.Machine$double.eps) {
+    if (abs(sum(NorP) - 1) < 10*.Machine$double.eps) {
       # Probabilities sum to 1, allowing rounding error
       Ps <- NorP    
     } else {

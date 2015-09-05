@@ -81,7 +81,7 @@ function(NorP, q = 1, Z = diag(length(Ps)), Correction = "Best", CheckArguments 
     }
   }
   
-  if (abs(sum(NorP) - 1) < 3*.Machine$double.eps) {
+  if (abs(sum(NorP) - 1) < 10*.Machine$double.eps) {
     # Probabilities sum to 1, allowing rounding error
     return(Hqz.ProbaVector(NorP, q=q, Z=Z, CheckArguments=CheckArguments))
   } else {
@@ -113,8 +113,19 @@ function (Ns, q = 1, Z = diag(length(Ns)), Correction = "Best", CheckArguments =
     Z <- as.matrix(Z)[names(Ns), names(Ns)]
   }
   
-  Ps <- Ns/sum(Ns)
-  Nrecords <- sum(Ns)    
+  N <- sum(Ns)
+  # Exit if Ns contains a single species
+  if (length(Ns) < 2) {
+    return(0)
+  } else {
+    # Probabilities instead of abundances
+    if (N < 2) {
+      warning("Bias correction attempted with probability data. Correction forced to 'None'")
+      Correction <- "None"
+    }
+  }
+  Ps <- Ns/N
+
   
   # No correction
   if (Correction == "None") {
@@ -122,14 +133,14 @@ function (Ns, q = 1, Z = diag(length(Ns)), Correction = "Best", CheckArguments =
   }
   
   if (Correction == "MarconZhang" | Correction == "Best") {
-    V <- 1:(Nrecords-1)
+    V <- 1:(N-1)
     # p_V_Ns is an array, containing (1 - (n_s-1)/(n-j)) for each species (lines) and all j from 1 to n-1
-    p_V_Ns <- outer(Ns, V, function(Ns, j) 1- (Ns-1)/(Nrecords-j))
+    p_V_Ns <- outer(Ns, V, function(Ns, j) 1- (Ns-1)/(N-j))
     # Useful values are products from j=1 to v, so prepare cumulative products
     p_V_Ns <- apply(p_V_Ns, 1, cumprod)
     # Sum of products weighted by w_v
     S_v <- function(s) {
-      Usedv <- 1:(Nrecords-Ns[s])
+      Usedv <- 1:(N-Ns[s])
       return(sum(w_v[Usedv]*p_V_Ns[Usedv, s]))
     }
   }
@@ -146,7 +157,7 @@ function (Ns, q = 1, Z = diag(length(Ns)), Correction = "Best", CheckArguments =
   
   if (Correction == "ChaoShen" | Correction == "Best") {
     # Horvitz-Thomson multiplier (replaces Ps)
-    HTCPs <- CPs/(1 - (1-CPs)^Nrecords)
+    HTCPs <- CPs/(1 - (1-CPs)^N)
     # Force 0/0=0 and 0log0=0
     HTCPs[CPs == 0] <- 0
     Zp[Zp == 0] <- 1
@@ -159,7 +170,7 @@ function (Ns, q = 1, Z = diag(length(Ns)), Correction = "Best", CheckArguments =
     Zpqm1[Zp == 0] <- 0
     K <- sum(CPs * Zpqm1)
     # Weights
-    i <- 1:Nrecords
+    i <- 1:N
     w_vi <- (1-AverageZ)*(i-q)/i
     w_v <- cumprod(w_vi)
     Taylor <- 1 + sum(Ps*sapply(1:length(Ns), S_v))

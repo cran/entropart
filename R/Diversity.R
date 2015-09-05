@@ -53,7 +53,7 @@ function(NorP, q = 1, Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns 
     }
   }
 
-  if (abs(sum(NorP) - 1) < 3*.Machine$double.eps) {
+  if (abs(sum(NorP) - 1) < 10*.Machine$double.eps) {
     # Probabilities sum to 1, allowing rounding error
     return(Diversity.ProbaVector(NorP, q=q, CheckArguments=CheckArguments))
   } else {

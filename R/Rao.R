@@ -51,7 +51,7 @@ function(NorP, Tree, Correction = "Lande", CheckArguments = TRUE, Ps = NULL, Ns 
     }
   }
   
-  if (abs(sum(NorP) - 1) < 3*.Machine$double.eps) {
+  if (abs(sum(NorP) - 1) < 10*.Machine$double.eps) {
     # Probabilities sum to 1, allowing rounding error
     return(Rao.ProbaVector(NorP, Tree=Tree, CheckArguments=CheckArguments))
   } else {
@@ -66,11 +66,25 @@ function(Ns, Tree, Correction="Lande", CheckArguments = TRUE)
 {
   if (CheckArguments)
     CheckentropartArguments()
-  
-  if (Correction == "Lande"  | Correction == "Best") {
-    Nrecords <- sum(Ns)
-    return(Nrecords/(Nrecords-1)*AllenH(Ns/sum(Ns), q=2, PhyloTree=Tree, Normalize=FALSE, CheckArguments=FALSE))  
+
+  # Eliminate 0
+  Ns <- Ns[Ns > 0]
+  N <- sum(Ns)
+  # Exit if Ns contains a single species
+  if (length(Ns) < 2) {
+    return(0)
   } else {
-    return(bcPhyloEntropy(Ns, q = 2, Tree = Tree, Normalize = FALSE, Correction = Correction, CheckArguments = FALSE)) 
+    # Probabilities instead of abundances
+    if (N < 2) {
+      warning("Bias correction attempted with probability data. Correction forced to 'None'")
+      Correction <- "None"
+    }
+  }	
+ 
+  if (Correction == "Lande"  | Correction == "Best") {
+    N <- sum(Ns)
+    return(N/(N-1)*AllenH(Ns/sum(Ns), q=2, PhyloTree=Tree, Normalize=FALSE, CheckArguments=FALSE))  
+  } else {
+    return(bcPhyloEntropy(Ns, q = 2, Tree = Tree, Normalize = FALSE, Correction = Correction, CheckArguments = FALSE)$Total) 
   }
 }

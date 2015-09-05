@@ -14,8 +14,8 @@
   \tabular{ll}{
     Package: \tab entropart\cr
     Type: \tab Package\cr
-    Version: \tab 1.3.1\cr
-    Date: \tab 2014-09-04\cr
+    Version: \tab 1.3.2\cr
+    Date: \tab 2014-09-05\cr
     License: \tab GNU General Public License\cr
   }
 

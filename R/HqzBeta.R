@@ -104,7 +104,7 @@ function(NorP, NorPexp = NULL, q = 1, Z = diag(length(Ps)), Correction = "Best",
     }
   }
   
-  if (abs(sum(NorP) - 1) < 3*.Machine$double.eps) {
+  if (abs(sum(NorP) - 1) < 10*.Machine$double.eps) {
     # Probabilities sum to 1, allowing rounding error
     return(HqzBeta.ProbaVector(NorP, NorPexp, q=q, Z=Z, CheckArguments=CheckArguments))
   } else {

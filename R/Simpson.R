@@ -51,7 +51,7 @@ function(NorP, Correction="Lande", CheckArguments = TRUE, Ps = NULL, Ns = NULL)
     }
   }
   
-  if (abs(sum(NorP) - 1) < 3*.Machine$double.eps) {
+  if (abs(sum(NorP) - 1) < 10*.Machine$double.eps) {
     # Probabilities sum to 1, allowing rounding error
     return(Simpson.ProbaVector(NorP, CheckArguments=CheckArguments))
   } else {
@@ -66,9 +66,22 @@ function(Ns, Correction="Lande", CheckArguments = TRUE)
 {
   if (CheckArguments)
     CheckentropartArguments()
-  
+
+  # Eliminate 0
+  Ns <- Ns[Ns > 0]
+  N <- sum(Ns)
+  # Exit if Ns contains a single species
+  if (length(Ns) < 2) {
+    return(0)
+  } else {
+    # Probabilities instead of abundances
+    if (N < 2) {
+      warning("Bias correction attempted with probability data. Correction forced to 'None'")
+      Correction <- "None"
+    }
+  }
+
   if (Correction == "Lande" | Correction == "Best") {
-    N <- sum(Ns)
     return(N/(N-1)*Tsallis(as.ProbaVector(Ns), 2, CheckArguments=FALSE))  
   } else {
     return(bcTsallis(Ns, q=2, Correction, CheckArguments=FALSE)) 

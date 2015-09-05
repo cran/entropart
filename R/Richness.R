@@ -51,7 +51,7 @@ function(NorP, Correction = "Chao1", Alpha = 0.05, JackOver = FALSE, CheckArgume
     }
   }
   
-  if (abs(sum(NorP) - 1) < 3*.Machine$double.eps) {
+  if (abs(sum(NorP) - 1) < 10*.Machine$double.eps) {
     # Probabilities sum to 1, allowing rounding error
     return(Richness.ProbaVector(NorP, CheckArguments=CheckArguments))
   } else {
