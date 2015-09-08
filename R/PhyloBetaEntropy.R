@@ -82,7 +82,7 @@ function(NorP, NorPexp = NULL, q = 1, Tree, Normalize = TRUE, Correction = "Best
     }
   }
   
-  if (abs(sum(NorP) - 1) < 10*.Machine$double.eps) {
+  if (abs(sum(NorP) - 1) < length(NorP)*.Machine$double.eps) {
     # Probabilities sum to 1, allowing rounding error
     return(PhyloBetaEntropy.ProbaVector(NorP, NorPexp, q=q, Tree=Tree, Normalize=Normalize, CheckArguments=CheckArguments))
   } else {

@@ -76,7 +76,7 @@ function(NorP, NorPexp = NULL, q = 1, Correction = "Best", CheckArguments = TRUE
     }
   }
   
-  if (abs(sum(NorP) - 1) < 10*.Machine$double.eps) {
+  if (abs(sum(NorP) - 1) < length(NorP)*.Machine$double.eps) {
     # Probabilities sum to 1, allowing rounding error
     return(TsallisBeta.ProbaVector(NorP, NorPexp, q=q, CheckArguments=CheckArguments))
   } else {

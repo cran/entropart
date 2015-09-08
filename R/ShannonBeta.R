@@ -69,7 +69,7 @@ function(NorP, NorPexp = NULL, Correction = "Best", CheckArguments = TRUE, Ps = 
     }
   }
   
-  if (abs(sum(NorP) - 1) < 10*.Machine$double.eps) {
+  if (abs(sum(NorP) - 1) < length(NorP)*.Machine$double.eps) {
     # Probabilities sum to 1, allowing rounding error
     return(ShannonBeta.ProbaVector(NorP, NorPexp, CheckArguments=CheckArguments))
   } else {

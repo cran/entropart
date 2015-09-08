@@ -51,7 +51,7 @@ function(NorP, Tree, Correction = "Lande", CheckArguments = TRUE, Ps = NULL, Ns 
     }
   }
   
-  if (abs(sum(NorP) - 1) < 10*.Machine$double.eps) {
+  if (abs(sum(NorP) - 1) < length(NorP)*.Machine$double.eps) {
     # Probabilities sum to 1, allowing rounding error
     return(Rao.ProbaVector(NorP, Tree=Tree, CheckArguments=CheckArguments))
   } else {

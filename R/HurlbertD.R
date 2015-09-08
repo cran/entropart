@@ -55,7 +55,7 @@ function(NorP, k = 2, CheckArguments = TRUE, Ps = NULL, Ns = NULL)
     }
   }
   
-  if (abs(sum(NorP) - 1) < 10*.Machine$double.eps) {
+  if (abs(sum(NorP) - 1) < length(NorP)*.Machine$double.eps) {
     # Probabilities sum to 1, allowing rounding error
     return(HurlbertD.ProbaVector(NorP, k=k, CheckArguments=CheckArguments))
   } else {

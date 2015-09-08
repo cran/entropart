@@ -81,7 +81,7 @@ function(NorP, q = 1, Z = diag(length(Ps)), Correction = "Best", CheckArguments 
     }
   }
   
-  if (abs(sum(NorP) - 1) < 10*.Machine$double.eps) {
+  if (abs(sum(NorP) - 1) < length(NorP)*.Machine$double.eps) {
     # Probabilities sum to 1, allowing rounding error
     return(Dqz.ProbaVector(NorP, q=q, Z=Z, CheckArguments=CheckArguments))
   } else {

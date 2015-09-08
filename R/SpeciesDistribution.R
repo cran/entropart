@@ -9,7 +9,13 @@ as.SpeciesDistribution.data.frame <-
 function (x) 
 {
   if (any(x < 0)) stop("Species distribution abundances or probabilities must be positive.")
+
+  # Try to save the names before applying as.numeric
+  spNames <- names(x)
   spD <- as.numeric(as.matrix(x))
+  if (length(spNames) == length(spD))
+    names(spD) <- spNames
+  
   class(spD) <- c("SpeciesDistribution", class(spD))
   return(spD)
 }
@@ -52,7 +58,8 @@ function (x, Correction = "None", Unveiling = "None", RCorrection = "Chao1", Jac
   if (CheckArguments)
     CheckentropartArguments()
 
-  spD <- as.SpeciesDistribution(as.vector(x))
+  spD <- as.SpeciesDistribution(x)
+  
   return(as.ProbaVector.numeric(spD, CheckArguments=FALSE))
 }
 
@@ -63,7 +70,12 @@ function (x, Correction = "None", Unveiling = "None", RCorrection = "Chao1", Jac
   if (CheckArguments)
     CheckentropartArguments()
   
+  # Try to save the names before applying as.vector
+  spNames <- names(x)
   spD <- as.SpeciesDistribution(as.vector(x))
+  if (length(spNames) == length(spD))
+    names(spD) <- spNames
+
   if (Correction == "None") {
     spD <- spD/sum(spD)
   } else {
@@ -209,13 +221,20 @@ function (x, Round = TRUE)
 as.AbdVector.data.frame <-
 function (x, Round = TRUE) 
 {
+  # Try to save the names before applying as.vector
+  spNames <- names(x)
+  
   if (Round) {
     intx <- as.integer(as.matrix(round(x)))
-    names(intx) <- names(x)
     spD <- as.SpeciesDistribution(as.vector(intx))
   } else {      
     spD <- as.SpeciesDistribution(as.vector(x))
   }
+
+  # Restore the names
+  if (length(spNames) == length(spD))
+    names(spD) <- spNames
+  
   class(spD) <- c("AbdVector", class(spD))
   return(spD)
 }
@@ -224,13 +243,20 @@ function (x, Round = TRUE)
 as.AbdVector.numeric <-
 function (x, Round = TRUE) 
 {
+  # Try to save the names before applyinf as.vector
+  spNames <- names(x)
+
   if (Round) {
     intx <- as.integer(round(x))
-    names(intx) <- names(x)
     spD <- as.SpeciesDistribution(as.vector(intx))
   } else {      
     spD <- as.SpeciesDistribution(as.vector(x))
   }
+  
+  # Restore the names
+  if (length(spNames) == length(spD))
+    names(spD) <- spNames
+  
   class(spD) <- c("AbdVector", class(spD))
   return(spD)
 }

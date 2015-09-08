@@ -51,7 +51,7 @@ function(NorP, Correction="Lande", CheckArguments = TRUE, Ps = NULL, Ns = NULL)
     }
   }
   
-  if (abs(sum(NorP) - 1) < 10*.Machine$double.eps) {
+  if (abs(sum(NorP) - 1) < length(NorP)*.Machine$double.eps) {
     # Probabilities sum to 1, allowing rounding error
     return(Simpson.ProbaVector(NorP, CheckArguments=CheckArguments))
   } else {
