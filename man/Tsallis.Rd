@@ -58,7 +58,7 @@ bcTsallis(Ns, q = 1, Correction = "Best", CheckArguments = TRUE)
   A number equal to the calculated entropy.
 }
 \references{
-  Chao, A. and Jost, L. (2015) Estimating diversity and entropy profiles via discovery rates of new species. \emph{Methods in Ecology and Evolution} 6_8): 873-882.
+  Chao, A. and Jost, L. (2015) Estimating diversity and entropy profiles via discovery rates of new species. \emph{Methods in Ecology and Evolution} 6(8): 873-882.
 
   Chao, A., Wang, Y. T. and Jost, L. (2013). Entropy and the species accumulation curve: a novel entropy estimator via discovery rates of new species. \emph{Methods in Ecology and Evolution} 4(11):1091-1100.
 

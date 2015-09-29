@@ -2,7 +2,7 @@
 
 \documentclass[nojss]{jss}
 
-\usepackage[utf8]{inputenc}  
+\usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{amsmath}
 %% Set PDF 1.5 and compression, including object compression
@@ -293,9 +293,9 @@ The sample coverage cannot be estimated from probability data: abundances are re
 
 Its interpretation is straightforward: some species have not been sampled. Their number is unknown but their total probability of occurence can be estimated accurately. Here, it is a bit less than 8\%. From another point of view, the probability for an individual of the community to belong to a sampled species is $C$: 8\% of them belong to missed species. The number of missed species may be estimated by \code{bcRichness} but this is not the point here. The sample coverage is the foundation of many estimators of entropy.
 
-\subsubsection{Estimation-bias corrected estimators}
+\subsubsection{Bias corrected estimators}
 
-Estimation-bias correction is used to improve the estimation of entropy despite unobserved species and also mathematical issues \citep{Bonachela2008}. 
+Correction of estimationbias is used to improve the estimation of entropy despite unobserved species and also mathematical issues \citep{Bonachela2008}. 
 Bias-corrected estimators (often relying on sample coverage) are returned by functions whose names are prefixed by \code{bc}, such as \code{bcTsallis}. 
 They are similar to the non-corrected ones but they use abundance data and propose several bias-correction techniques to select in the \code{Correction} argument. 
 A ``Best'' correction is calculated by default, detailed in the help file of each function.
@@ -775,7 +775,7 @@ exp(pa$Total)
 
 \subsection{Manipulation of meta-communities}
 
-Several meta-communities, combined in a list, can be merged two different ways: the \code{MergeMC} function simplifies hierarchical partitioning of diversity: it creates a new meta-community whose communities are the original meta-communities aggregated data. 
+Several meta-communities, combined in a list, can be merged two different ways: the \code{MergeMC} function simplifies hierarchical partitioning of diversity: it considers the aggregated data of each meta-community as a community and builds an upper-level meta-community with them. 
 The $\alpha$ entropy of the new meta-community is the weighted average $\gamma$ entropy of the original meta-communities.
 
 \code{MergeC} combines the communities of several meta-communities to create a single meta-community containing them all. 
@@ -827,7 +827,7 @@ The $\gamma$ diversity of MC1 is \Sexpr{round(dpMC1$GammaDiversity, 2)} effectiv
 
 \section{Conclusion}
 
-The entropart package allows estimating biodiversity according to the framework based on HCDT entropy, the correction of its estimation-bias \citep{Grassberger1988, Chao2003} and its transformation into equivalent numbers of species \citep{Hill1973, Jost2006, Marcon2014}. 
+The entropart package allows estimating biodiversity according to the framework based on HCDT entropy, the correction of its estimation-bias \citep{Grassberger1988, Chao2003, Chao2015} and its transformation into equivalent numbers of species \citep{Hill1973, Jost2006, Marcon2014}. 
 Phylogenetic or functional diversity \citep{Marcon2014a} can be estimated, considering phyloentropy as the average species-neutral diversity over slices of a phylogenetic or functional tree \citep{Pavoine2009}. 
 Similarity-based diversity \cite{Leinster2012} can be used to estimate \citep{Marcon2014e} functional diversity from a similarity or dissimilarity matrix between species without requiring building a dendrogram and thus preserving the topology of species  \citep{Pavoine2005a, Podani2007}.
 

@@ -10,6 +10,9 @@ function(Tree, FUN, NorP, Normalize = TRUE, ..., CheckArguments = TRUE)
   } else {
     ppTree <- Preprocess.Tree(Tree)
   }
+  # The tree must be ultrametric
+  if (!ape::is.ultrametric(ppTree$phyTree))
+    stop("The tree must be ultrametric to apply a function over it.")
 
   # NorP may be a vector or a matrix. If it is a vector, double it into a matrix to simplify the code (use rownames)
   if (is.vector(NorP) | is.SpeciesDistribution(NorP)) {
@@ -28,11 +31,8 @@ function(Tree, FUN, NorP, Normalize = TRUE, ..., CheckArguments = TRUE)
   }
   # NorP should be named. If it is not, but has the same number of elements as the tree, just warn.
   if (is.null(rownames(NorP))) {
-    if (nrow(NorP) == length(ppTree$phyTree$leaves)) {
-      rownames(NorP) <- names(ppTree$phyTree$leaves)
-      # Spaces are changed into underscores by rownames, so tree leaves must be renamed too
-      names(ppTree$phyTree$leaves) <- gsub(" ", "_", names(ppTree$phyTree$leaves))
-      ppTree$hTree$labels <- names(ppTree$phyTree$leaves)
+    if (nrow(NorP) == length(ppTree$phyTree$tip.label)) {
+      rownames(NorP) <- ppTree$phyTree$tip.label
       warning("The abundance or frequency vector was not named. It was supposed to be order as the tree leaves.")
     } else {
       stop("The abundance or frequency vector is not named and does not have the same number of elements as the tree. Abundances and species could not be related.")
@@ -40,12 +40,12 @@ function(Tree, FUN, NorP, Normalize = TRUE, ..., CheckArguments = TRUE)
   }
 
   # Eliminate abundances which are not in the tree (with a warning)
-  SpeciesNotFound <- setdiff(rownames(NorP), names(ppTree$phyTree$leaves))
+  SpeciesNotFound <- setdiff(rownames(NorP), ppTree$phyTree$tip.label)
   if (length(SpeciesNotFound) > 0) {
-    NorP <- NorP[intersect(rownames(NorP),names(ppTree$phyTree$leaves)), ]
+    NorP <- NorP[intersect(rownames(NorP), ppTree$phyTree$tip.label), ]
     if (nrow(NorP) > 1) { 
       # Some species have been dropped
-      warning(paste("Species not found in the tree: ", SpeciesNotFound, collapse = "; "))
+      warning(paste("Species not found in the tree: ", SpeciesNotFound, collapse="; "))
     } else {
       # Less than 2 species were kept. Cannot calculate diversity.
       stop("Species cannot be found in the tree")

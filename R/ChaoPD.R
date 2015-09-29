@@ -4,50 +4,47 @@ function(Ps, q = 1, PhyloTree, Normalize = TRUE, CheckArguments = TRUE)
   if (CheckArguments)
     CheckentropartArguments()
   
-  # PhyloTree must be either a phylog or a hclust object
-  if (inherits(PhyloTree, "PPtree")) {
-    phyTree <- PhyloTree$phyTree
+  # Tree must be either a phylog, phylo or a hclust object
+  if (inherits(PhyloTree, "phylog")) {
+    # build a phylo object. Go through an hclust because as.phylo.phylog generates errors
+    hTree <- stats::hclust(PhyloTree$Wdist^2/2, "average")
+    Tree <- ape::as.phylo.hclust(hTree)
   } else {
-    if (inherits(PhyloTree, "phylog")) {
-      phyTree <- PhyloTree
+    if (inherits(PhyloTree, "hclust")) {
+      # build a phylo object
+      Tree <- ape::as.phylo.hclust(PhyloTree)
     } else {
-      if (inherits(PhyloTree, "hclust")) {
-        phyTree <- ade4::hclust2phylog(PhyloTree)
+      if (inherits(PhyloTree, "phylo")) {
+        Tree <- PhyloTree
       } else {
-        stop("PhyloTree must be an object of class phylog or hclust")
+        if (inherits(PhyloTree, "PPtree")) {
+          Tree <- PhyloTree$phyTree
+        } else {
+          stop("Tree must be an object of class phylo, phylog, hclust or PPtree")
+        }
       }
     }
   }
   
+  # Ps must be named
+  if (is.null(names(Ps)))
+    stop("Ps must be named to match the tree's species")
   # Verifiy all species are in the tree
-  SpeciesNotFound <- setdiff(names(Ps), names(phyTree$leaves))
+  SpeciesNotFound <- setdiff(names(Ps), Tree$tip.label)
   if (length(SpeciesNotFound) > 0) {
     stop(paste("Species not found in the tree: ", SpeciesNotFound, collapse = "; "))
     print(SpeciesNotFound)
   }
-  
-  
-  # Prepare the vector of branches
-  Names <- c(names(phyTree$leaves), names(phyTree$nodes))
-  Branches <- vector("numeric", length(Names))
-  names(Branches) <- Names
-  # Eliminate "Root"
-  Branches <- Branches[-length(Branches)]
-  # Get unnormalized probabilities p(b)
-  Branches[names(Ps)]=Ps
-  for (NodeName in names(phyTree$nodes[-length(phyTree$nodes)])) {
-    Branches[NodeName] <- sum(Branches[phyTree$parts[[NodeName]]])
-  }
-  
-  # Lengths
-  Lengths <- phyTree$droot[-length(phyTree$droot)]
-  for (PartName in names(Lengths)) {
-    Lengths[phyTree$parts[[PartName]]] <- phyTree$droot[phyTree$parts[[PartName]]]-phyTree$droot[PartName]
-  }
-  # Normalize to get l(b)
-  Tbar <- mean(phyTree$droot[names(phyTree$leaves)])
-  Lengths <- Lengths/Tbar
 
+  # Branch lengths
+  Lengths <- Tree$edge.length
+  # Get unnormalized probabilities p(b)
+  ltips <- sapply(Tree$edge[, 2], function(node) geiger::tips(Tree, node))
+  Branches <- unlist(lapply(ltips, function(VectorOfTips) sum(Ps[VectorOfTips])))
+  # Normalize to get l(b)
+  Tbar <- sum(Lengths*Branches)
+  Lengths <- Lengths/Tbar
+  
   # Eliminate zeros
   Lengths <- Lengths[Branches != 0]
   Branches <- Branches[Branches != 0]

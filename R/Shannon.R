@@ -70,9 +70,13 @@ function(Ns, Correction = "Best", CheckArguments = TRUE)
   # Eliminate 0
   Ns <- Ns[Ns > 0]
   N <- sum(Ns)
-  # Exit if Ns contains a single species
+  # Exit if Ns contains no or a single species
   if (length(Ns) < 2) {
-    return(0)
+  	if (length(Ns) == 0) {
+  		return(NA)
+  	} else {
+  		return(0)
+  	}
   } else {
     # Probabilities instead of abundances
     if (N < 2) {

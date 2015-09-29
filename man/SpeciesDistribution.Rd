@@ -109,13 +109,18 @@ is.AbdVector(x)
   
   \code{SpeciesDistribution} objects can be plotted. The \code{plot} method returns the estimated parameters of the fitted distribution. The broken stick has no parameter, so the maximum abundance is returned.
 }
+\note{
+  Fisher's alpha (Fisher \emph{et al.}, 1943) is estimated to fit the log-series distribution. The estimation is done by the \code{\link{fisher.alpha}} function of package \code{vegan}. It may differ substantially from the estimation returned by \code{optimal.theta} from package \code{untb}.
+}
 \author{
-  Eric Marcon <Eric.Marcon@ecofog.gf>
+  Eric Marcon <Eric.Marcon@ecofog.gf>, Bruno Herault <Bruno.Herault@ecofog.gf>
 }
 \references{
   Chao, A., Wang, Y. T. and Jost, L. (2013). Entropy and the species accumulation curve: a novel entropy estimator via discovery rates of new species. \emph{Methods in Ecology and Evolution} 4(11):1091-1100.
 
   Chao, A., Hsieh, T. C., Chazdon, R. L., Colwell, R. K., Gotelli, N. J. (2015) Unveiling the Species-Rank Abundance Distribution by Generalizing Good-Turing Sample Coverage Theory. \emph{Ecology} 96(5): 1189-1201.
+
+  Fisher R.A., Corbet A.S., Williams C.B. (1943) The Relation Between the Number of Species and the Number of Individuals in a Random Sample of an Animal Population. \emph{Journal of Animal Ecology} 12: 42-58.
 
   Gregorius H.-R. (2010) Linking Diversity and Differentiation. \emph{Diversity} 2(3): 370-394.
 }

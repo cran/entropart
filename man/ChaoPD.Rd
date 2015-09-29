@@ -17,7 +17,7 @@ ChaoPD(Ps, q = 1, PhyloTree, Normalize = TRUE, CheckArguments = TRUE)
     A number: the order of diversity. Default is 1.
   }
   \item{PhyloTree}{
-    An object of class \code{\link{hclust}} or \code{\link{phylog}}. The tree is not necessarily ultrametric. Computation is must faster if the tree is \code{\link{phylog}} or \code{\link{PPtree}}
+    An object of class \code{\link{hclust}}, \code{\link{phylo}}, \code{\link{phylog}} or \code{\link{PPtree}}. The tree is not necessarily ultrametric.
   }
   \item{Normalize}{
     If \code{TRUE} (default), diversity is not affected by the height of the tree.\cr
@@ -32,8 +32,6 @@ ChaoPD(Ps, q = 1, PhyloTree, Normalize = TRUE, CheckArguments = TRUE)
   
   The \code{Normalize} arguments allows calculating either \eqn{^{q}\bar{D}(T)} (if \code{TRUE}) or \eqn{^{q}PD(T)} if \code{FALSE}.
 
-  This function allows very efficient calculation when the \code{Tree} is of class \code{\link{phylog}} or \code{\link{PPtree}} (\code{\link{hclust}} trees must be converted to \code{\link{phylog}}, a slow process).
-  
   Diversity can be calculated for non ultrametric trees following Chao \emph{et al.} (2010) even though the meaning of the result is not so clear (Leinster and Cobold, 2011).
 }
 \value{

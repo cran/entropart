@@ -276,8 +276,8 @@ function() {
   if (!is.na(names(Args["Tree"]))) {
     Tree <- eval(expression(Tree), parent.frame())
     if (!is.null(Tree)) {
-      if (!inherits(Tree, "phylog") & !inherits(Tree, "hclust") & !inherits(Tree, "PPtree"))
-        ErrorMessage("Tree may be NULL or an object of class hclust or phylog or PPtree.", Tree)
+      if (!inherits(Tree, "phylo") & !inherits(Tree, "phylog") & !inherits(Tree, "hclust") & !inherits(Tree, "PPtree"))
+        ErrorMessage("Tree may be NULL or an object of class hclust or phylo or phylog or PPtree.", Tree)
       if (inherits(Tree, "phylog")) {
         if (is.null(Tree$Wdist))
           ErrorMessage("phylog Tree must contain a distance matrix (use add.tools=TRUE when creating it).", Tree)
@@ -288,9 +288,13 @@ function() {
   if (!is.na(names(Args["PhyloTree"]))) {
     PhyloTree <- eval(expression(PhyloTree), parent.frame())
     if (!is.null(PhyloTree)) {
-      if (!inherits(PhyloTree, "phylog") & !inherits(PhyloTree, "hclust") & !inherits(PhyloTree, "PPtree"))
-        ErrorMessage("PhyloTree may be NULL or an object of class hclust or phylog or PPtree.", PhyloTree)
-    }  
+      if (!inherits(PhyloTree, "phylo") & !inherits(PhyloTree, "phylog") & !inherits(PhyloTree, "hclust") & !inherits(PhyloTree, "PPtree"))
+        ErrorMessage("PhyloTree may be NULL or an object of class hclust or phylo or phylog or PPtree", PhyloTree)
+      if (inherits(PhyloTree, "phylog")) {
+        if (is.null(PhyloTree$Wdist))
+          ErrorMessage("phylog PhyloTree must contain a distance matrix (use add.tools=TRUE when creating it).", PhyloTree)
+      }
+    }
   }
   
   # prob

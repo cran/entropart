@@ -67,23 +67,38 @@ function(Ns, Correction = "Chao1", Alpha = 0.05, JackOver = FALSE, CheckArgument
   if (CheckArguments)
     CheckentropartArguments()
   
-  # No correction
-  if (Correction == "None") {
-    return(Richness.ProbaVector(Ns/sum(Ns), CheckArguments = FALSE))
-  }
-  
-  # Eliminate 0 and calculate basic statistics
+  # Eliminate 0
   Ns <- Ns[Ns > 0]
   N <- sum(Ns)
+  # Exit if Ns contains no or a single species
+  if (length(Ns) < 2) {
+    if (length(Ns) == 0) {
+      return(NA)
+    } else {
+      return(0)
+    }
+  } else {
+    # Probabilities instead of abundances
+    if (N < 2) {
+      warning("Bias correction attempted with probability data. Correction forced to 'None'")
+      Correction <- "None"
+    }
+  }
+  
+  # Calculate basic statistics
   S <- length(Ns)
+
+  # No correction
+  if (Correction == "None") {
+    names(S) <- "None"
+    return(S)
+  }
+
+  # Calculate basic statistics
   AFC <- AbdFreqCount(Ns)
   S1 <- AFC[AFC[, 1] == 1][2]
   S2 <- AFC[AFC[, 1] == 2][2]
   
-  # No correction
-  if (Correction == "None") {
-    return(S)
-  }
   
   # Chao1
   if ((Correction == "Chao1") | (Correction == "iChao1")) {
@@ -97,7 +112,9 @@ function(Ns, Correction = "Chao1", Alpha = 0.05, JackOver = FALSE, CheckArgument
     }
   }
   if (Correction == "Chao1") {
-    return(S + S0)
+    S <- S + S0
+    names(S) <- "Chao1"
+    return(S)
   }
   if (Correction == "iChao1") {
     S3 <- AFC[AFC[, 1] == 3][2]
@@ -109,7 +126,9 @@ function(Ns, Correction = "Chao1", Alpha = 0.05, JackOver = FALSE, CheckArgument
       S4 <- 1
     }
     iS0 <- S3/4/S4*max(S1-S2*S3/2/S4, 0)
-    return(S + S0 + iS0)
+    S <- S + S0 + iS0
+    names(S) <- "iChao1"
+    return(S)
   }
   
   if (Correction == "Jackknife") {
@@ -156,9 +175,10 @@ function(Ns, Correction = "Chao1", Alpha = 0.05, JackOver = FALSE, CheckArgument
     x <- (gene[2:(k + 1), 5] < coe)
     if (sum(x, na.rm=TRUE) == 0) {
       # If none, keep the max value of k
-      jackest <- gene[k + 1, 1]
+      Smallestk <- k + 1
+      jackest <- gene[Smallestk, 1]
       # Estimated standard error
-      sej <- gene[k + 1, 2]
+      sej <- gene[Smallestk, 2]
     }
     else {
       # Else, keep the smallest value (+1 because jack1 is in line 2)
@@ -171,6 +191,7 @@ function(Ns, Correction = "Chao1", Alpha = 0.05, JackOver = FALSE, CheckArgument
       # Estimated standard error
       sej <- gene[Smallestk, 2]
     }
+    names(jackest) <- paste("Jackknife", Smallestk-1)
     return(jackest) 
   }
 }

@@ -75,9 +75,13 @@ function(Ns, q = 1, Correction = "Best", CheckArguments = TRUE)
   # Eliminate 0
   Ns <- Ns[Ns > 0]
   N <- sum(Ns)
-  # Exit if Ns contains a single species
+  # Exit if Ns contains no or a single species
   if (length(Ns) < 2) {
-    return(0)
+	  if (length(Ns) == 0) {
+		  return(NA)
+	  } else {
+		  return(0)
+	  }
   } else {
     # Probabilities instead of abundances
     if (N < 2) {
@@ -141,19 +145,29 @@ function(Ns, q = 1, Correction = "Best", CheckArguments = TRUE)
     Doubletons <- DistN["2"]
     # Calculate A
     if (is.na(Doubletons)) {
+      Doubletons <- 0
       if (is.na(Singletons)) {
         A <- 1
+        Singletons <- 0
       } else {
+        if (is.na(Singletons)) {
+          Singletons <- 0
+        }
         A <- 2/((N-1)*(Singletons-1)+2)
       }
     } else {
       A <- 2*Doubletons/((N-1)*Singletons+2*Doubletons)
     }
     # Eq 7d in Chao & Jost (2015). Terms for r in 1:(N-1) equal (-1)^r * w_v[r] * (A-1)^r. w_v is already available from ZhangGrabchak
-    Eq7dSum <- sapply(1:(N-1), function(r) w_v[r]*(1-A)^r)
-    # Calculate the estimator of the bias. Eq7dSum contains all terms of the sum except for r=0: the missing term equals 1.
-    # The bias in Chao & Jost (2015) is that of the Hill number. It must be divided by 1-q to be applied to entropy.
-    ChaoJostBias <- (Singletons/N*(1-A)^(1-N) * (A^(q-1) - sum(Eq7dSum) - 1))/(1-q)
+    if (A == 1) {
+      # The general formula of Eq 7d has a 0/0 part that must be forced to 0
+      ChaoJostBias <- 0
+    } else {
+      Eq7dSum <- sapply(1:(N-1), function(r) w_v[r]*(1-A)^r)
+      # Calculate the estimator of the bias. Eq7dSum contains all terms of the sum except for r=0: the missing term equals 1.
+      # The bias in Chao & Jost (2015) is that of the Hill number. It must be divided by 1-q to be applied to entropy.
+      ChaoJostBias <- (Singletons/N*(1-A)^(1-N) * (A^(q-1) - sum(Eq7dSum) - 1))/(1-q)
+    }
     return(as.numeric(ZhangGrabchak + ChaoJostBias))
   }
   if (Correction == "ChaoShen" | Correction == "GenCov" | Correction == "Marcon") {

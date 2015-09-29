@@ -114,9 +114,13 @@ function (Ns, q = 1, Z = diag(length(Ns)), Correction = "Best", CheckArguments =
   }
   
   N <- sum(Ns)
-  # Exit if Ns contains a single species
+  # Exit if Ns contains no or a single species
   if (length(Ns) < 2) {
-    return(0)
+  	if (length(Ns) == 0) {
+  		return(NA)
+  	} else {
+  		return(0)
+  	}
   } else {
     # Probabilities instead of abundances
     if (N < 2) {
