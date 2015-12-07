@@ -8,6 +8,13 @@ function(NorP, k = 2, CheckArguments = TRUE, Ps = NULL, Ns = NULL)
 HurlbertD.ProbaVector <-
 function(NorP, k = 2, CheckArguments = TRUE, Ps = NULL, Ns = NULL) 
 {
+  if (missing(NorP)){
+    if (!missing(Ps)) {
+      NorP <- Ps
+    } else {
+      stop("An argument NorP or Ps must be provided.")
+    }
+  }
   if (CheckArguments)
     CheckentropartArguments()
   
@@ -16,13 +23,22 @@ function(NorP, k = 2, CheckArguments = TRUE, Ps = NULL, Ns = NULL)
   # Find the effective number of species numerically
   f <- function(D, S, k) D*(1-(1-1/D)^k)-S
   Dk <- stats::uniroot(f, c(1, 1E+7), S=Sk, k=k)
-  return (Dk$root)
+  diversity <- Dk$root
+  names(diversity) <- "Biased"
+  return (diversity)
 }
 
 HurlbertD.AbdVector <-
 function(NorP, k = 2, CheckArguments = TRUE, Ps = NULL, Ns = NULL)
 {
-  return(bcHurlbertD(Ns=NorP, k=k, CheckArguments=CheckArguments))
+  if (missing(NorP)){
+    if (!missing(Ns)) {
+      NorP <- Ns
+    } else {
+      stop("An argument NorP or Ns must be provided.")
+    }
+  }
+  return (bcHurlbertD(Ns=NorP, k=k, CheckArguments=CheckArguments))
 }
 
 
@@ -36,7 +52,7 @@ function(NorP, k = 2, CheckArguments = TRUE, Ps = NULL, Ns = NULL)
       stop("An argument NorP Ns must be provided.")
     }
   }
-  return(bcHurlbertD(Ns=NorP, k=k, CheckArguments=CheckArguments))
+  return (bcHurlbertD(Ns=NorP, k=k, CheckArguments=CheckArguments))
 }
 
 
@@ -57,10 +73,10 @@ function(NorP, k = 2, CheckArguments = TRUE, Ps = NULL, Ns = NULL)
   
   if (abs(sum(NorP) - 1) < length(NorP)*.Machine$double.eps) {
     # Probabilities sum to 1, allowing rounding error
-    return(HurlbertD.ProbaVector(NorP, k=k, CheckArguments=CheckArguments))
+    return (HurlbertD.ProbaVector(NorP, k=k, CheckArguments=CheckArguments))
   } else {
     # Abundances
-    return(HurlbertD.AbdVector(NorP, k=k, CheckArguments=CheckArguments))
+    return (HurlbertD.AbdVector(NorP, k=k, CheckArguments=CheckArguments))
   }
 }
 
@@ -76,5 +92,7 @@ function(Ns, k = 2, CheckArguments = TRUE)
   # Find the effective number of species numerically
   f <- function(D, S, k) D*(1-(1-1/D)^k)-S
   Dk <- stats::uniroot(f, c(1, 1E+7), S=Sk, k=k)
-  return (Dk$root)
+  diversity <- Dk$root
+  names(diversity) <- "Unbiased"
+  return (diversity)
 }

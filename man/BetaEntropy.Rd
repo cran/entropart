@@ -1,10 +1,10 @@
 \name{BetaEntropy}
 \alias{BetaEntropy}
 \title{
-  Unbiased beta entropy of a metacommunity
+  Reduced-bias beta entropy of a metacommunity
 }
 \description{
-  Calculates the unbiased beta entropy of order \eqn{q} between communities.
+  Calculates the reduced-bias beta entropy of order \eqn{q} between communities.
 }
 \usage{
 BetaEntropy(MC, q = 1, Correction = "Best", Tree = NULL, Normalize = TRUE, 
@@ -35,9 +35,9 @@ BetaEntropy(MC, q = 1, Correction = "Best", Tree = NULL, Normalize = TRUE,
   }
 }
 \details{
-  If \code{Tree} is not \code{NULL}, then phylogenetic entropy is calculated by \code{\link{bcPhyloBetaEntropy}} else if \code{Z} is not \code{NULL}, then similarity-based entropy is calculated by \code{\link{bcHqzBeta}}, else neutral entropy is calculated by \code{\link{bcTsallisBeta}}, else .
+  If \code{Tree} is not \code{NULL}, then phylogenetic entropy is calculated by \code{\link{bcPhyloBetaEntropy}}; else, if \code{Z} is not \code{NULL}, then similarity-based entropy is calculated by \code{\link{bcHqzBeta}}; else, neutral entropy is calculated by \code{\link{bcTsallisBeta}}.
   
-  The unbiased beta entropy of each community is calculated and summed according to community weights.
+  The reduced-bias beta entropy of each community is calculated and summed according to community weights.
 
   Note that beta entropy is related to alpha entropy (if \eqn{q} is not 1) and cannot be compared accross communities (Jost, 2007). Do rather calculate the \code{\link{BetaDiversity}} of the metacommunity.
 }

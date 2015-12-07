@@ -8,6 +8,13 @@ function(NorP, q = 1, Tree, Normalize = TRUE, Correction = "Best", CheckArgument
 PhyloEntropy.ProbaVector <-
 function(NorP, q = 1, Tree, Normalize = TRUE, Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns = NULL) 
 {
+  if (missing(NorP)){
+    if (!missing(Ps)) {
+      NorP <- Ps
+    } else {
+      stop("An argument NorP or Ps must be provided.")
+    }
+  }
   if (CheckArguments)
     CheckentropartArguments()
   
@@ -29,6 +36,13 @@ function(NorP, q = 1, Tree, Normalize = TRUE, Correction = "Best", CheckArgument
 PhyloEntropy.AbdVector <-
 function(NorP, q = 1, Tree, Normalize = TRUE, Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns = NULL) 
 {
+  if (missing(NorP)){
+    if (!missing(Ns)) {
+      NorP <- Ns
+    } else {
+      stop("An argument NorP or Ns must be provided.")
+    }
+  }
   return(bcPhyloEntropy(Ns=NorP, q=q, Tree=Tree, Normalize=Normalize, Correction=Correction, CheckArguments=CheckArguments))
 }
 
@@ -110,7 +124,7 @@ function(object, ...)
   }
   if (!is.null(object$Tree)) {
     cat("\nPhylogenetic or functional entropy was calculated according to the tree", object$Tree, "\n", fill=TRUE)
-    cat("Entropy is", ifelse(object$Normalized, "", "not"), "normalized", fill=TRUE)
+    cat("Entropy is", ifelse(object$Normalized, "normalized", "not normalized"), fill=TRUE)
   }
   cat("\nEntropy equals:", object$Total)
   return(invisible(NULL))

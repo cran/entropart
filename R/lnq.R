@@ -18,11 +18,11 @@ function(Profile)
     stop("Profile must be a CommunityProfile")
   
   CP <- Profile
-  CP$y <- sapply(1:length(CP$x), function(i) lnq(CP$y[i], CP$x[i]))
+  CP$y <- vapply(1:length(CP$x), function(i) lnq(CP$y[i], CP$x[i]), 0)
   if (!is.null(CP$low))
-    CP$low <- sapply(1:length(CP$x), function(i) lnq(CP$low[i], CP$x[i]))
+    CP$low <- vapply(1:length(CP$x), function(i) lnq(CP$low[i], CP$x[i]), 0)
   if (!is.null(CP$hi))
-    CP$hi <- sapply(1:length(CP$x), function(i) lnq(CP$hi[i], CP$x[i]))
+    CP$hi <- vapply(1:length(CP$x), function(i) lnq(CP$hi[i], CP$x[i]), 0)
   
   return (CP)
 }

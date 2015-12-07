@@ -1,10 +1,10 @@
 \name{GammaDiversity}
 \alias{GammaDiversity}
 \title{
-  Unbiased gamma diversity of a metacommunity
+  Reduced-bias gamma diversity of a metacommunity
 }
 \description{
-  Calculates the unbiased diversity of order \eqn{q} of a metacommunity.
+  Calculates the reduced-bias diversity of order \eqn{q} of a metacommunity.
 }
 \usage{
 GammaDiversity(MC, q = 1, Correction = "Best", Tree = NULL, Normalize = TRUE, 
@@ -18,7 +18,7 @@ GammaDiversity(MC, q = 1, Correction = "Best", Tree = NULL, Normalize = TRUE,
     A number: the order of diversity. Default is 1.
   }
   \item{Correction}{
-    A string containing one of the possible corrections: \code{"ChaoShen"}, \code{"Grassberger"}, \code{"Holste"}, \code{"Bonachela"} or \code{"Best"}, the default value.
+    A string containing one of the possible corrections accepted by \code{\link{AlphaEntropy}} or \code{"None"} or \code{"Best"}, the default value.
   }
   \item{Tree}{
     An object of class \code{\link{hclust}} or \code{\link{phylog}}. The tree must be ultrametric.

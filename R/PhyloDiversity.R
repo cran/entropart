@@ -8,6 +8,13 @@ function(NorP, q = 1, Tree, Normalize = TRUE, Correction = "Best", CheckArgument
 PhyloDiversity.ProbaVector <-
 function(NorP, q = 1, Tree, Normalize = TRUE, Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns = NULL) 
 {
+  if (missing(NorP)){
+    if (!missing(Ps)) {
+      NorP <- Ps
+    } else {
+      stop("An argument NorP or Ps must be provided.")
+    }
+  }
   if (CheckArguments)
     CheckentropartArguments()
   
@@ -28,6 +35,7 @@ function(NorP, q = 1, Tree, Normalize = TRUE, Correction = "Best", CheckArgument
   Diversity$Tree <- deparse(substitute(Tree))
   Diversity$Type <- "alpha or gamma"
   Diversity$Order <- q
+  Diversity$Normalized <- Normalize
   
   class(Diversity) <- c("PhyloDiversity", "PhyloValue")
   
@@ -38,6 +46,13 @@ function(NorP, q = 1, Tree, Normalize = TRUE, Correction = "Best", CheckArgument
 PhyloDiversity.AbdVector <-
 function(NorP, q = 1, Tree, Normalize = TRUE, Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns = NULL) 
 {
+  if (missing(NorP)){
+    if (!missing(Ns)) {
+      NorP <- Ns
+    } else {
+      stop("An argument NorP or Ns must be provided.")
+    }
+  }
   return(bcPhyloDiversity(Ns=NorP, q=q, Tree=Tree, Normalize=Normalize, Correction=Correction, CheckArguments=CheckArguments))
 }
 
@@ -106,6 +121,7 @@ function(Ns, q = 1, Tree, Normalize = TRUE, Correction = "Best", CheckArguments 
   Diversity$Type <- "alpha or gamma"
   Diversity$Order <- q
   Diversity$Correction <- Correction
+  Diversity$Normalized <- Normalize
   
   class(Diversity) <- c("PhyloDiversity", "PhyloValue")
   
@@ -129,7 +145,7 @@ function(object, ...)
   }
   if (!is.null(object$Tree)) {
     cat("\nPhylogenetic or functional diversity was calculated according to the tree", object$Tree, "\n", fill=TRUE)
-    cat("Diversity is", ifelse(object$Normalized, "", "not"), "normalized", fill=TRUE)
+    cat("Diversity is", ifelse(object$Normalized, "normalized", "not normalized"), fill=TRUE)
   }
   cat("\nDiversity equals:", object$Total)
   return(invisible(NULL))

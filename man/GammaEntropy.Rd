@@ -1,10 +1,10 @@
 \name{GammaEntropy}
 \alias{GammaEntropy}
 \title{
-  Unbiased gamma entropy of a metacommunity
+  Reduced-bias gamma entropy of a metacommunity
 }
 \description{
-  Calculates the unbiased Tsallis entropy of order \eqn{q} of a metacommunity.
+  Calculates the reduced-bias Tsallis entropy of order \eqn{q} of a metacommunity.
 }
 \usage{
 GammaEntropy(MC, q = 1, Correction = "Best", Tree = NULL, Normalize = TRUE, 
@@ -35,7 +35,11 @@ GammaEntropy(MC, q = 1, Correction = "Best", Tree = NULL, Normalize = TRUE,
   }
 }
 \details{
-  If \code{Tree} is not \code{NULL}, then phylogenetic entropy is calculated by \code{\link{bcPhyloEntropy}} else if \code{Z} is not \code{NULL}, then similarity-based entropy is calculated by \code{\link{bcHqz}}, else neutral entropy is calculated by \code{\link{bcTsallis}}, else .
+  If \code{Tree} is not \code{NULL}, then phylogenetic entropy is calculated by \code{\link{bcPhyloEntropy}}.
+  
+  Else, if \code{Z} is not \code{NULL}, then similarity-based entropy is calculated by \code{\link{bcHqz}}.
+  
+  Else, neutral entropy is calculated by \code{\link{bcTsallis}}.
 }
 \value{
   A number equal to the calculated entropy.

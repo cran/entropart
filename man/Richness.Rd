@@ -9,7 +9,7 @@
   Number of species of a community
 }
 \description{
-  Calculates the number of species from probability vector.
+  Calculates the number of species from probability vector.  The name is that of the estimator (the bias correction) used.
 }
 \usage{
 Richness(NorP, Correction = "Chao1", Alpha = 0.05, JackOver = FALSE, 
@@ -57,7 +57,7 @@ bcRichness(Ns, Correction = "Chao1", Alpha = 0.05, JackOver = FALSE,
   The functions are designed to be used as simply as possible. \code{Richness} is a generic method. If its first argument is an abundance vector, an integer vector or a numeric vector which does not sum to 1, the bias corrected function \code{bcRichness} is called. Explicit calls to \code{bcRichness} (with bias correction) or to \code{Richness.ProbaVector} (without correction) are possible to avoid ambiguity. The \code{.integer} and \code{.numeric} methods accept \code{Ps} or \code{Ns} arguments instead of \code{NorP} for backward compatibility.
 }
 \value{
-  A number equal to the estimated number of species.
+  A named number equal to the estimated number of species.
 }
 \references{
   Burnham, K. P., and Overton,W. S. (1978), Estimation of the Size of a Closed Population When Capture Probabilities Vary Among Animals. \emph{Biometrika}, 65:625-633.

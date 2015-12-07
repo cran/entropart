@@ -8,6 +8,13 @@ function(NorP, q = 1, Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns 
 Tsallis.ProbaVector <-
 function(NorP, q = 1, Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns = NULL) 
 {
+  if (missing(NorP)){
+    if (!missing(Ps)) {
+      NorP <- Ps
+    } else {
+      stop("An argument NorP or Ps must be provided.")
+    }
+  }
   if (CheckArguments)
     CheckentropartArguments()
   
@@ -16,14 +23,23 @@ function(NorP, q = 1, Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns 
   # Eliminate unobserved species
   dataTsallis[Ps == 0] <- 0
   
-  return (sum(dataTsallis))
+  entropy <- sum(dataTsallis)
+  names(entropy) <- "None"
+  return (entropy)
 }
 
 
 Tsallis.AbdVector <-
 function(NorP, q = 1, Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns = NULL) 
 {
-  return(bcTsallis(Ns=NorP, q=q, Correction=Correction, CheckArguments=CheckArguments))
+  if (missing(NorP)){
+    if (!missing(Ns)) {
+      NorP <- Ns
+    } else {
+      stop("An argument NorP or Ns must be provided.")
+    }
+  }
+  return (bcTsallis(Ns=NorP, q=q, Correction=Correction, CheckArguments=CheckArguments))
 }
 
 
@@ -72,15 +88,21 @@ function(Ns, q = 1, Correction = "Best", CheckArguments = TRUE)
   if (CheckArguments)
     CheckentropartArguments()
   
+  if (Correction == "Best") Correction <- "ChaoWangJost"
+  
   # Eliminate 0
   Ns <- Ns[Ns > 0]
   N <- sum(Ns)
   # Exit if Ns contains no or a single species
   if (length(Ns) < 2) {
 	  if (length(Ns) == 0) {
-		  return(NA)
+	    entropy <- NA
+	    names(entropy) <- "No Species"
+	    return (entropy)
 	  } else {
-		  return(0)
+	    entropy <- 0
+	    names(entropy) <- "Single Species"
+	    return (entropy)
 	  }
   } else {
     # Probabilities instead of abundances
@@ -92,12 +114,14 @@ function(Ns, q = 1, Correction = "Best", CheckArguments = TRUE)
 
   # No correction
   if (Correction == "None") {
-    return(Tsallis.ProbaVector(Ns/sum(Ns), q, CheckArguments = FALSE))
+    entropy <- Tsallis.ProbaVector(Ns/sum(Ns), q, CheckArguments = FALSE)
+    names(entropy) <- Correction
+    return (entropy)
   }
   
   
   # Common code for ZhangGrabchak
-  if (Correction == "ZhangGrabchak" | Correction == "ChaoWangJost" | Correction == "Best") {
+  if (Correction == "ZhangGrabchak" | Correction == "ChaoWangJost") {
     Ps <- Ns/N
     V <- 1:(N-1)
     # p_V_Ns is an array, containing (1 - (n_s-1)/(n-j)) for each species (lines) and all j from 1 to n-1
@@ -116,12 +140,16 @@ function(Ns, q = 1, Correction = "Best", CheckArguments = TRUE)
     if (Correction == "Marcon") {
       ChaoShen <- bcShannon(Ns, Correction="ChaoShen", CheckArguments=FALSE)
       Grassberger <- bcShannon(Ns, Correction="Grassberger", CheckArguments=FALSE)
-      return(max(ChaoShen, Grassberger))
+      entropy <- max(ChaoShen, Grassberger)
+      names(entropy) <- Correction
+      return (entropy)
     } else {
       if (Correction == "ZhangGrabchak") {
         # Weights
         w_v <- 1/V
-        return(sum(Ps*sapply(1:length(Ns), S_v)))
+        entropy <- sum(Ps*vapply(1:length(Ns), S_v, 0))
+        names(entropy) <- Correction
+        return (entropy)
       } else {
         return (bcShannon(Ns, Correction=Correction, CheckArguments=FALSE)) 
       }
@@ -129,14 +157,15 @@ function(Ns, q = 1, Correction = "Best", CheckArguments = TRUE)
   }
   
   # Not Shannon
-  if (Correction == "ZhangGrabchak" | Correction == "ChaoWangJost" | Correction == "Best") {
+  if (Correction == "ZhangGrabchak" | Correction == "ChaoWangJost") {
     # Weights
     i <- 1:N
     w_vi <- (i-q)/i
     w_v <- cumprod(w_vi)
-    ZhangGrabchak <- sum(Ps*sapply(1:length(Ns), S_v))/(1-q)
+    ZhangGrabchak <- sum(Ps*vapply(1:length(Ns), S_v, 0))/(1-q)
     # ZhangGrabchak stops here, but ChaoWangJost adds an estimator of the bias
     if (Correction == "ZhangGrabchak") {
+      names(ZhangGrabchak) <- Correction
       return(ZhangGrabchak)
     } 
     # Calculate abundance distribution to obtain A
@@ -163,12 +192,14 @@ function(Ns, q = 1, Correction = "Best", CheckArguments = TRUE)
       # The general formula of Eq 7d has a 0/0 part that must be forced to 0
       ChaoJostBias <- 0
     } else {
-      Eq7dSum <- sapply(1:(N-1), function(r) w_v[r]*(1-A)^r)
+      Eq7dSum <- vapply(1:(N-1), function(r) w_v[r]*(1-A)^r, 0)
       # Calculate the estimator of the bias. Eq7dSum contains all terms of the sum except for r=0: the missing term equals 1.
       # The bias in Chao & Jost (2015) is that of the Hill number. It must be divided by 1-q to be applied to entropy.
       ChaoJostBias <- (Singletons/N*(1-A)^(1-N) * (A^(q-1) - sum(Eq7dSum) - 1))/(1-q)
     }
-    return(as.numeric(ZhangGrabchak + ChaoJostBias))
+    entropy <- as.numeric(ZhangGrabchak + ChaoJostBias)
+    names(entropy) <- Correction
+    return (entropy)
   }
   if (Correction == "ChaoShen" | Correction == "GenCov" | Correction == "Marcon") {
     SampleCoverage <- Coverage(Ns, CheckArguments=FALSE)
@@ -183,26 +214,44 @@ function(Ns, q = 1, Correction = "Best", CheckArguments = TRUE)
     ChaoShen <- -sum(CPs^q * lnq(CPs, q) /(1 - (1-CPs)^N))
   }
   if (Correction == "ChaoShen" | Correction == "GenCov") {
+    names(ChaoShen) <- Correction
     return(ChaoShen)
   }
   if (Correction == "Grassberger" | Correction == "Marcon") {
     Grassberger <- (1-N^(-q)*sum(Enq(Ns, q)))/(q-1)
   }
   if (Correction == "Grassberger") {
+    names(Grassberger) <- Correction
     return(Grassberger)
   }
   if (Correction == "Marcon") {
-    return(max(ChaoShen, Grassberger))
+    entropy <- max(ChaoShen, Grassberger)
+    names(entropy) <- Correction
+    return (entropy)
   }
   if (Correction == "Holste") {
-    return(1/(1-q)*(beta(length(Ns)+N, q)*sum(1/beta(Ns+1, q))-1))  
+    entropy <- 1/(1-q)*(beta(length(Ns)+N, q)*sum(1/beta(Ns+1, q))-1)
+    names(entropy) <- Correction
+    return (entropy)
   } 
   if (Correction == "Bonachela") {
-    return(1/(1-q)*(beta(2+N, q)*sum(1/beta(Ns+1, q))-1))  
+    entropy <- 1/(1-q)*(beta(2+N, q)*sum(1/beta(Ns+1, q))-1)
+    names(entropy) <- Correction
+    return (entropy)
   }
-  if (Correction == "Unveil") {
-    TunedPs <- as.ProbaVector(Ns, Correction="Chao2015", Unveiling="geom", RCorrection = "Jackknife", CheckArguments = FALSE)
-    return(Tsallis(TunedPs, q, CheckArguments = FALSE))
+  if (Correction == "UnveilC") {
+    TunedPs <- as.ProbaVector(Ns, Correction="Chao2015", Unveiling="geom", RCorrection = "Chao1", CheckArguments=FALSE)
+  }
+  if (Correction == "UnveiliC") {
+    TunedPs <- as.ProbaVector(Ns, Correction="Chao2015", Unveiling="geom", RCorrection = "iChao1", CheckArguments=FALSE)
+  }
+  if (Correction == "UnveilJ") {
+    TunedPs <- as.ProbaVector(Ns, Correction="Chao2015", Unveiling="geom", RCorrection = "Jackknife", CheckArguments=FALSE)
+  }
+  if (Correction == "UnveilC" | Correction == "UnveiliC" | Correction == "UnveilJ") {
+    entropy <- Tsallis.ProbaVector(TunedPs, q, CheckArguments = FALSE)
+    names(entropy) <- Correction
+    return (entropy)
   }
   
   warning("Correction was not recognized")

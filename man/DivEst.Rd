@@ -93,8 +93,8 @@ is.DivEst(x)
   # Load Paracou data (number of trees per species in two 1-ha plot of a tropical forest)
   data(Paracou618)
   # Estimate Shannon diversity.
-  Estimation <- DivEst(q = 1, Paracou618.MC, Biased = FALSE, Correction = "Best", 
-    Simulations = 100)
+  Estimation <- DivEst(q = 1, Paracou618.MC, Biased = FALSE, Correction = "UnveilJ", 
+    Simulations = 20)
   plot(Estimation)
   summary(Estimation)
 }

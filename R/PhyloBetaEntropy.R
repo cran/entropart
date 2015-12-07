@@ -52,7 +52,7 @@ function(NorP, NorPexp = NULL, q = 1, Tree, Normalize = TRUE, Correction = "Best
       stop("An argument NorPexp or Nexp must be provided.")
     }
   }
-  return(bcPhyloBetaEntropy(Ns=NorP, Nexp=NorPexp, q=q, Tree=Tree, Normalize=Normalize, Correction=Correction, CheckArguments=CheckArguments))
+  return (bcPhyloBetaEntropy(Ns=NorP, Nexp=NorPexp, q=q, Tree=Tree, Normalize=Normalize, Correction=Correction, CheckArguments=CheckArguments))
 }
 
 
@@ -87,7 +87,7 @@ function(NorP, NorPexp = NULL, q = 1, Tree, Normalize = TRUE, Correction = "Best
     return(PhyloBetaEntropy.ProbaVector(NorP, NorPexp, q=q, Tree=Tree, Normalize=Normalize, CheckArguments=CheckArguments))
   } else {
     # Abundances
-    return(PhyloBetaEntropy.AbdVector(NorP, NorPexp, q=q, Tree=Tree, Normalize=Normalize, Correction=Correction, CheckArguments=CheckArguments))
+    return (PhyloBetaEntropy.AbdVector(NorP, NorPexp, q=q, Tree=Tree, Normalize=Normalize, Correction=Correction, CheckArguments=CheckArguments))
   }
 }
 

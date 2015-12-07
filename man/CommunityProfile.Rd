@@ -104,12 +104,14 @@ CEnvelope(Profile, LineWidth = 2, ShadeColor = "grey75", BorderColor = "red", \d
 \examples{
   # Load Paracou data (number of trees per species in two 1-ha plot of a tropical forest)
   data(Paracou618)
+  # Plot diversity estimated without bias correction
+  plot(CommunityProfile(Diversity, Paracou618.MC$Ps, seq(0, 2, 0.2)), 
+    lty=3, ylim=c(50, 350))
   # Estimate diversity, with a condidence envelope 
   # (only 10 simulations to save time, should be 1000)
-  Profile <- CommunityProfile(Diversity, as.AbdVector(Paracou618.MC$Ns, Round=TRUE), 
-              seq(0, 2, 0.2), NumberOfSimulations=10)
-  plot(Profile, main="Paracou Plots Diversity")
-  # Compare to non bias-corrected diversity
-  CEnvelope(CommunityProfile(Diversity, Paracou618.MC$Ps, seq(0, 2, 0.2)), lty=3)
+  Profile <- CommunityProfile(Diversity, as.AbdVector(Paracou618.MC$Ns), 
+              seq(0, 2, 0.2), Correction="UnveilJ", NumberOfSimulations=10)
+  # Complete the plot, and add the legend
+  CEnvelope(Profile, main="Paracou Plots Diversity")
   legend("topright", c("Bias Corrected", "Biased"), lty=c(1,3), inset=0.01)
 }

@@ -7,7 +7,7 @@
   Calculates the phylogenetic diversity of order \eqn{q} of a probability vector.
 }
 \usage{
-AllenH(Ps, q = 1, PhyloTree, Normalize = TRUE, CheckArguments = TRUE)
+AllenH(Ps, q = 1, PhyloTree, Normalize = TRUE, Prune = FALSE, CheckArguments = TRUE)
 }
 \arguments{
   \item{Ps}{
@@ -23,6 +23,11 @@ AllenH(Ps, q = 1, PhyloTree, Normalize = TRUE, CheckArguments = TRUE)
     If \code{TRUE} (default), diversity is not affected by the height of the tree.\cr
     If \code{FALSE}, it is proportional to the height of the tree.
   }
+  \item{Prune}{
+    What to do when somes species are in the tree but not in \code{Ps}?\cr
+    If \code{TRUE}, the tree is pruned to keep species of \code{Ps} only. The height of the tree may be changed if a pruned branch is related to the root.\cr
+    If \code{FALSE} (default), species with probability 0 are added in \code{Ps}.
+  }
   \item{CheckArguments}{
     Logical; if \code{TRUE}, the function arguments are verified. Should be set to \code{FALSE} to save time when the arguments have been checked elsewhere.
   }
@@ -35,7 +40,7 @@ AllenH(Ps, q = 1, PhyloTree, Normalize = TRUE, CheckArguments = TRUE)
   Diversity can be calculated for non ultrametric trees following Leinster and Cobold (2011) even though the meaning of the result is not so clear.
 }
 \value{
-  A number equal the entropy of the community.
+  A named number equal the entropy of the community. The name is "None" to recall that no bias correction is available.
 }
 \references{
   Allen, B., Kon, M. and Bar-Yam, Y. (2009). A New Phylogenetic Diversity Measure Generalizing the Shannon Index and Its Application to Phyllostomid Bats. \emph{American Naturalist} 174(2): 236-243.

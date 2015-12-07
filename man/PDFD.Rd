@@ -30,7 +30,7 @@ PDFD(Ps, Tree, CheckArguments = TRUE)
   Use \code{\link{bcPhyloDiversity}}\code{(Ps, 0, Tree)} and choose the \code{Correction}.
 }
 \value{
-  A number equal to the calculated diversity.
+  A named number equal to the calculated diversity. The name is that of the bias correction used.
 }
 \references{
   Faith, D. P. (1992). Conservation evaluation and phylogenetic diversity. \emph{Biological Conservation} 61(1): 1-10.

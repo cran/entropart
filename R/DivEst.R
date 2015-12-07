@@ -103,7 +103,7 @@ function(object, ...)
   
   if (!is.null(object$Tree)) {
     cat("Phylogenetic or functional diversity was calculated according to the tree", object$Tree, "\n", fill=TRUE)
-    cat("Diversity is", ifelse(object$Normalized, "", "not"), "normalized\n", fill=TRUE)
+    cat("Diversity is", ifelse(object$Normalized, "normalized", "not normalized"), "\n", fill=TRUE)
   }
   cat("Alpha diversity of communities:", "\n")
   print(object$CommunityAlphaDiversities)

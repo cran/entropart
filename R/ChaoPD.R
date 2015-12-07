@@ -1,5 +1,5 @@
 ChaoPD <-
-function(Ps, q = 1, PhyloTree, Normalize = TRUE, CheckArguments = TRUE) 
+function(Ps, q = 1, PhyloTree, Normalize = TRUE, Prune = FALSE, CheckArguments = TRUE) 
 {
   if (CheckArguments)
     CheckentropartArguments()
@@ -9,6 +9,8 @@ function(Ps, q = 1, PhyloTree, Normalize = TRUE, CheckArguments = TRUE)
     # build a phylo object. Go through an hclust because as.phylo.phylog generates errors
     hTree <- stats::hclust(PhyloTree$Wdist^2/2, "average")
     Tree <- ape::as.phylo.hclust(hTree)
+    # edge lengths are divided by 2 during the conversion. See ?as.phylo.hclust
+    Tree$edge.length <- 2*Tree$edge.length
   } else {
     if (inherits(PhyloTree, "hclust")) {
       # build a phylo object
@@ -36,6 +38,20 @@ function(Ps, q = 1, PhyloTree, Normalize = TRUE, CheckArguments = TRUE)
     print(SpeciesNotFound)
   }
 
+  # More species in the tree than in Ps?
+  SpeciesNotFound <- setdiff(Tree$tip.label, names(Ps))
+  if (length(SpeciesNotFound) > 0 ){
+    if (Prune) {
+      # Prune the tree to keep species in Ps only
+      Tree <- ape::drop.tip(Tree, SpeciesNotFound)
+    } else {
+      # Add species with probability 0 in Ps
+      ExtraPs <- rep(0, length(SpeciesNotFound))
+      names(ExtraPs) <- SpeciesNotFound
+      Ps <- c(Ps, ExtraPs)
+    }
+  }
+
   # Branch lengths
   Lengths <- Tree$edge.length
   # Get unnormalized probabilities p(b)
@@ -51,9 +67,11 @@ function(Ps, q = 1, PhyloTree, Normalize = TRUE, CheckArguments = TRUE)
 
   # Return normalized diversity
   if (q == 1) {
-    return (prod(Branches^(-Lengths*Branches))*ifelse(Normalize, 1, Tbar))
+    PD <- prod(Branches^(-Lengths*Branches))*ifelse(Normalize, 1, Tbar)
   } else {
-    return ((sum(Lengths*Branches^q))^(1/(1-q))*ifelse(Normalize, 1, Tbar))
+    PD <- (sum(Lengths*Branches^q))^(1/(1-q))*ifelse(Normalize, 1, Tbar)
   }
-    
+  names(PD) <- "None"
+  
+  return (PD)
 }

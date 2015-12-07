@@ -71,7 +71,7 @@ function(Tree, FUN, NorP, Normalize = TRUE, ..., CheckArguments = TRUE)
     DatedN <- lapply(DatedN, function(m) m[,1])
   }
   # Apply Function to each slice.
-  DatedResult <- unlist(lapply(DatedN, FUN, ..., CheckArguments = FALSE))
+  DatedResult <- unlist(parallel::mclapply(DatedN, FUN, ..., CheckArguments = FALSE))
   # Names of slices should be the cut time, without the rounding error
   names(DatedResult) <- ppTree$Cuts
   # Normalization

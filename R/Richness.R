@@ -8,16 +8,32 @@ function(NorP, Correction = "Chao1", Alpha = 0.05, JackOver = FALSE, CheckArgume
 Richness.ProbaVector <-
 function(NorP, Correction = "Chao1", Alpha = 0.05, JackOver = FALSE, CheckArguments = TRUE, Ps = NULL, Ns = NULL)  
 {
+  if (missing(NorP)){
+    if (!missing(Ps)) {
+      NorP <- Ps
+    } else {
+      stop("An argument NorP or Ps must be provided.")
+    }
+  }
   if (CheckArguments)
     CheckentropartArguments()
   
-  return (sum(NorP > 0))
+  S <- sum(NorP > 0)
+  names(S) <- "None"
+  return(S)
 }
 
 
 Richness.AbdVector <-
 function(NorP, Correction = "Chao1", Alpha = 0.05, JackOver = FALSE, CheckArguments = TRUE, Ps = NULL, Ns = NULL)
 {
+  if (missing(NorP)){
+    if (!missing(Ns)) {
+      NorP <- Ns
+    } else {
+      stop("An argument NorP or Ns must be provided.")
+    }
+  }
   return(bcRichness(Ns=NorP, Correction=Correction, Alpha=Alpha, JackOver=JackOver, CheckArguments=CheckArguments))
 }
 
@@ -73,9 +89,13 @@ function(Ns, Correction = "Chao1", Alpha = 0.05, JackOver = FALSE, CheckArgument
   # Exit if Ns contains no or a single species
   if (length(Ns) < 2) {
     if (length(Ns) == 0) {
-      return(NA)
+      entropy <- NA
+      names(entropy) <- "No Species"
+      return (entropy)
     } else {
-      return(0)
+      entropy <- 0
+      names(entropy) <- "Single Species"
+      return (entropy)
     }
   } else {
     # Probabilities instead of abundances
@@ -107,6 +127,7 @@ function(Ns, Correction = "Chao1", Alpha = 0.05, JackOver = FALSE, CheckArgument
     }
     if (is.na(S2)) {
       S0 <- (N-1)/N*S1*(S1-1)/2
+      S2 <- 0
     } else {
       S0 <- (N-1)/N*S1*S1/2/S2
     }

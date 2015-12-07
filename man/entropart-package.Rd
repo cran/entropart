@@ -11,13 +11,6 @@
   Estimation-bias corrections are available.
 }
 \details{
-  \tabular{ll}{
-    Package: \tab entropart\cr
-    Type: \tab Package\cr
-    Version: \tab 1.4.1\cr
-    Date: \tab 2014-09-27\cr
-    License: \tab GNU General Public License\cr
-  }
 
   In the entropart package, individuals of different "species" are counted in several "communities" which are agregated to define a "metacommunity". In the metacommunity, the probability to find a species in the weighted average of probabilities in communities.
   
@@ -54,9 +47,7 @@
   such as \code{\link{DivPart}} (to partition diversity), \code{\link{DivEst}} (to partition diversity and calculate confidence interval of its estimation) 
   or \code{\link{DivProfile}} (to compute diversity profiles).
   
-  The package also provides community functions to calculate entropy or diversity with bias correction from a vector of probabilities or abundances, 
-  such as \code{\link{bcShannon}} (to calculate the unbiased estimator of Shannon entropy of a community) or \code{\link{Diversity}} (to calculate the 
-  true diversity of a community).
+  The package also provides community functions to calculate entropy or diversity with bias correction from a vector of probabilities or abundances, such as \code{\link{bcShannon}} (to calculate the reduced-bias estimator of Shannon entropy of a community) or \code{\link{Diversity}} (to calculate the true diversity of a community).
   
   Phylogenetic entropy and diversity can be calculated if a phylogenetic (or functional), ultrametric tree is provided. See \code{\link{PhyloEntropy}}, \code{\link{Rao}} for examples of entropy and \code{\link{bcPhyloDiversity}} to calculate phylodiversity, with bias correction. Similarity-based diversity is calculated with \code{\link{Dqz}} or (with bias correction) \code{\link{bcDqz}}, based on a similarity matrix.
 
@@ -66,12 +57,14 @@
   Bruno Herault
 }
 \references{
-  Marcon, E., Zhang, Z. and Herault, B. (2014). The decomposition of similarity-based diversity and its bias correction. \emph{HAL} hal-00989454(version 1).
+  Marcon, E. and Herault, B. (2015). entropart: An R Package to Measure and Partition Diversity. \emph{Journal of Statistical Software}, 67(8): 1-26.
     
   Marcon, E., Herault, B. (2015). Decomposing  Phylodiversity. \emph{Methods in Ecology and Evolution} 6(3): 333-339.
   
-  Marcon, E., Scotti, I., Herault, B., Rossi, V. and Lang G. (2014). Generalization of the partitioning of Shannon diversity. \emph{PLOS One} 9(3): e90289.
-  
   Marcon, E., Herault, B., Baraloto, C. and Lang, G. (2012). The Decomposition of Shannon's Entropy and a Confidence Interval for Beta Diversity. \emph{Oikos} 121(4): 516-522.
+
+  Marcon, E., Scotti, I., Herault, B., Rossi, V. and Lang G. (2014). Generalization of the partitioning of Shannon diversity. \emph{PLOS One} 9(3): e90289.
+
+  Marcon, E., Zhang, Z. and Herault, B. (2014). The decomposition of similarity-based diversity and its bias correction. \emph{HAL} hal-00989454(version 1).
 }
 \keyword{ package }

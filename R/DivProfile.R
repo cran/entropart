@@ -12,8 +12,8 @@ function(q.seq = seq(0, 2, .1), MC, Biased = TRUE, Correction = "Best", Tree = N
     Height <- ppTree$Height
   }  
 
-  # Calculate diversity profile
-  Diversity.seq <- sapply(q.seq, DivPart, MC = MC, Biased = Biased, Correction = Correction, Tree = ppTree, Normalize = Normalize, Z=Z, CheckArguments =FALSE)
+  # Calculate diversity profile. Parallelize.
+  Diversity.seq <- simplify2array(mclapply(q.seq, DivPart, MC = MC, Biased = Biased, Correction = Correction, Tree = ppTree, Normalize = Normalize, Z=Z, CheckArguments =FALSE))
 
   # Rearrange complex structures
   Dalpha <- unlist(Diversity.seq["CommunityAlphaDiversities", ])
@@ -109,7 +109,7 @@ function(object, ...)
   
   if (!is.null(object$Tree)) {
     cat("Phylogenetic or functional diversity was calculated according to the tree", object$Tree, "\n", fill=TRUE)
-    cat("Diversity is", ifelse(object$Normalized, "", "not"), "normalized\n", fill=TRUE)
+    cat("Diversity is", ifelse(object$Normalized, "normalized", "not normalized"), "\n", fill=TRUE)
   }
   
   cat("Diversity against its order:\n")

@@ -25,7 +25,7 @@ KLq(Ps, Pexp, q = 1, CheckArguments = TRUE)
 }
 \details{
   The generalized Kullback-Leibler divergence (Borland et al., 1998) converges to the Kullback-Leibler divergence (Kullback and Leibler, 1951) when \eqn{q} tends to 1.
-  It is used to calculate the generalized beta entropy (Marcon et al., submitted).
+  It is used to calculate the generalized beta entropy (Marcon et al., 2014).
 }
 \value{
   A number equal to the generalized Kullback-Leibler divergence between the probability distributions.

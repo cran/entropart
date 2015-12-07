@@ -59,10 +59,10 @@ is.AbdVector(x)
     The distribution to fit on the plot. May be \code{"lnorm"} (log-normal), \code{"lseries"} (log-series), \code{"geom"} (geometric) or \code{"bstick"} (broken stick). If \code{NULL}, no distribution is fitted. See \code{\link{rCommunity}} for the description of these distributions.
   }
   \item{Round}{
-    If \code{TRUE} (by default), values of \code{x} are set to integer to create an \code{as.AbdVector}. This is useful if original abundances are not integers (this is often the case for \code{\link{MetaCommunity}} abundances which are the product of probabilities by the number of individuals) and integer values are required (for example to calculate the bootstrap confidence interval of a community profile).
+    If \code{TRUE} (by default), values of \code{x} are set to integer to create an \code{AbdVector}. This is useful if original abundances are not integers (this is often the case for \code{\link{MetaCommunity}} abundances which are the product of probabilities by the number of individuals) and integer values are required (for example to calculate the bootstrap confidence interval of a community profile).
   }
   \item{Correction}{
-    A string containing one of the possible corrections to estimate a probability distribution: \code{"None"} (no correction), \code{"Chao2013"} or  \code{"Chao2015"}, or \code{"Chao1"}, the default value.
+    A string containing one of the possible corrections to estimate a probability distribution: \code{"None"} (no correction, the default value), \code{"Chao2013"},\code{"Chao2015"}, or \code{"ChaoShen"}.
   }
   \item{Unveiling}{
     A string containing one of the possible unveiling methods to estimate the probabilities of the unobserved species: \code{"None"} (default, no species is added), \code{"unif"} (uniform: all unobserved species have the same probability) or \code{"geom"} (geometric: the unobserved species distribution is geometric).
@@ -103,7 +103,7 @@ is.AbdVector(x)
   
   \code{as.AbdVector} just sets the class of the numeric or integer \code{x} so that appropriate versions of community functions (generic methods such as \code{\link{Diversity}}) are applied. Abundance values are rounded (by default) to the nearest integer.
   
-  \code{as.ProbaVector} normalizes the vector so that it sums to 1. If \code{Correction} is not \code{"None"}, the observed abundance distribution is used to estimate the actual species distribution. First, observed species probabilities are estimated folllowing Chao \emph{et al.} (2013, single-parameter model), or Chao \emph{et al.} (2015, two-parameter model). The total probability of observed species equals the sample coverage. Then, the distribution of unobserved species can be unveiled: their number is estimated according to \code{RCorrection} (if the Jackknife estimator is chosen, the \code{JackOver} argument allows using the order immediately over the optimal one). The coverage deficit (1 minus the sample coverage) is shared by the unobserved species equally (\code{Unveiling = "unif"}, Chao \emph{et al.}, 2013) or according to a geometric distribution (\code{Unveiling = "geom"}, Chao \emph{et al.}, 2015).
+  \code{as.ProbaVector} normalizes the vector so that it sums to 1. If \code{Correction} is not \code{"None"}, the observed abundance distribution is used to estimate the actual species distribution. First, observed species probabilities are estimated folllowing Chao and Shen (2003), \emph{i.e.} input probabilities are multiplied by the sample coverage, or according to more sophisticated models: Chao \emph{et al.} (2013, single-parameter model), or Chao \emph{et al.} (2015, two-parameter model). The total probability of observed species equals the sample coverage. Then, the distribution of unobserved species can be unveiled: their number is estimated according to \code{RCorrection} (if the Jackknife estimator is chosen, the \code{JackOver} argument allows using the order immediately over the optimal one). The coverage deficit (1 minus the sample coverage) is shared by the unobserved species equally (\code{Unveiling = "unif"}, Chao \emph{et al.}, 2013) or according to a geometric distribution (\code{Unveiling = "geom"}, Chao \emph{et al.}, 2015).
   
   These functions can be applied to data frames to calculate the joint diversity (Gregorius, 2010).
   
@@ -116,6 +116,8 @@ is.AbdVector(x)
   Eric Marcon <Eric.Marcon@ecofog.gf>, Bruno Herault <Bruno.Herault@ecofog.gf>
 }
 \references{
+  Chao, A. and Shen, T. J. (2003). Nonparametric estimation of Shannon's index of diversity when there are unseen species in sample. \emph{Environmental and Ecological Statistics} 10(4): 429-443.
+
   Chao, A., Wang, Y. T. and Jost, L. (2013). Entropy and the species accumulation curve: a novel entropy estimator via discovery rates of new species. \emph{Methods in Ecology and Evolution} 4(11):1091-1100.
 
   Chao, A., Hsieh, T. C., Chazdon, R. L., Colwell, R. K., Gotelli, N. J. (2015) Unveiling the Species-Rank Abundance Distribution by Generalizing Good-Turing Sample Coverage Theory. \emph{Ecology} 96(5): 1189-1201.

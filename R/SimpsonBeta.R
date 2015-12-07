@@ -18,7 +18,7 @@ function(NorP, NorPexp = NULL, Correction = "Best", CheckArguments = TRUE, Ps = 
 SimpsonBeta.AbdVector <-
 function(NorP, NorPexp = NULL, Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns = NULL, Pexp = NULL, Nexp = NULL) 
 {
-  return(bcSimpsonBeta(Ns=NorP, Nexp=NorPexp, Correction=Correction, CheckArguments=CheckArguments))
+  return (bcSimpsonBeta(Ns=NorP, Nexp=NorPexp, Correction=Correction, CheckArguments=CheckArguments))
 }
 
 
@@ -39,7 +39,7 @@ function(NorP, NorPexp = NULL, Correction = "Best", CheckArguments = TRUE, Ps = 
       stop("An argument NorPexp or Nexp must be provided.")
     }
   }
-  return(bcSimpsonBeta(Ns=NorP, Nexp=NorPexp, Correction=Correction, CheckArguments=CheckArguments))
+  return (bcSimpsonBeta(Ns=NorP, Nexp=NorPexp, Correction=Correction, CheckArguments=CheckArguments))
 }
 
 
@@ -71,10 +71,10 @@ function(NorP, NorPexp = NULL, Correction = "Best", CheckArguments = TRUE, Ps = 
   
   if (abs(sum(NorP) - 1) < length(NorP)*.Machine$double.eps) {
     # Probabilities sum to 1, allowing rounding error
-    return(SimpsonBeta.ProbaVector(NorP, NorPexp, CheckArguments=CheckArguments))
+    return (SimpsonBeta.ProbaVector(NorP, NorPexp, CheckArguments=CheckArguments))
   } else {
     # Abundances
-    return(SimpsonBeta.AbdVector(NorP, NorPexp, Correction=Correction, CheckArguments=CheckArguments))
+    return (SimpsonBeta.AbdVector(NorP, NorPexp, Correction=Correction, CheckArguments=CheckArguments))
   }
 }
 

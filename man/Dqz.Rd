@@ -60,7 +60,7 @@ bcDqz(Ns, q = 1, Z = diag(length(Ns)), Correction = "Best", CheckArguments = TRU
   The functions are designed to be used as simply as possible. \code{Dqz} is a generic method. If its first argument is an abundance vector, an integer vector or a numeric vector which does not sum to 1, the bias corrected function \code{bcDqz} is called. Explicit calls to \code{bcDqz} (with bias correction) or to \code{Dqz.ProbaVector} (without correction) are possible to avoid ambiguity. The \code{.integer} and \code{.numeric} methods accept \code{Ps} or \code{Ns} arguments instead of \code{NorP} for backward compatibility.
 }
 \value{
-  A number equal to the calculated diversity.
+  A named number equal to the calculated diversity. The name is that of the bias correction used.
 }
 \references{
   Leinster, T. and Cobbold, C. (2012). Measuring diversity: the importance of species similarity. \emph{Ecology} 93(3): 477-489.
@@ -81,5 +81,5 @@ bcDqz(Ns, q = 1, Z = diag(length(Ns)), Correction = "Best", CheckArguments = TRU
   # Similarity can be 1 minus normalized distances between species
   Z <- 1 - DistanceMatrix/max(DistanceMatrix)
   # Calculate diversity of order 2
-  bcDqz(Paracou618.MC$Ns, 2, Z)
+  Dqz(Paracou618.MC$Ns, 2, Z)
 }

@@ -45,15 +45,16 @@ function(NorP, NorPexp = NULL, q = 1, Z = diag(length(Ps)), Correction = "Best",
   Zpexp <- Z %*% Pexp
   
   dataBeta <- Ps * (lnq(1/Zpexp, q)-lnq(1/Zps, q))
-  
-  return (sum(dataBeta))
+  entropy <- sum(dataBeta)
+  names(entropy) <- "None"
+  return (entropy)
 }
 
 
 HqzBeta.AbdVector <-
 function(NorP, NorPexp = NULL, q = 1, Z = diag(length(Ps)), Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns = NULL, Pexp = NULL, Nexp = NULL) 
 {
-  return(bcHqzBeta(Ns=NorP, Nexp=NorPexp , q=q, Z=Z, Correction=Correction, CheckArguments=CheckArguments))
+  return (bcHqzBeta(Ns=NorP, Nexp=NorPexp , q=q, Z=Z, Correction=Correction, CheckArguments=CheckArguments))
 }
 
 
@@ -74,7 +75,7 @@ function(NorP, NorPexp = NULL, q = 1, Z = diag(length(Ps)), Correction = "Best",
       stop("An argument NorPexp or Nexp must be provided.")
     }
   }
-  return(bcHqzBeta(Ns=NorP, Nexp=NorPexp, q=q, Z=Z, Correction=Correction, CheckArguments=CheckArguments))
+  return (bcHqzBeta(Ns=NorP, Nexp=NorPexp, q=q, Z=Z, Correction=Correction, CheckArguments=CheckArguments))
 }
 
 
@@ -106,10 +107,10 @@ function(NorP, NorPexp = NULL, q = 1, Z = diag(length(Ps)), Correction = "Best",
   
   if (abs(sum(NorP) - 1) < length(NorP)*.Machine$double.eps) {
     # Probabilities sum to 1, allowing rounding error
-    return(HqzBeta.ProbaVector(NorP, NorPexp, q=q, Z=Z, CheckArguments=CheckArguments))
+    return (HqzBeta.ProbaVector(NorP, NorPexp, q=q, Z=Z, CheckArguments=CheckArguments))
   } else {
     # Abundances
-    return(HqzBeta.AbdVector(NorP, NorPexp, q=q, Z=Z, Correction=Correction, CheckArguments=CheckArguments))
+    return (HqzBeta.AbdVector(NorP, NorPexp, q=q, Z=Z, Correction=Correction, CheckArguments=CheckArguments))
   }
 }
 
@@ -126,7 +127,7 @@ function(Ns, Nexp = NULL, q = 1, Z = diag(length(Ns)), Correction = "Best", Chec
   
   # No correction available yet
   if (Correction == "None" | Correction == "Best") {
-    return(HqzBeta(Ns/sum(Ns), Nexp/sum(Nexp), q, Z, CheckArguments=FALSE))
+    return (HqzBeta(Ns/sum(Ns), Nexp/sum(Nexp), q, Z, CheckArguments=FALSE))
   }
   
   warning("Correction was not recognized")

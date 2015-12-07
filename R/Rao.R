@@ -8,17 +8,31 @@ function(NorP, Tree, Correction = "Lande", CheckArguments = TRUE, Ps = NULL, Ns 
 Rao.ProbaVector <-
 function(NorP, Tree, Correction = "Lande", CheckArguments = TRUE, Ps = NULL, Ns = NULL) 
 {
+  if (missing(NorP)){
+    if (!missing(Ps)) {
+      NorP <- Ps
+    } else {
+      stop("An argument NorP or Ps must be provided.")
+    }
+  }
   if (CheckArguments)
     CheckentropartArguments()
   
-  return(AllenH(NorP, q=2, PhyloTree=Tree, Normalize=FALSE, CheckArguments=FALSE))
+  return (AllenH(NorP, q=2, PhyloTree=Tree, Normalize=FALSE, CheckArguments=FALSE))
 }
 
 
 Rao.AbdVector <-
 function(NorP, Tree, Correction = "Lande", CheckArguments = TRUE, Ps = NULL, Ns = NULL) 
 {
-  return(bcRao(Ns=NorP, Tree=Tree, Correction=Correction, CheckArguments=CheckArguments))
+  if (missing(NorP)){
+    if (!missing(Ns)) {
+      NorP <- Ns
+    } else {
+      stop("An argument NorP or Ns must be provided.")
+    }
+  }
+  return (bcRao(Ns=NorP, Tree=Tree, Correction=Correction, CheckArguments=CheckArguments))
 }
 
 
@@ -32,7 +46,7 @@ function(NorP, Tree, Correction = "Lande", CheckArguments = TRUE, Ps = NULL, Ns 
       stop("An argument NorP or Ns must be provided.")
     }
   }
-  return(bcRao(Ns=NorP, Tree=Tree, Correction=Correction, CheckArguments=CheckArguments))
+  return (bcRao(Ns=NorP, Tree=Tree, Correction=Correction, CheckArguments=CheckArguments))
 }
 
 
@@ -53,10 +67,10 @@ function(NorP, Tree, Correction = "Lande", CheckArguments = TRUE, Ps = NULL, Ns 
   
   if (abs(sum(NorP) - 1) < length(NorP)*.Machine$double.eps) {
     # Probabilities sum to 1, allowing rounding error
-    return(Rao.ProbaVector(NorP, Tree=Tree, CheckArguments=CheckArguments))
+    return (Rao.ProbaVector(NorP, Tree=Tree, CheckArguments=CheckArguments))
   } else {
     # Abundances
-    return(Rao.AbdVector(NorP, Tree=Tree, Correction=Correction, CheckArguments=CheckArguments))
+    return (Rao.AbdVector(NorP, Tree=Tree, Correction=Correction, CheckArguments=CheckArguments))
   }
 }
 
@@ -73,9 +87,13 @@ function(Ns, Tree, Correction="Lande", CheckArguments = TRUE)
   # Exit if Ns contains no or a single species
   if (length(Ns) < 2) {
   	if (length(Ns) == 0) {
-  		return(NA)
+  	  entropy <- NA
+  	  names(entropy) <- "No Species"
+  	  return (entropy)
   	} else {
-  		return(0)
+  	  entropy <- 0
+  	  names(entropy) <- "Single Species"
+  	  return (entropy)
   	}
   } else {
     # Probabilities instead of abundances
@@ -87,8 +105,10 @@ function(Ns, Tree, Correction="Lande", CheckArguments = TRUE)
  
   if (Correction == "Lande"  | Correction == "Best") {
     N <- sum(Ns)
-    return(N/(N-1)*AllenH(Ns/sum(Ns), q=2, PhyloTree=Tree, Normalize=FALSE, CheckArguments=FALSE))  
+    entropy <- N/(N-1)*AllenH(Ns/sum(Ns), q=2, PhyloTree=Tree, Normalize=FALSE, CheckArguments=FALSE)
+    names(entropy) <- Correction
+    return (entropy) 
   } else {
-    return(bcPhyloEntropy(Ns, q = 2, Tree = Tree, Normalize = FALSE, Correction = Correction, CheckArguments = FALSE)$Total) 
+    return (bcPhyloEntropy(Ns, q = 2, Tree = Tree, Normalize = FALSE, Correction = Correction, CheckArguments = FALSE)$Total) 
   }
 }

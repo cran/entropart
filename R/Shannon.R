@@ -8,17 +8,31 @@ function(NorP, Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns = NULL)
 Shannon.ProbaVector <-
 function(NorP, Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns = NULL) 
 {
+  if (missing(NorP)){
+    if (!missing(Ps)) {
+      NorP <- Ps
+    } else {
+      stop("An argument NorP or Ps must be provided.")
+    }
+  }
   if (CheckArguments)
     CheckentropartArguments()
   
-  return (Tsallis(NorP, q=1, CheckArguments=FALSE))
+  return (Tsallis.ProbaVector(NorP, q=1, CheckArguments=FALSE))
 }
 
 
 Shannon.AbdVector <-
 function(NorP, Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns = NULL) 
 {
-  return(bcShannon(Ns=NorP, Correction=Correction, CheckArguments=CheckArguments))
+  if (missing(NorP)){
+    if (!missing(Ns)) {
+      NorP <- Ns
+    } else {
+      stop("An argument NorP or Ns must be provided.")
+    }
+  }
+  return (bcShannon(Ns=NorP, Correction=Correction, CheckArguments=CheckArguments))
 }
 
 
@@ -32,7 +46,7 @@ function(NorP, Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns = NULL)
       stop("An argument NorP or Ns must be provided.")
     }
   }
-  return(bcShannon(Ns=NorP, Correction=Correction, CheckArguments=CheckArguments))
+  return (bcShannon(Ns=NorP, Correction=Correction, CheckArguments=CheckArguments))
 }
 
 
@@ -53,10 +67,10 @@ function(NorP, Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns = NULL)
   
   if (abs(sum(NorP) - 1) < length(NorP)*.Machine$double.eps) {
     # Probabilities sum to 1, allowing rounding error
-    return(Shannon.ProbaVector(NorP, CheckArguments=CheckArguments))
+    return (Shannon.ProbaVector(NorP, CheckArguments=CheckArguments))
   } else {
     # Abundances
-    return(Shannon.AbdVector(NorP, Correction=Correction, CheckArguments=CheckArguments))
+    return (Shannon.AbdVector(NorP, Correction=Correction, CheckArguments=CheckArguments))
   }
 }
 
@@ -67,15 +81,21 @@ function(Ns, Correction = "Best", CheckArguments = TRUE)
   if (CheckArguments)
     CheckentropartArguments()
   
+  if (Correction == "Best") Correction <- "ChaoWangJost"
+  
   # Eliminate 0
   Ns <- Ns[Ns > 0]
   N <- sum(Ns)
   # Exit if Ns contains no or a single species
   if (length(Ns) < 2) {
   	if (length(Ns) == 0) {
-  		return(NA)
+  	  entropy <- NA
+  	  names(entropy) <- "No Species"
+  	  return (entropy)
   	} else {
-  		return(0)
+  	  entropy <- 0
+  	  names(entropy) <- "Single Species"
+  	  return (entropy)
   	}
   } else {
     # Probabilities instead of abundances
@@ -87,12 +107,12 @@ function(Ns, Correction = "Best", CheckArguments = TRUE)
   
   # No correction
   if (Correction == "None") {
-    return(Shannon.ProbaVector(Ns/sum(Ns), CheckArguments=FALSE))
+    return (Shannon.ProbaVector(Ns/sum(Ns), CheckArguments=FALSE))
   }
   
   
   if (Correction == "Miller") {
-    return(Shannon(Ns/sum(Ns), CheckArguments=FALSE) + (length(Ns)-1)/2/N)  
+    return (Shannon(Ns/sum(Ns), CheckArguments=FALSE) + (length(Ns)-1)/2/N)  
   }
   if (Correction == "ChaoShen" | Correction == "GenCov" | Correction == "Marcon") {
     SampleCoverage <- Coverage(Ns, CheckArguments=FALSE)
@@ -107,17 +127,21 @@ function(Ns, Correction = "Best", CheckArguments = TRUE)
     ChaoShen <- sum(-CPs*log(CPs)/(1-(1-CPs)^N))
   }
   if (Correction == "ChaoShen" | Correction == "GenCov") {
-    return(ChaoShen)  
+    names(ChaoShen) <- Correction
+    return (ChaoShen)  
   } 
   if (Correction == "Grassberger") {
     # (-1)^n is problematic for long vectors (returns NA for large values). It is replaced by 1-n%%2*2 (Ns is rounded if is not an integer)
     Grassberger <- sum(Ns/N*(log(N)-digamma(Ns)-(1-round(Ns)%%2*2)/(Ns+1)))
   }
   if (Correction == "Grassberger") {
+    names(Grassberger) <- Correction
     return(Grassberger)
   }
   if (Correction == "Marcon") {
-    return(max(ChaoShen, Grassberger))
+    entropy <- max(ChaoShen, Grassberger)
+    names(entropy) <- Correction
+    return (entropy)
   }
   if (Correction == "Grassberger2003" | Correction == "Schurmann") {
     # Define a function to calculate the integral in the bias formuma for each value of N
@@ -130,20 +154,26 @@ function(Ns, Correction = "Best", CheckArguments = TRUE)
     Integral.V <- unlist(sapply(Ns, Integral, upper = exp(-1/2))["value",])
   }
   if (Correction == "Grassberger2003" | Correction == "Schurmann") {
-    return(sum(Ns/N*(digamma(N)-digamma(Ns)-(1-Ns%%2*2)*Integral.V)))
+    entropy <- sum(Ns/N*(digamma(N)-digamma(Ns)-(1-Ns%%2*2)*Integral.V))
+    names(entropy) <- Correction
+    return (entropy)
   }
   if (Correction == "Holste" | Correction == "Bonachela") {
     seql <- 1:(length(Ns)+N)
     invl <- 1/seql
     cumul <- function(n) {sum(invl[n:length(invl)])}
-    suminvl <- sapply(seql, cumul) 
+    suminvl <- vapply(seql, cumul, 0) 
     if (Correction == "Holste") {
-      return(sum((Ns+1)/(length(Ns)+N)*suminvl[Ns+2])) 
+      entropy <- sum((Ns+1)/(length(Ns)+N)*suminvl[Ns+2])
+      names(entropy) <- Correction
+      return (entropy)
     } else {
-      return(sum((Ns+1)/(2+N)*suminvl[Ns+2]))    
+      entropy <- sum((Ns+1)/(2+N)*suminvl[Ns+2])
+      names(entropy) <- Correction
+      return (entropy)
     }
   }
-  if (Correction == "ChaoWangJost" | Correction == "Best") {
+  if (Correction == "ChaoWangJost") {
     # Calculate abundance distribution
     DistN <- tapply(Ns, Ns, length)
     Singletons <- DistN["1"]
@@ -158,11 +188,12 @@ function(Ns, Correction = "Best", CheckArguments = TRUE)
     } else {
       A <- 2*Doubletons/((N-1)*Singletons+2*Doubletons)
     }
-    Part2 <- sapply(1:(N-1), function(r) 1/r*(1-A)^r) 
+    Part2 <- vapply(1:(N-1), function(r) 1/r*(1-A)^r, 0) 
     ChaoWangJost <- sum(Ns/N*(digamma(N)-digamma(Ns)))
     if (!is.na(Singletons) & (A != 1)) {
       ChaoWangJost <- as.numeric(ChaoWangJost + Singletons/N*(1-A)^(1-N)*(-log(A)-sum(Part2)))
     }
+    names(ChaoWangJost) <- Correction
     return(ChaoWangJost)  
   }
   if (Correction == "ZhangHz") {
@@ -180,11 +211,23 @@ function(Ns, Correction = "Best", CheckArguments = TRUE)
       sum(Ps*p_V_Ps[1:length(Ps), v])
     }
     # Apply S_s to all values of v. Use logs or w_v goes to Inf.
-    return(sum(exp(lnw_v + log(sapply(V, S_s)))))
+    entropy <- sum(exp(lnw_v + log(vapply(V, S_s, 0))))
+    names(entropy) <- Correction
+    return (entropy)
   }
-  if (Correction == "Unveil") {
+  if (Correction == "UnveilC") {
+    TunedPs <- as.ProbaVector(Ns, Correction="Chao2015", Unveiling="geom", RCorrection = "Chao1", CheckArguments = FALSE)
+  }
+  if (Correction == "UnveiliC") {
+    TunedPs <- as.ProbaVector(Ns, Correction="Chao2015", Unveiling="geom", RCorrection = "iChao1", CheckArguments = FALSE)
+  }
+  if (Correction == "UnveilJ") {
     TunedPs <- as.ProbaVector(Ns, Correction="Chao2015", Unveiling="geom", RCorrection = "Jackknife", CheckArguments = FALSE)
-    return(Shannon(TunedPs, CheckArguments = FALSE))
+  }
+  if (Correction == "UnveilC" | Correction == "UnveiliC" | Correction == "UnveilJ") {
+    entropy <- Shannon.ProbaVector(TunedPs, CheckArguments = FALSE)
+    names(entropy) <- Correction
+    return (entropy)
   }
   
   warning("Correction was not recognized")

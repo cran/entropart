@@ -8,6 +8,13 @@ function(NorP, q = 1, Z = diag(length(Ps)), Correction = "Best", CheckArguments 
 Hqz.ProbaVector <-
 function(NorP, q = 1, Z = diag(length(Ps)), Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns = NULL) 
 {
+  if (missing(NorP)){
+    if (!missing(Ps)) {
+      NorP <- Ps
+    } else {
+      stop("An argument NorP or Ps must be provided.")
+    }
+  }
   if (CheckArguments)
     CheckentropartArguments()
   
@@ -41,13 +48,22 @@ function(NorP, q = 1, Z = diag(length(Ps)), Correction = "Best", CheckArguments 
     Entropy <- (1-(Ps %*% Zpqm1))/(q-1)
   }
   # Return the value of entropy, as a number rather than a 1x1 matrix
-  return (as.numeric(Entropy))
+  Entropy <- as.numeric(Entropy)
+  names(Entropy) <- "None"
+  return (Entropy)
 }
 
 
 Hqz.AbdVector <-
 function(NorP, q = 1, Z = diag(length(Ps)), Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns = NULL) 
 {
+  if (missing(NorP)){
+    if (!missing(Ns)) {
+      NorP <- Ns
+    } else {
+      stop("An argument NorP or Ns must be provided.")
+    }
+  }
   return(bcHqz(Ns=NorP, q=q, Z=Z, Correction=Correction, CheckArguments=CheckArguments))
 }
 
@@ -55,14 +71,14 @@ function(NorP, q = 1, Z = diag(length(Ps)), Correction = "Best", CheckArguments 
 Hqz.integer <-
 function(NorP, q = 1, Z = diag(length(Ps)), Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns = NULL) 
 {
-if (missing(NorP)){
-  if (!missing(Ns)) {
-    NorP <- Ns
-  } else {
-    stop("An argument NorP or Ns must be provided.")
+  if (missing(NorP)){
+    if (!missing(Ns)) {
+      NorP <- Ns
+    } else {
+      stop("An argument NorP or Ns must be provided.")
+    }
   }
-}
-return(bcHqz(Ns=NorP, q=q, Z=Z, Correction=Correction, CheckArguments=CheckArguments))
+  return(bcHqz(Ns=NorP, q=q, Z=Z, Correction=Correction, CheckArguments=CheckArguments))
 }
 
 
@@ -117,9 +133,13 @@ function (Ns, q = 1, Z = diag(length(Ns)), Correction = "Best", CheckArguments =
   # Exit if Ns contains no or a single species
   if (length(Ns) < 2) {
   	if (length(Ns) == 0) {
-  		return(NA)
+  	  entropy <- NA
+  	  names(entropy) <- "No Species"
+  	  return (entropy)
   	} else {
-  		return(0)
+  	  entropy <- 0
+  	  names(entropy) <- "Single Species"
+  	  return (entropy)
   	}
   } else {
     # Probabilities instead of abundances
@@ -133,7 +153,7 @@ function (Ns, q = 1, Z = diag(length(Ns)), Correction = "Best", CheckArguments =
   
   # No correction
   if (Correction == "None") {
-    return(Hqz.ProbaVector(Ps, q, Z, CheckArguments = FALSE))
+    return (Hqz.ProbaVector(Ps, q, Z, CheckArguments = FALSE))
   }
   
   if (Correction == "MarconZhang" | Correction == "Best") {
@@ -145,7 +165,7 @@ function (Ns, q = 1, Z = diag(length(Ns)), Correction = "Best", CheckArguments =
     # Sum of products weighted by w_v
     S_v <- function(s) {
       Usedv <- 1:(N-Ns[s])
-      return(sum(w_v[Usedv]*p_V_Ns[Usedv, s]))
+      return (sum(w_v[Usedv]*p_V_Ns[Usedv, s]))
     }
   }
   
@@ -177,7 +197,7 @@ function (Ns, q = 1, Z = diag(length(Ns)), Correction = "Best", CheckArguments =
     i <- 1:N
     w_vi <- (1-AverageZ)*(i-q)/i
     w_v <- cumprod(w_vi)
-    Taylor <- 1 + sum(Ps*sapply(1:length(Ns), S_v))
+    Taylor <- 1 + sum(Ps*vapply(1:length(Ns), S_v, 0))
     FirstTerms <- CPs*(AverageZ+(1-AverageZ)*CPs)^(q-1)
     U <- Taylor-sum(FirstTerms)
     MZ <- ((K+U-1)/(1-q))
@@ -187,21 +207,26 @@ function (Ns, q = 1, Z = diag(length(Ns)), Correction = "Best", CheckArguments =
     L <- -sum(CPs*log(Zp))
     # Weights
     w_v <- ((1-AverageZ)^V)/V
-    Taylor <- sum(Ps*sapply(1:length(Ns), S_v))
+    Taylor <- sum(Ps*vapply(1:length(Ns), S_v, 0))
     FirstTerms <- -CPs*log(AverageZ+(1-AverageZ)*CPs)
     X <- Taylor-sum(FirstTerms)
     # MZ <- -sum(CPs*log(Zp)) -(1-C)*log(AverageZ)
     MZ <- L+X
   }
   
+  
   if (Correction == "ChaoShen") {
+    names(HT) <- Correction
     return(HT)
   }
   if (Correction == "MarconZhang") {
+    names(MZ) <- Correction
     return(MZ)
   }
   if (Correction == "Best") {
-    return(max(HT, MZ))
+    entropy <- max(HT, MZ)
+    names(entropy) <- Correction
+    return(entropy)
   }
   warning("Correction was not recognized")
   return (NA)

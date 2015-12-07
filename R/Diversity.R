@@ -8,6 +8,13 @@ function (NorP, q = 1, Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns
 Diversity.ProbaVector <-
 function(NorP, q = 1, Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns = NULL) 
 {
+  if (missing(NorP)){
+    if (!missing(Ps)) {
+      NorP <- Ps
+    } else {
+      stop("An argument NorP or Ps must be provided.")
+    }
+  }
   if (CheckArguments)
     CheckentropartArguments()
   
@@ -20,7 +27,14 @@ function(NorP, q = 1, Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns 
 Diversity.AbdVector <-
 function(NorP, q = 1, Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns = NULL)
 {
-  return(bcDiversity(Ns=NorP, q=q, Correction=Correction, CheckArguments=CheckArguments))
+  if (missing(NorP)){
+    if (!missing(Ns)) {
+      NorP <- Ns
+    } else {
+      stop("An argument NorP or Ns must be provided.")
+    }
+  }
+  return (bcDiversity(Ns=NorP, q=q, Correction=Correction, CheckArguments=CheckArguments))
 }
 
 
@@ -34,7 +48,7 @@ function(NorP, q = 1, Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns 
       stop("An argument NorP Ns must be provided.")
     }
   }
-  return(bcDiversity(Ns=NorP, q=q, Correction=Correction, CheckArguments=CheckArguments))
+  return (bcDiversity(Ns=NorP, q=q, Correction=Correction, CheckArguments=CheckArguments))
 }
 
 
@@ -55,10 +69,10 @@ function(NorP, q = 1, Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns 
 
   if (abs(sum(NorP) - 1) < length(NorP)*.Machine$double.eps) {
     # Probabilities sum to 1, allowing rounding error
-    return(Diversity.ProbaVector(NorP, q=q, CheckArguments=CheckArguments))
+    return (Diversity.ProbaVector(NorP, q=q, CheckArguments=CheckArguments))
   } else {
     # Abundances
-    return(Diversity.AbdVector(NorP, q=q, Correction=Correction, CheckArguments=CheckArguments))
+    return (Diversity.AbdVector(NorP, q=q, Correction=Correction, CheckArguments=CheckArguments))
   }
 }
 

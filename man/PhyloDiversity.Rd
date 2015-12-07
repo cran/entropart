@@ -74,6 +74,9 @@ is.PhyloDiversity(x)
 
   The functions are designed to be used as simply as possible. \code{PhyloDiversity} is a generic method. If its first argument is an abundance vector, an integer vector or a numeric vector which does not sum to 1, the bias corrected function \code{bcPhyloDiversity} is called. Explicit calls to \code{bcPhyloDiversity} (with bias correction) or to \code{PhyloDiversity.ProbaVector} (without correction) are possible to avoid ambiguity. The \code{.integer} and \code{.numeric} methods accept \code{Ps} or \code{Ns} arguments instead of \code{NorP} for backward compatibility.
 }
+\note{
+  The tree must contain all species of the probability vector. If it contains extra species, computation time will just be increased.
+}
 \value{
   An object of class \code{PhyloDiversity} is a list:
   \item{Distribution}{The distribution used to calculate diversity}

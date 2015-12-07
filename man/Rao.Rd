@@ -51,7 +51,7 @@ bcRao(Ns, Tree, Correction="Lande", CheckArguments = TRUE)
   The functions are designed to be used as simply as possible. \code{Tsallis} is a generic method. If its first argument is an abundance vector, an integer vector or a numeric vector which does not sum to 1, the bias corrected function \code{bcTsallis} is called. Explicit calls to \code{bcTsallis} (with bias correction) or to \code{Tsallis.ProbaVector} (without correction) are possible to avoid ambiguity. The \code{.integer} and \code{.numeric} methods accept \code{Ps} or \code{Ns} arguments instead of \code{NorP} for backward compatibility.
 }
 \value{
-  A number equal to the calculated diversity.
+  A named number equal to the calculated entropy. The name is that of the bias correction used.
 }
 \references{
   Marcon, E., Herault, B. (2015). Decomposing  Phylodiversity. \emph{Methods in Ecology and Evolution} 6(3): 333-339.

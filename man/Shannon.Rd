@@ -35,7 +35,7 @@ bcShannon(Ns, Correction = "Best", CheckArguments = TRUE)
     A numeric vector, an integer vector, an abundance vector (\code{\link{AbdVector}}) or a probability vector (\code{\link{ProbaVector}}). Contains either abundances or probabilities.
   }
   \item{Correction}{
-    A string containing one of the possible corrections: \code{"None"} (no correction), \code{"ChaoShen"}, \code{"GenCov"}, \code{"Grassberger"}, \code{"Grassberger2003"}, \code{"Schurmann"}, \code{"Holste"}, \code{"Bonachela"}, \code{"Miller"}, \code{"ZhangHz"}, \code{"ChaoWangJost"}, \code{"Marcon"}, \code{"Unveil"} or \code{"Best"}, the default value. Currently, \code{"Best"} is \code{"ChaoWangJost"}.
+    A string containing one of the possible corrections: \code{"None"} (no correction), \code{"ChaoShen"}, \code{"GenCov"}, \code{"Grassberger"}, \code{"Grassberger2003"}, \code{"Schurmann"}, \code{"Holste"}, \code{"Bonachela"}, \code{"Miller"}, \code{"ZhangHz"}, \code{"ChaoWangJost"}, \code{"Marcon"}, \code{"UnveilC"}, \code{"UnveiliC"}, \code{"UnveilJ"} or \code{"Best"}, the default value. Currently, \code{"Best"} is \code{"ChaoWangJost"}.
   }
   \item{CheckArguments}{
     Logical; if \code{TRUE}, the function arguments are verified. Should be set to \code{FALSE} to save time when the arguments have been checked elsewhere.
@@ -46,12 +46,12 @@ bcShannon(Ns, Correction = "Best", CheckArguments = TRUE)
   
   Correction techniques are from Miller (1955), Chao and Shen (2003), Grassberger (1988), Grassberger (2003), Schurmann (2003), Holste \emph{et al.} (1998), Bonachela \emph{et al.} (2008), Zhang (2012), Chao, Wang  and Jost (2013). More estimators can be found in the \code{entropy} package.
   
-  Using \code{\link{MetaCommunity}} mutual information, Chao, Wang  and Jost (2013) calculate unbiased Shannon beta entropy (see the last example below) with better results than the Chao and Shen estimator, but community weights cannot be arbitrary: they must be proportional to the number of individuals.
+  Using \code{\link{MetaCommunity}} mutual information, Chao, Wang and Jost (2013) calculate reduced-bias Shannon beta entropy (see the last example below) with better results than the Chao and Shen estimator, but community weights cannot be arbitrary: they must be proportional to the number of individuals.
 
   The functions are designed to be used as simply as possible. \code{Shannon} is a generic method. If its first argument is an abundance vector, an integer vector or a numeric vector which does not sum to 1, the bias corrected function \code{bcShannon} is called. Explicit calls to \code{bcShannon} (with bias correction) or to \code{Shannon.ProbaVector} (without correction) are possible to avoid ambiguity. The \code{.integer} and \code{.numeric} methods accept \code{Ps} or \code{Ns} arguments instead of \code{NorP} for backward compatibility.
 }
 \value{
-  A number equal to the calculated entropy.
+  A named number equal to the calculated entropy. The name is that of the bias correction used.
 }
 \references{
   Bonachela, J. A., Hinrichsen, H. and Munoz, M. A. (2008). Entropy estimates of small data sets. \emph{Journal of Physics A: Mathematical and Theoretical} 41(202001): 1-9.
@@ -95,12 +95,10 @@ bcShannon(Ns, Correction = "Best", CheckArguments = TRUE)
   # Calculate Shannon entropy
   Shannon(Ps)
 
-  # Calculate a reduced-bias estimator of Shannon entropy
+  # Calculate the best estimator of Shannon entropy
   Shannon(Ns)
   
   # Use metacommunity data to calculate reduced-bias Shannon beta as mutual information
   (bcShannon(Paracou618.MC$Ns) + bcShannon(colSums(Paracou618.MC$Nsi))
     - bcShannon(Paracou618.MC$Nsi))
-  # Compare with Chao and Jost correction (works for Tsallis entropy in general)
-  summary(BetaEntropy(Paracou618.MC, 1))
 }

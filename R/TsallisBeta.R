@@ -18,14 +18,16 @@ function(NorP, NorPexp = NULL, q = 1, Correction = "Best", CheckArguments = TRUE
   dataBeta <- NorP^q * lnq(NorP/NorPexp, q)
   dataBeta[NorP == 0] <- 0
   
-  return (sum(dataBeta))
+  entropy <- sum(dataBeta)
+  names(entropy) <- "None"
+  return (entropy)
 }
 
 
 TsallisBeta.AbdVector <-
 function(NorP, NorPexp = NULL, q = 1, Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns = NULL, Pexp = NULL, Nexp = NULL) 
 {
-  return(bcTsallisBeta(Ns=NorP, Nexp=NorPexp, q=q, Correction=Correction, CheckArguments=CheckArguments))
+  return (bcTsallisBeta(Ns=NorP, Nexp=NorPexp, q=q, Correction=Correction, CheckArguments=CheckArguments))
 }
 
 
@@ -46,7 +48,7 @@ function(NorP, NorPexp = NULL, q = 1, Correction = "Best", CheckArguments = TRUE
       stop("An argument NorPexp or Nexp must be provided.")
     }
   }
-  return(bcTsallisBeta(Ns=NorP, Nexp=NorPexp, q=q, Correction=Correction, CheckArguments=CheckArguments))
+  return (bcTsallisBeta(Ns=NorP, Nexp=NorPexp, q=q, Correction=Correction, CheckArguments=CheckArguments))
 }
 
 
@@ -78,10 +80,10 @@ function(NorP, NorPexp = NULL, q = 1, Correction = "Best", CheckArguments = TRUE
   
   if (abs(sum(NorP) - 1) < length(NorP)*.Machine$double.eps) {
     # Probabilities sum to 1, allowing rounding error
-    return(TsallisBeta.ProbaVector(NorP, NorPexp, q=q, CheckArguments=CheckArguments))
+    return (TsallisBeta.ProbaVector(NorP, NorPexp, q=q, CheckArguments=CheckArguments))
   } else {
     # Abundances
-    return(TsallisBeta.AbdVector(NorP, NorPexp, q=q, Correction=Correction, CheckArguments=CheckArguments))
+    return (TsallisBeta.AbdVector(NorP, NorPexp, q=q, Correction=Correction, CheckArguments=CheckArguments))
   }
 }
 
@@ -98,7 +100,7 @@ function(Ns, Nexp = NULL, q, Correction = "Best", CheckArguments = TRUE)
   
   # No correction
   if (Correction == "None") {
-    return(TsallisBeta.ProbaVector(Ns/sum(Ns), Nexp/sum(Nexp), q, CheckArguments=FALSE))
+    return (TsallisBeta.ProbaVector(Ns/sum(Ns), Nexp/sum(Nexp), q, CheckArguments=FALSE))
   }
   
   # Sample coverage
@@ -113,7 +115,9 @@ function(Ns, Nexp = NULL, q, Correction = "Best", CheckArguments = TRUE)
     dataBeta <- CiPsi^q * lnq(CiPsi/CPs, q) / (1 -(1-CiPsi)^Nrecords)    
     # force 0log0=0                                                                                                                                       
     dataBeta[Ns == 0] <- 0
-    return (sum(dataBeta))  
+    entropy <- sum(dataBeta)
+    names(entropy) <- Correction
+    return (entropy)
   } 
   warning("Correction was not recognized")
   return (NA)

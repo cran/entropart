@@ -1,10 +1,10 @@
 \name{AlphaDiversity}
 \alias{AlphaDiversity}
 \title{
-  Unbiased alpha diversity of a metacommunity
+  Reduced-bias alpha diversity of a metacommunity
 }
 \description{
-  Calculates the unbiased total alpha diversity of order \eqn{q} of communities.
+  Calculates the eeduced-bias total alpha diversity of order \eqn{q} of communities.
 }
 \usage{
 AlphaDiversity(MC, q = 1, Correction = "Best", Tree = NULL, Normalize = TRUE, 

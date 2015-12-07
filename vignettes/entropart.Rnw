@@ -68,6 +68,7 @@ It allows calculating species-neutral, phylogenetic and functional entropy and d
 
 \begin{document}
 \SweaveOpts{concordance=TRUE, keep.source=FALSE, width=5, height=4}
+\setkeys{Gin}{width=0.7\textwidth}
 
 <<Declarations, echo=FALSE>>=
 options(prompt = "R> ", continue = "+  ", width = 70, useFancyQuotes = FALSE)
@@ -81,7 +82,7 @@ Interpretation of entropy is not straightforward but one can easily transform it
 
 \cite{Marcon2014a} generalized the duality of entropy and diversity, deriving the relation between phylogenetic or functional diversity \citep {Chao2010} and phylogenetic or functional entropy (we will write \emph{phylodiversity} and \emph{phyloentropy} for short), as introduced by \cite {Pavoine2009}. 
 Special cases are the well-known PD \citep{Faith1992} and FD \citep{Petchey2002} indices and Rao's (\citeyear{Rao1982}) quadratic entropy. 
-The same relation holds between Ricotta and Szeidl entropy of a community \citep{Ricotta2006} and similarity-based diversity \citep{Leinster2012}.
+The same relation holds between Ricotta and Szeidl's entropy of a community \citep{Ricotta2006} and similarity-based diversity \citep{Leinster2012}.
 
 The \pkg{entropart} package for \proglang{R} \citep{R2014} enables calculation of all these measures of diversity and entropy and their partitioning.
 
@@ -94,7 +95,7 @@ $\alpha$ and $\gamma$ diversities are underestimated by naive estimators \citep{
 $\beta$ diversity is severely biased too when sampling is not sufficient \citep{Beck2013}. 
 Bias-corrected estimators of phylodiversity have been developed by \cite{Marcon2014a}. 
 Estimators of similarity-based diversity were derived by \cite{Marcon2014e}. 
-The package includes them all.
+The package includes them all \citep{Marcon2015}.
 
 In summary, the framework supported by the package is as follows. 
 First, an information function is chosen to describe the amount of surprise brought by the observation of each individual.
@@ -106,7 +107,7 @@ Diversity is an effective number of species, \emph{i.e.}\ the number of equally-
 The average entropy of communities of an assemblage is $\alpha$ entropy, while the entropy of the assemblage is $\gamma$ entropy. 
 Their difference is $\beta$ entropy.
 After transformation, $\beta$ diversity is the ratio of $\gamma$ to $\alpha$ diversity.
-It is an effective number of communities, \emph{i.e.}\ the number of equally-weighted communities with no species in common necessary to obtain the same diversity as the data.
+It is an effective number of communities, \emph{i.e.}\ the number of equally-weighted communities with no species in common (and where species are maximally distinct between communities) necessary to obtain the same diversity as the data.
 Estimation-bias correction is more easily applied to entropy before transforming it into diversity.
 
 This framework is somehow different from that of \cite{Chao2014a} who define $\alpha$ diversity in another way \citep[see][for a detailed comparison]{Marcon2014a}, such that $\alpha$ entropy is not the average surprise of an assemblage. They also propose a definition of functional diversity \citep{Chiu2014b} based in the information brought by pairs of individuals that is not supported in the package.
@@ -193,7 +194,7 @@ PAbd <- as.AbdVector(Paracou618.MC$Ns)
 
 The \code{as.ProbaVector} function transforms abundances to probabilities if necessary:
 <<ProbaVector>>=
-PProba <- as.ProbaVector(Paracou618.MC$Ns)
+PProba <- as.ProbaVector(Paracou618.MC$Ps)
 @
 
 \begin{figure}
@@ -254,7 +255,9 @@ Species-neutral HCDT entropy of order $q$ of a community is defined as:
 
 \begin{equation}
 \displaystyle
-^q\!H=\frac{1-\sum_s{p^q_s}}{q-1}=-\sum_s{p^q_s}\ln_q{p_s}
+^q\!H=\frac{1-\sum_s{p^q_s}}{q-1}
+     =-\sum_s{p^q_s}\ln_q{p_s}
+     =\sum_s{p_s}\ln_q{\frac{1}{p_s}}
 \label{Hgamma}
 \end{equation}
 
@@ -262,12 +265,12 @@ Species-neutral HCDT entropy of order $q$ of a community is defined as:
 Entropy can be calculated by the \textbf{Tsallis} function. 
 Paracou meta-community entropy of order 1 is:
 <<ShannonP6.1>>=
-Tsallis(Ps = Paracou618.MC$Ps, q = 1)
+Tsallis(PProba, q = 1)
 @
 
 For convenience, special cases of entropy of order $q$ have a clear-name function: \code{Richness} for $q=0$, \code{Shannon} for $q=1$, \code{Simpson} for $q=2$.
 <<ShannonP6.2>>=
-Shannon(Ps = Paracou618.MC$Ps)
+Shannon(PProba)
 @
 
 Entropy values have no intuitive interpretation in general, except for the number of species $^0\!H$ and Simpson entropy $^2\!H$ which is the probability for two randomly chosen individuals to belong to different species.
@@ -286,12 +289,12 @@ $S^1$ is the number of singletons (species observed once) of the sample, and $n$
 The estimator has been improved by taking into account the whole distribution of species \citep{Zhang2007}. 
 The \code{Coverage} function calculates it, allowing to choose the estimator (Zhang and Huang's by default):
 <<Coverage>>=
-Coverage(Ns = Paracou618.MC$Ns)
+Coverage(PAbd)
 @
 
 The sample coverage cannot be estimated from probability data: abundances are required.
 
-Its interpretation is straightforward: some species have not been sampled. Their number is unknown but their total probability of occurence can be estimated accurately. Here, it is a bit less than 8\%. From another point of view, the probability for an individual of the community to belong to a sampled species is $C$: 8\% of them belong to missed species. The number of missed species may be estimated by \code{bcRichness} but this is not the point here. The sample coverage is the foundation of many estimators of entropy.
+Its interpretation is straightforward: some species have not been sampled. Their number is unknown but their total probability of occurence can be estimated accurately. Here, it is a bit less than 8\%. From another point of view, the probability for an individual of the community to belong to a sampled species is $C$: 8\% of them belong to missed species. The number of missed species may be estimated by \code{Richness} but this is not the point here. The sample coverage is the foundation of many estimators of entropy.
 
 \subsubsection{Bias corrected estimators}
 
@@ -301,22 +304,16 @@ They are similar to the non-corrected ones but they use abundance data and propo
 A ``Best'' correction is calculated by default, detailed in the help file of each function.
 
 <<bcShannonP6.1>>=
-bcTsallis(Ns = Paracou618.MC$Ns, q = 1)
+bcTsallis(PAbd, q = 1)
 @
 
 The best correction for Tsallis entropy follows \cite{Chao2015}. It combines an unbiased estimator previously derived by \cite{Zhang2014} and an estimate of the remaining bias.
 
 All community functions such as \code{Tsallis} are actually generic methods that can handle several types of data the appropriate way: if the first argument of the function is a \code{ProbaVector} (or a numeric vector summing to 1), no bias correction is applied.
-If it is an \code{AbdVector} (or an integer vector), the bias-corrected estimator is used (\emph{e.g.}\ \code{bcTsallis}).
+If it is an \code{AbdVector} (or an integer vector), the bias-corrected estimator is used (\emph{e.g.}\ \code{bcTsallis}). Numeric vectors summing to more than 2 are considered as abundances but some bias corrections do not allow non-integer values, so they will round them with a warning.
 
 The different ways to use the functions are a matter of personal preference.
-\code{bcTsallis} with a numeric vector:
-
-<<bcShannonP6.2>>=
-bcTsallis(Paracou618.MC$Ns, q = 1)
-@
-
-is equivalent to \code{Tsallis} with an abundance vector:
+\code{bcTsallis} is equivalent to \code{Tsallis} with an abundance vector:
 <<bcShannonP6.3>>=
 Tsallis(PAbd, q = 1)
 @
@@ -341,13 +338,11 @@ Entropy should be converted into ``true diversity'' \citep{Jost2007}, \emph{i.e.
 
 This can be done by the deformed exponential function, or using directly the \code{Diversity} or \code{bcDiversity} functions (equal to the deformed exponential of order $q$ of \code{Tsallis} or \code{bcTsallis})
 <<Diversity>>=
-expq(Simpson(Ps = Paracou618.MC$Ps), q = 2)
-Diversity(Ps = Paracou618.MC$Ps, q = 2)
-expq(bcTsallis(Ns = Paracou618.MC$Ns, q = 2), q = 2)
-bcDiversity(Ns = Paracou618.MC$Ns, q = 2)
+expq(Tsallis(PAbd, q = 2), q = 2)
+Diversity(PAbd, q = 2)
 @
 
-The effective number of species of the Paracou dataset is estimated to be \Sexpr{round(bcDiversity(Ns = Paracou618.MC$Ns, q = 2))} after bias correction (rather than \Sexpr{round(Diversity(Ps = Paracou618.MC$Ps, q = 2))} without it). It means that a community made of \Sexpr{round(bcDiversity(Ns = Paracou618.MC$Ns, q = 2))} equally-frequent species has the same Simpson entropy as the actual one. This is much less than the actual \Sexpr{round(Paracou618.MC$Nspecies, 0)} sampled species but Simpson's entropy focuses on dominant species. 
+The effective number of species of the Paracou dataset is estimated to be \Sexpr{round(bcDiversity(PAbd, q = 2))} after bias correction (rather than \Sexpr{round(Diversity(PProba, q = 2))} without it). It means that a community made of \Sexpr{round(bcDiversity(Ns = PAbd, q = 2))} equally-frequent species has the same Simpson entropy as the actual one. This is much less than the actual \Sexpr{round(Paracou618.MC$Nspecies, 0)} sampled species. Simpson's entropy focuses on dominant species. 
 
 \subsubsection{Hurlbert's diversity}
 
@@ -368,13 +363,12 @@ The effective number of species $_k\!D$ can be found by solving the following eq
   _k\!S  = {_k\!D} \left[1-{\left(1-\frac{1}{_k\!D}\right)}^k\right]
 \end{equation}
 
-Hurlbert's index is calculated by the \code{Hurlbert} function, its unbiased estimator by 
-\code{bcHurlbert} and its effective number of species by \code{HurlbertD} or \code{bcHurlbertD}.
+Hurlbert's index is calculated by the \code{Hurlbert} function. Its unbiased estimator is obtained by \code{bcHurlbert} (implicitly if an abundance vector is used). Its effective number of species is caclulated by \code{HurlbertD} or \code{bcHurlbertD}.
 
 <<Hurlbert>>=
-Hurlbert(Ps = Paracou618.MC$Ps, k = 2)
-bcHurlbert(Ns = Paracou618.MC$Ns, k = 2)
-bcHurlbertD(Ns = Paracou618.MC$Ns, k = 2)
+Hurlbert(PProba, k = 2)
+Hurlbert(PAbd, k = 2)
+HurlbertD(PAbd, k = 2)
 @
 
 Hurlbert's diversity of order 2 is identical to Simpson's diversity.
@@ -391,7 +385,9 @@ Meta-community functions allow partitioning diversity according to Patil and Tai
 
 $^q_iH_{\alpha}$ is the entropy of community $i$:
 \begin{equation}
-^q_i\!H_{\alpha}=\frac{1-\sum_s{p^q_{s,i}}}{q-1}=-\sum_s{p^q_{s,i}}\ln_q{p_{s,i}}
+^q_i\!H_{\alpha}=\frac{1-\sum_s{p^q_{s,i}}}{q-1}
+    =-\sum_s{p^q_{s,i}}\ln_q{p_{s,i}}
+    =\sum_s{p_{s,i}}\ln_q{\frac{1}{p_{s,i}}}
 \label{Halpha}
 \end{equation}
 
@@ -401,7 +397,10 @@ In this particular case, both definitions are identical.
 $\gamma$ entropy of the meta-community is defined as $\alpha$ entropy of a community. 
 $\beta$ entropy, the difference between $\gamma$ and $\alpha$, is the generalized Jensen-Shannon divergence between the species distribution of the meta-community and those of communities \citep{Marcon2014}:
 \begin{equation}
-^q\!H_{\beta}=^q\!H_{\gamma}-^q\!H_{\alpha}=\sum_s{p^q_{s,i}\ln_q\frac{p_{s,i}}{p_s}}
+^q\!H_{\beta
+  }=^q\!H_{\gamma}-^q\!H_{\alpha}
+  =\sum_s{p^q_{s,i}\ln_q\frac{p_{s,i}}{p_s}}
+  =\sum_s{p_{s,i}\ln_q\frac{p_s}{p_{s,i}}}
 \label{Hbeta}
 \end{equation}
 
@@ -436,7 +435,7 @@ summary(p)
 p$CommunityAlphaEntropies
 @
 
-The $\alpha$ diversity of communities is \Sexpr{round(p$TotalAlphaDiversity, 0)} effective species (it is the exponential of the entropy calculated previously). This is more than Simpson diversity (\Sexpr{round(bcDiversity(Ns = Paracou618.MC$Ns, q = 2))} species, calculated above) because less frequent species are taken into account. $\gamma$ diversity of the meta-community is \Sexpr{round(p$GammaDiversity, 0)} effective species. $\beta$ diversity is \Sexpr{round(p$TotalBetaDiversity, 2)} effective communities, \emph{i.e.}\ the two actual communities are as different from each other as \Sexpr{round(p$TotalBetaDiversity, 2)} ones with equal weights and no species in common.
+The $\alpha$ diversity of communities is \Sexpr{round(p$TotalAlphaDiversity, 0)} effective species (it is the exponential of the entropy calculated previously). This is more than Simpson diversity (\Sexpr{round(bcDiversity(Ns = PAbd, q = 2))} species, calculated above) because less frequent species are taken into account. $\gamma$ diversity of the meta-community is \Sexpr{round(p$GammaDiversity, 0)} effective species. $\beta$ diversity is \Sexpr{round(p$TotalBetaDiversity, 2)} effective communities, \emph{i.e.}\ the two actual communities are as different from each other as \Sexpr{round(p$TotalBetaDiversity, 2)} ones with equal weights and no species in common.
 
 \begin{figure}
 \centering
@@ -506,7 +505,7 @@ Beta entropy can also be calculated by a set of functions named after the commun
 Bias correction is currently limited to Chao and Shen's correction. 
 The example below calculates the Shannon $\beta$ entropy of the first community of Paracou618 and the meta-community.
 <<ShannonBeta>>=
-ShannonBeta(Paracou618.MC$Psi[, 1], Paracou618.MC$Ps)
+ShannonBeta(Paracou618.MC$Psi[, 1], PProba)
 @
 
 These functions are available for particular uses, when a \code{MetaCommunity} is not available or not convenient to use (\emph{e.g.}\ simulations). 
@@ -552,7 +551,7 @@ We normalize it so that it does not depend on the tree height:
 \label{PhyloH}
 \end{equation}
 
-Unnormalized values are multiplied by the tree height, such as $^q\!\mathit{PD}(T)$ \citep{Chao2010}.
+Unnormalized values are multiplied by the height of the tree, such as $^q\!\mathit{PD}(T)$ \citep{Chao2010}.
 
 Phyloentropy is calculated as HCDT entropy along the slices of the trees applying possible estimation-bias corrections, summed, possibly normalized, and finally transformed into diversity:
 \begin{equation}
@@ -564,19 +563,19 @@ Phyloentropy is calculated as HCDT entropy along the slices of the trees applyin
 \subsection{Community functions}
 
 \code{PhyloEntropy} and the estimation-bias-corrected \code{bcPhyloEntropy} are the phylogenetic analogs of \code{Tsallis} and \code{bcTsallis}. 
-They accept the same arguments plus an ultrametric tree of class \code{hclust} or \code{phylog}, and \code{Normalize}, a boolean to normalize the tree height to 1 (by default).
+They accept the same arguments plus an ultrametric tree of class \code{phylo}, \code{hclust} or \code{phylog}, and \code{Normalize}, a boolean to normalize the tree height to 1 (by default).
 
 Phylogenetic diversity is calculated by \code{PhyloDiversity} or \code{bcPhyloDiversity}, analogous to the species-neutral diversity functions \code{Diversity} and \code{bcDiversity}.
 
 Results are either a \code{PhyloDiversity} or a \code{PhyloEntropy} object, which can be plotted (Figure~\ref{PhyloDiversity}) and summarized.
 <<PhyloDiversity>>=
-phd <- bcPhyloDiversity(Paracou618.MC$Ns, q = 1, Tree = Paracou618.Taxonomy, Normalize = TRUE)
+phd <- bcPhyloDiversity(PAbd, q = 1, Tree = Paracou618.Taxonomy, Normalize = TRUE)
 summary(phd)
 @
 
 The phylogenetic diversity of order 1 of the Paracou dataset is \Sexpr{round(phd$Total, 0)} effective species: \Sexpr{round(phd$Total, 0)} totally different species (only connected by the root of the tree) with equal probabilities would have the same entropy.
-It can be compared to its species-neutral diversity, \Sexpr{round(p$GammaDiversity, 0)} species. 
-The latter is the diversity of the first slice of the tree. When going up the tree, diversity decreases because species collapse. On Figure~\ref{PhyloDiversity}, diversity of the second slice, between $T=1$ and $T=2$, is that of genera (\Sexpr{round(phd$Cuts[2], 0)} effective genera) and the last slice contains (\Sexpr{round(phd$Cuts[3], 0)} effective families). 
+It can be compared to its species-neutral diversity: \Sexpr{round(p$GammaDiversity, 0)} species. 
+The latter is the diversity of the first slice of the tree. When going up the tree, diversity decreases because species collapse. On Figure~\ref{PhyloDiversity}, the diversity of the second slice, between $T=1$ and $T=2$, is that of genera (\Sexpr{round(phd$Cuts[2], 0)} effective genera) and the last slice contains \Sexpr{round(phd$Cuts[3], 0)} effective families. 
 The phylogenetic entropy of the community is the average of the entropy along slices, weighted by the slice lengths. Diversity can not be averaged the same way.
 
 A less trivial phylogeny would contain many slices, resulting in as many diversity levels with respect to $T$.
@@ -636,38 +635,38 @@ Similarity-based diversity is the reciprocal of the generalized average of order
 
 The \code{Dqz} function calculates similarity-based diversity. 
 Its arguments are the vector of probabilities of occurrences of the species, the order of diversity and the similarity matrix $\mathbf{Z}$. 
-The \code{bcDqz} function allows estimation-bias correction.
+The \code{bcDqz} function allows estimation-bias correction \citep{Marcon2014e}.
 
 This example calculates the $\gamma$ diversity of the meta-community Paracou. 
 First, the similarity matrix is calculated from the distance matrix between all pairs of species as 1 minus normalized dissimilarity.
 <<Dqz>>=
 DistanceMatrix <- as.matrix(Paracou618.dist)
 Z <- 1 - DistanceMatrix/max(DistanceMatrix)
-bcDqz(Paracou618.MC$Ns, q = 2, Z)
+bcDqz(PAbd, q = 2, Z)
 @
 
 If $\mathbf{Z}$ is the identity matrix, similarity-based diversity equals HCDT diversity:
 <<DqzHCDT>>=
-Dqz(Paracou618.MC$Ps, q = 2, Z = diag(length(Paracou618.MC$Ps)))
-Diversity(Paracou618.MC$Ps, q = 2)
+Dqz(PProba, q = 2, Z = diag(length(PProba)))
+Diversity(PProba, q = 2)
 @
 
-Functional diversity of order 2 is only \Sexpr{round(bcDqz(Paracou618.MC$Ns, q = 2, Z), 2)} effective species, which is very small compared to \Sexpr{round(Diversity(Paracou618.MC$Ps, q = 2), 0)} effective species for Simpson diversity. 
-\Sexpr{round(bcDqz(Paracou618.MC$Ns, q = 2, Z), 2)} equally-frequent species with similarity equal to 0 would have the same functional diversity as the actual community (made of \Sexpr{round(Paracou618.MC$Nspecies, 0)} species). 
+Functional diversity of order 2 is only \Sexpr{round(bcDqz(PAbd, q = 2, Z), 2)} effective species, which is very small compared to \Sexpr{round(Diversity(PProba, q = 2), 0)} effective species for Simpson diversity. 
+\Sexpr{round(bcDqz(PAbd, q = 2, Z), 2)} equally-frequent species with similarity equal to 0 would have the same functional diversity as the actual community (made of \Sexpr{round(Paracou618.MC$Nspecies, 0)} species). 
 This means that species are very similar from a functional point of view. 
 The very low values returned by $^qD^Z$ are questioned by \cite{Chao2014a} and discussed in depth by \cite{Marcon2014e}: the choice of the similarity matrix is not trivial.
 
 The similarity-based entropy of a community $^qH^Z$ \citep{Leinster2012, Ricotta2006} has the same relations with diversity as HCDT entropy and Hill numbers. 
 The \code{Hqz} function calculates it:
 <<Hqz>>=
-Hqz(Paracou618.MC$Ps, q = 2, Z)
-lnq(Dqz(Paracou618.MC$Ps, q = 2, Z), q = 2)
+Hqz(PProba, q = 2, Z)
+lnq(Dqz(PProba, q = 2, Z), q = 2)
 @
 
 As species-neutral entropy, $^qH^Z$ has no straightforward interpretation beyond the average surprise of a community.
 
 All meta-community functions can be used to estimate similarity-based diversity: argument \code{Z} must be provided:
-<<AlphaEntropy>>=
+<<AlphaEntropyZ>>=
 e <- AlphaEntropy(Paracou618.MC, q = 1, Z = Z)
 summary(e)
 @
@@ -693,7 +692,7 @@ This example code draws a single community of 1000 individuals according to a lo
 <<rCommunity>>=
 rCommunity(n = 1, size = 1000, S=300, Distribution = "lnorm", sd=1) -> NsRef
 Richness(as.ProbaVector(NsRef))
-bcRichness(NsRef)
+Richness(NsRef)
 plot(NsRef, Distribution="lnorm")
 @
 
@@ -713,7 +712,7 @@ Simulated communities are obtained by random draws in a multinomial distribution
 The arguments of \code{EntropyCI} are an entropy function (any entropy function of the package accepting a vector of species abundances, such as \code{bcTsallis}), the number of simulations to run, the observed species frequencies and the method to obtain probabilities for the multinomial distribution (the same as that of \code{rCommunity}).
 
 The result is a numeric vector containing the entropy value of each simulated community. 
-Entropy can be finally transformed into diversity (but it is not correct to use a diversity function in simulations because the average simulated value must be calculate and only entropy can be averaged).
+Entropy can be finally transformed into diversity (but it is not correct to use a diversity function in simulations because the average simulated value must be calculated and only entropy can be averaged).
 
 This example shows how to use the function. 
 First, the distribution of the $\gamma$ HCDT entropy of order 1 (Shannon entropy) of the Paracou meta-community is calculated and transformed into diversity. 
@@ -766,7 +765,7 @@ The \code{PhyloApply} function is used to apply an entropy community function (g
 
 This example shows how to calculate Shannon entropy along the tree containing the taxonomy to obtain species, genus and family entropy shown on figure~\ref{PhyloDiversity}:
 <<PhyloApply>>=
-pa <- PhyloApply(Tree=Paracou618.Taxonomy, FUN=bcTsallis, NorP=Paracou618.MC$Ns)
+pa <- PhyloApply(Tree=Paracou618.Taxonomy, FUN=bcTsallis, NorP=PAbd)
 summary(pa)
 exp(pa$Cuts)
 exp(pa$Total)
@@ -790,7 +789,7 @@ MC1 <- MetaCommunity(Abundances = df, Weights = w)
 @
 
 Then a second one:
-<<MC1>>=
+<<MC2>>=
 (df <- data.frame(C1 = c(10, 4), C2 = c(3, 4), row.names = c("sp1", "sp5")))
 w <- colSums(df)
 MC2 <- MetaCommunity(Abundances = df, Weights = w)

@@ -18,7 +18,7 @@ function(NorP, NorPexp = NULL, Correction = "Best", CheckArguments = TRUE, Ps = 
 ShannonBeta.AbdVector <-
 function(NorP, NorPexp = NULL, Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns = NULL, Pexp = NULL, Nexp = NULL) 
 {
-  return(bcShannonBeta(Ns=NorP, Nexp=NorPexp, Correction=Correction, CheckArguments=CheckArguments))
+  return (bcShannonBeta(Ns=NorP, Nexp=NorPexp, Correction=Correction, CheckArguments=CheckArguments))
 }
 
 
@@ -39,7 +39,7 @@ function(NorP, NorPexp = NULL, Correction = "Best", CheckArguments = TRUE, Ps = 
       stop("An argument NorPexp or Nexp must be provided.")
     }
   }
-  return(bcShannonBeta(Ns=NorP, Nexp=NorPexp, Correction=Correction, CheckArguments=CheckArguments))
+  return (bcShannonBeta(Ns=NorP, Nexp=NorPexp, Correction=Correction, CheckArguments=CheckArguments))
 }
 
 
@@ -71,10 +71,10 @@ function(NorP, NorPexp = NULL, Correction = "Best", CheckArguments = TRUE, Ps = 
   
   if (abs(sum(NorP) - 1) < length(NorP)*.Machine$double.eps) {
     # Probabilities sum to 1, allowing rounding error
-    return(ShannonBeta.ProbaVector(NorP, NorPexp, CheckArguments=CheckArguments))
+    return (ShannonBeta.ProbaVector(NorP, NorPexp, CheckArguments=CheckArguments))
   } else {
     # Abundances
-    return(ShannonBeta.AbdVector(NorP, NorPexp, Correction=Correction, CheckArguments=CheckArguments))
+    return (ShannonBeta.AbdVector(NorP, NorPexp, Correction=Correction, CheckArguments=CheckArguments))
   }
 }
 
@@ -107,9 +107,11 @@ function(Ns, Nexp, Correction = "Best", CheckArguments = TRUE)
     S_v <- function(s) {
       Usedv1 <- 1:(m-Y[s])
       Usedv2 <- 1:(n-X[s])
-      return(sum(w_v1[Usedv1]*p_V_Ns1[s, Usedv1]) - sum(w_v2[Usedv2]*p_V_Ns2[s, Usedv2]))
+      return (sum(w_v1[Usedv1]*p_V_Ns1[s, Usedv1]) - sum(w_v2[Usedv2]*p_V_Ns2[s, Usedv2]))
     }
-    return(sum(Ps*sapply(1:length(Ps), S_v)))
+    entropy <- sum(Ps*vapply(1:length(Ps), S_v, 0))
+    names(entropy) <- Correction
+    return (entropy)
   } else {
     return (bcTsallisBeta(Ns, Nexp, 1, Correction, CheckArguments=FALSE))    
   }

@@ -26,12 +26,12 @@ Coverage(Ns, Estimator = "ZhangHuang", CheckArguments = TRUE)
   The historical estimator is due to Turing (Good, 1953). It only relies on singletons (species observed only once). Chao's (Chao and Shen, 2010) estimator uses doubletons too and Zhang-Huang's (Chao et al., 1988; Zhang and Huang, 2007) uses the whole distribution.
 }
 \value{
-  A number equal to the calculated sample coverage.
+  A named number equal to the calculated sample coverage. The name is that of the estimator used.
 }
 \references{
   Chao, A., Lee, S.-M. and Chen, T.-C. (1988). A generalized Good's nonparametric coverage estimator. \emph{Chinese Journal of Mathematics} 16: 189-199.
   
-  Chao, A. and Shen, T.-J. (2010). \emph{Program SPADE: Species Prediction And Diversity Estimation. Program and user's guide}. CARE, Hsin-Chu, Taiwan. \url{http://chao.stat.nthu.edu.tw/softwareCE.html}
+  Chao, A. and Shen, T.-J. (2010). \emph{Program SPADE: Species Prediction And Diversity Estimation. Program and user's guide}. CARE, Hsin-Chu, Taiwan.
   
   Good, I. J. (1953). On the Population Frequency of Species and the Estimation of Population Parameters. \emph{Biometrika} 40(3/4): 237-264.
   

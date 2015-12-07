@@ -61,7 +61,7 @@ bcHqz(Ns, q = 1, Z = diag(length(Ns)), Correction = "Best", CheckArguments = TRU
 
 }
 \value{
-  A number equal to the calculated entropy.
+  A named number equal to the calculated entropy. The name is that of the bias correction used.
 }
 \references{
   Leinster, T. and Cobbold, C. (2012). Measuring diversity: the importance of species similarity. \emph{Ecology} 93(3): 477-489.

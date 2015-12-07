@@ -1,10 +1,10 @@
 \name{BetaDiversity}
 \alias{BetaDiversity}
 \title{
-  Unbiased beta diversity of a metacommunity
+  Reduced-bias beta diversity of a metacommunity
 }
 \description{
-  Calculates the unbiased beta diversity of order \eqn{q} between communities.
+  Calculates the reduced-bias beta diversity of order \eqn{q} between communities.
 }
 \usage{
 BetaDiversity(MC, q = 1, Correction = "Best", Tree = NULL, Normalize = TRUE, 

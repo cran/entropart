@@ -7,13 +7,13 @@ function(FUN, NorP, q.seq = seq(0, 2, 0.1),
   }
 
   # Estimated profile
-  Values <- sapply(q.seq, function(q) FUN(NorP, q, ..., CheckArguments = FALSE))
+  Values <- vapply(q.seq, function(q) FUN(NorP, q, ..., CheckArguments = FALSE), 0)
   
   if (NumberOfSimulations > 0) {
     NsInt <- as.integer(NorP)
-    if (any(NsInt != NorP)) stop ("Evaluation of the confidence interval of community profiles require integer abundances in argument NorP")
+    if (any(NsInt != NorP)) warning("Evaluation of the confidence interval of community profiles require integer abundances in argument NorP. Abundances have been rounded.")
     # Create a MetaCommunity made of simulated communities
-    MCSim <- rCommunity(NumberOfSimulations, NorP=NorP, BootstrapMethod=BootstrapMethod, CheckArguments = FALSE)
+    MCSim <- rCommunity(NumberOfSimulations, NorP=NsInt, BootstrapMethod=BootstrapMethod, CheckArguments = FALSE)
     # May return NA if the bootstrap method is not recognized
     if (any(is.na(MCSim))) stop("Communities could not be simulated.")
     ProgressBar <- utils::txtProgressBar(min=0, max=NumberOfSimulations)
@@ -21,7 +21,9 @@ function(FUN, NorP, q.seq = seq(0, 2, 0.1),
     # Loops are required for the progress bar, instead of:
     # Sims <- apply(MCSim$Nsi, 2, function(Nsi) CommunityProfile(FUN, Nsi, q.seq, ...)$y)
     for (i in 1:NumberOfSimulations) {
-      Sims[i, ] <- sapply(q.seq, function(q) FUN(MCSim$Nsi[, i], q, ..., CheckArguments = FALSE))
+      # Parralelize. Do not allow more forks in PhyloApply()
+      ProfileAsaList <- parallel::mclapply(q.seq, function(q) FUN(MCSim$Nsi[, i], q, ..., CheckArguments=FALSE), mc.allow.recursive=FALSE)
+      Sims[i, ] <- simplify2array(ProfileAsaList)
       utils::setTxtProgressBar(ProgressBar, i)
     }
     # Recenter simulated values

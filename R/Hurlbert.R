@@ -8,16 +8,32 @@ function(NorP, k = 2, CheckArguments = TRUE, Ps = NULL, Ns = NULL)
 Hurlbert.ProbaVector <-
 function(NorP, k = 2, CheckArguments = TRUE, Ps = NULL, Ns = NULL) 
 {
+  if (missing(NorP)){
+    if (!missing(Ps)) {
+      NorP <- Ps
+    } else {
+      stop("An argument NorP or Ps must be provided.")
+    }
+  }
   if (CheckArguments)
     CheckentropartArguments()
   
-  return (sum(1 - (1-NorP)^k))
+  index <- sum(1 - (1-NorP)^k)
+  names(index) <- "Biased"
+  return (index)
 }
 
 Hurlbert.AbdVector <-
 function(NorP, k = 2, CheckArguments = TRUE, Ps = NULL, Ns = NULL) 
 {
-  return(bcHurlbert(Ns=NorP, k=k, CheckArguments=CheckArguments))
+  if (missing(NorP)){
+    if (!missing(Ns)) {
+      NorP <- Ns
+    } else {
+      stop("An argument NorP or Ns must be provided.")
+    }
+  }
+  return (bcHurlbert(Ns=NorP, k=k, CheckArguments=CheckArguments))
 }
 
 
@@ -31,7 +47,7 @@ function(NorP, k = 2, CheckArguments = TRUE, Ps = NULL, Ns = NULL)
       stop("An argument NorP or Ns must be provided.")
     }
   }
-  return(bcHurlbert(Ns=NorP, k=k, CheckArguments=CheckArguments))
+  return (bcHurlbert(Ns=NorP, k=k, CheckArguments=CheckArguments))
 }
 
 
@@ -52,10 +68,10 @@ function(NorP, k = 2, CheckArguments = TRUE, Ps = NULL, Ns = NULL)
   
   if (abs(sum(NorP) - 1) < length(NorP)*.Machine$double.eps) {
     # Probabilities sum to 1, allowing rounding error
-    return(Hurlbert.ProbaVector(NorP, k=k, CheckArguments=CheckArguments))
+    return (Hurlbert.ProbaVector(NorP, k=k, CheckArguments=CheckArguments))
   } else {
     # Abundances
-    return(Hurlbert.AbdVector(NorP, k=k, CheckArguments=CheckArguments))
+    return (Hurlbert.AbdVector(NorP, k=k, CheckArguments=CheckArguments))
   }
 }
 
@@ -71,5 +87,8 @@ function(Ns, k = 2, CheckArguments = TRUE)
   S <- length(Ns)
   # Use lchoose and differences to avoid Inf
   lcNk <- lchoose(N, k)
-  return (S - sum(exp(lchoose(N-Ns, k)-lcNk)))
+  index <- S - sum(exp(lchoose(N-Ns, k)-lcNk))
+  names(index) <- "Unbiased"
+  return (index)
+  
 }

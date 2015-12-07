@@ -66,7 +66,7 @@ bcHurlbertD(Ns, k = 2, CheckArguments = TRUE)
   The functions are designed to be used as simply as possible. \code{Hurlbert} is a generic method. If its first argument is an abundance vector, an integer vector or a numeric vector which does not sum to 1, the bias corrected function \code{bcHurlbert} is called. Explicit calls to \code{bcHurlbert} (with bias correction) or to \code{Hurlbert.ProbaVector} (without correction) are possible to avoid ambiguity. The \code{.integer} and \code{.numeric} methods accept \code{Ps} or \code{Ns} arguments instead of \code{NorP} for backward compatibility.
 }
 \value{
-  A number equal to the calculated index or diversity.
+  A named number equal to the calculated index or diversity. The name is either "Biased" or "Unbiased", depending on the estimator used.
 }
 \references{
   Dauby G. & Hardy O.J. (2012) Sampled-based estimation of diversity sensu stricto by transforming Hurlbert diversities into effective number of species. \emph{Ecography} 35(7): 661-672.

@@ -81,7 +81,7 @@ function (x, Correction = "None", Unveiling = "None", RCorrection = "Chao1", Jac
   } else {
     # Integer abundances are required
     NsInt <- as.integer(spD)
-    if (any(NsInt != spD)) stop("Integer abundance values are required to estimate community probabilities")
+    if (any(NsInt != spD)) warning("Integer abundance values are required to estimate community probabilities. Abundances have been rounded.")
     
     # Eliminate 0 and calculate elementary statistics
     Ns <- NsInt[NsInt > 0]
@@ -321,12 +321,12 @@ function(x, ..., Distribution = NULL,
       alpha <- vegan::fisher.alpha(Ns)
       # May (1975) Ecology and evolution of communities, Harvard University Press
       sei <- function(t) exp(-t)/t
-      ranks <- sapply(Ns, function(x) {
+      ranks <- vapply(Ns, function(x) {
         n <- x * log(1 + alpha/N)
         f <- stats::integrate(sei, n, Inf)
         fv <- f[["value"]]
         return(alpha * fv)}
-      )
+      , 0)
       graphics::lines(ranks, Ns, col = "red")
       return(list(alpha = alpha))
     }

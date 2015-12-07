@@ -8,17 +8,31 @@ function(NorP, Correction="Lande", CheckArguments = TRUE, Ps = NULL, Ns = NULL)
 Simpson.ProbaVector <-
 function(NorP, Correction="Lande", CheckArguments = TRUE, Ps = NULL, Ns = NULL) 
 {
+  if (missing(NorP)){
+    if (!missing(Ps)) {
+      NorP <- Ps
+    } else {
+      stop("An argument NorP or Ps must be provided.")
+    }
+  }
   if (CheckArguments)
     CheckentropartArguments()
   
-  return (Tsallis(NorP, q=2, CheckArguments=FALSE))
+  return (Tsallis.ProbaVector (NorP, q=2, CheckArguments=FALSE))
 }
 
 
 Simpson.AbdVector <-
 function(NorP, Correction="Lande", CheckArguments = TRUE, Ps = NULL, Ns = NULL) 
 {
-  return(bcSimpson(Ns=NorP, Correction=Correction, CheckArguments=CheckArguments))
+  if (missing(NorP)){
+    if (!missing(Ns)) {
+      NorP <- Ns
+    } else {
+      stop("An argument NorP or Ns must be provided.")
+    }
+  }
+  return (bcSimpson(Ns=NorP, Correction=Correction, CheckArguments=CheckArguments))
 }
 
 
@@ -32,7 +46,7 @@ function(NorP, Correction="Lande", CheckArguments = TRUE, Ps = NULL, Ns = NULL)
       stop("An argument NorP or Ns must be provided.")
     }
   }
-  return(bcSimpson(Ns=NorP, Correction=Correction, CheckArguments=CheckArguments))
+  return (bcSimpson(Ns=NorP, Correction=Correction, CheckArguments=CheckArguments))
 }
 
 
@@ -53,10 +67,10 @@ function(NorP, Correction="Lande", CheckArguments = TRUE, Ps = NULL, Ns = NULL)
   
   if (abs(sum(NorP) - 1) < length(NorP)*.Machine$double.eps) {
     # Probabilities sum to 1, allowing rounding error
-    return(Simpson.ProbaVector(NorP, CheckArguments=CheckArguments))
+    return (Simpson.ProbaVector(NorP, CheckArguments=CheckArguments))
   } else {
     # Abundances
-    return(Simpson.AbdVector(NorP, Correction=Correction, CheckArguments=CheckArguments))
+    return (Simpson.AbdVector(NorP, Correction=Correction, CheckArguments=CheckArguments))
   }
 }
 
@@ -86,8 +100,10 @@ function(Ns, Correction="Lande", CheckArguments = TRUE)
   }
 
   if (Correction == "Lande" | Correction == "Best") {
-    return(N/(N-1)*Tsallis(as.ProbaVector(Ns), 2, CheckArguments=FALSE))  
+    entropy <- N/(N-1)*Tsallis(as.ProbaVector(Ns), 2, CheckArguments=FALSE)
+    names(entropy) <- Correction
+    return (entropy)
   } else {
-    return(bcTsallis(Ns, q=2, Correction, CheckArguments=FALSE)) 
+    return (bcTsallis(Ns, q=2, Correction, CheckArguments=FALSE)) 
   }
 }

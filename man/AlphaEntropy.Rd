@@ -1,10 +1,10 @@
 \name{AlphaEntropy}
 \alias{AlphaEntropy}
 \title{
-  Unbiased alpha entropy of a metacommunity
+  Reduced-bias alpha entropy of a metacommunity
 }
 \description{
-  Calculates the unbiased total alpha entropy of order \eqn{q} of communities.
+  Calculates the reduced-bias total alpha entropy of order \eqn{q} of communities.
 }
 \usage{
 AlphaEntropy(MC, q = 1, Correction = "Best", Tree = NULL, Normalize = TRUE,
@@ -35,9 +35,11 @@ AlphaEntropy(MC, q = 1, Correction = "Best", Tree = NULL, Normalize = TRUE,
   }
 }
 \details{
-  If \code{Tree} is not \code{NULL}, then phylogenetic entropy is calculated by \code{\link{bcPhyloEntropy}} else if \code{Z} is not \code{NULL}, then similarity-based entropy is calculated by \code{\link{bcHqz}}, else neutral entropy is calculated by \code{\link{bcTsallis}}, else .
+  If \code{Tree} is not \code{NULL}, then phylogenetic entropy is calculated by \code{\link{bcPhyloEntropy}}; else, if \code{Z} is not \code{NULL}, then similarity-based entropy is calculated by \code{\link{bcHqz}}; else, neutral entropy is calculated by \code{\link{bcTsallis}}.
   
   The alpha entropy of each community is calculated and summed according to community weights.
+  
+  The possible corrections are detailed in \code{\link{Tsallis}}.
 }
 \value{
   An \code{\link{MCentropy}} object containing entropy values of each community and of the metacommunity.

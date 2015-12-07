@@ -8,6 +8,13 @@ function(NorP, q = 1, Z = diag(length(Ps)), Correction = "Best", CheckArguments 
 Dqz.ProbaVector <-
 function(NorP, q = 1, Z = diag(length(Ps)), Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns = NULL) 
 {
+  if (missing(NorP)){
+    if (!missing(Ps)) {
+      NorP <- Ps
+    } else {
+      stop("An argument NorP or Ps must be provided.")
+    }
+  }
   if (CheckArguments)
     CheckentropartArguments()
   
@@ -41,13 +48,22 @@ function(NorP, q = 1, Z = diag(length(Ps)), Correction = "Best", CheckArguments 
     Diversity <- (Ps %*% Zpqm1)^(1/(1-q))
   }
   # Return the value of diversity, as a number rather than a 1x1 matrix
-  return (as.numeric(Diversity))
+  Diversity <- as.numeric(Diversity)
+  names(Diversity) <- "None"
+  return (Diversity)
 }
 
 
 Dqz.AbdVector <-
 function(NorP, q = 1, Z = diag(length(Ps)), Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns = NULL) 
 {
+  if (missing(NorP)){
+    if (!missing(Ns)) {
+      NorP <- Ns
+    } else {
+      stop("An argument NorP or Ns must be provided.")
+    }
+  }
   return(bcDqz(Ns=NorP, q=q, Z=Z, Correction=Correction, CheckArguments=CheckArguments))
 }
 

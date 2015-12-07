@@ -60,7 +60,7 @@ bcSimpsonBeta(Ns, Nexp, Correction = "Best", CheckArguments = TRUE)
   The functions are designed to be used as simply as possible. \code{SimpsonBeta} is a generic method. If its first argument is an abundance vector, an integer vector or a numeric vector which does not sum to 1, the bias corrected function \code{bcSimpsonBeta} is called. Explicit calls to \code{bcSimpsonBeta} (with bias correction) or to \code{SimpsonBeta.ProbaVector} (without correction) are possible to avoid ambiguity. The \code{.integer} and \code{.numeric} methods accept \code{Ps} or \code{Ns} arguments instead of \code{NorP} for backward compatibility.
 }
 \value{
-  A number equal to the calculated entropy.
+  A named number equal to the calculated entropy. The name is that of the bias correction used.
 }
 \references{
   Jost (2007), Partitioning diversity into independent alpha and beta components. \emph{Ecology} 88(10): 2427-2439.
@@ -90,6 +90,6 @@ bcSimpsonBeta(Ns, Nexp, Correction = "Best", CheckArguments = TRUE)
   Ns <- as.AbdVector(Paracou618.MC$Ns)
   # Abundances in the first plot
   Ns1 <- as.AbdVector(Paracou618.MC$Nsi[, 1])
-  # Unbiased Shannon beta entropy of the plot
+  # Reduced-bias Shannon beta entropy of the plot
   bcSimpsonBeta(Ns1, Ns)
 }

@@ -1,3 +1,27 @@
+  CHANGES IN entropart VERSION 1.4-3
+  ==================================
+
+USER-VISIBLE CHANGES 
+
+  o All scalar values of diversity or entropy are now named. Their name is the bias correction used to obtain them.
+  o The Unveiled estimator is more versatile. Correction = "Unveil" is deprecated and replaced by "UnveilC", "UnveiliC" or "UnveilJ" in functions such as Tsallis() or Diversity().
+
+
+IMPROVEMENTS 
+
+  o Parallelization of DivProfile(), CommunityProfile() and PhyloApply() using the parallel package (mclapply). No effect on Windows, pretty much faster on other systems.
+  o Extensive use of vapply() instead of sapply() makes some functions faster.
+  o AllenH() and ChaoPD() returned NA if the tree contained more species than the probability vector. Now, the tree may be pruned or kept unchanged and extra species considered to have probabilities 0.
+
+  
+BUG CORRECTION 
+
+  o Using phylog trees in AllenH and ChaoPD() returned erroneous unnormalized diversity (divided by two) because of the conversion of phylog to htree divides branch lengths by two. Corrected.
+  o The richness estimator iChao1 returned NA if the distibution contained singletons but no doubletons. Corrected.
+
+
+
+
   CHANGES IN entropart VERSION 1.4.1
   ==================================
 
@@ -64,7 +88,7 @@ IMPROVEMENTS
 
 BUG CORRECTION 
 
-  o ChaoPD() returned an incorrect value when q=0 and some probabilities =0
+  o ChaoPD() returned an incorrect value when q=0 and some probabilities =0.
 
 
   CHANGES IN entropart VERSION 1.2.0
