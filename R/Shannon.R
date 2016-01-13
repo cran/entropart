@@ -177,20 +177,22 @@ function(Ns, Correction = "Best", CheckArguments = TRUE)
     # Calculate abundance distribution
     DistN <- tapply(Ns, Ns, length)
     Singletons <- DistN["1"]
+    if (is.na(Singletons)) Singletons <- 0
     Doubletons <- DistN["2"]
+    if (is.na(Doubletons)) Doubletons <- 0
     # Calculate A
-    if (is.na(Doubletons)) {
-      if (is.na(Singletons)) {
-        A <- 1
-      } else {
-        A <- 2/((N-1)*(Singletons-1)+2)
-      }
-    } else {
+    if (Doubletons) {
       A <- 2*Doubletons/((N-1)*Singletons+2*Doubletons)
+    } else {
+      if (Singletons) {
+        A <- 2/((N-1)*(Singletons-1)+2)
+      } else {
+        A <- 1
+      }
     }
-    Part2 <- vapply(1:(N-1), function(r) 1/r*(1-A)^r, 0) 
     ChaoWangJost <- sum(Ns/N*(digamma(N)-digamma(Ns)))
-    if (!is.na(Singletons) & (A != 1)) {
+    if (A != 1) {
+      Part2 <- vapply(1:(N-1), function(r) 1/r*(1-A)^r, 0) 
       ChaoWangJost <- as.numeric(ChaoWangJost + Singletons/N*(1-A)^(1-N)*(-log(A)-sum(Part2)))
     }
     names(ChaoWangJost) <- Correction

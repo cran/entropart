@@ -39,10 +39,8 @@ function(n, size = sum(NorP), NorP = 1, BootstrapMethod = "Chao2015",
       # Probabilities sum to 1, allowing rounding error
       Ps <- NorP    
     } else {
-      # Abundances
-      # Eliminate 0
-      Ns <- NorP[NorP > 0]
-      # Generate Ps according to the chosen method
+      Ns <- NorP
+      # Abundances: Generate Ps according to the chosen method
       if (BootstrapMethod == "Chao2015") {
         Ps <- as.ProbaVector(Ns, Correction = "Chao2015", Unveiling = "geom", CheckArguments = FALSE)
       }

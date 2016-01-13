@@ -10,13 +10,14 @@ function(q = 0, MC, Biased = TRUE, Correction = "Best", Tree = NULL, Normalize =
     Height <- 1
   } else {
     Height <- ppTree$Height
-  }  
+  }
 
   # Estimation from data
   RealEst <- DivPart(q, MC, Biased, Correction, ppTree, Normalize, Z, CheckArguments=FALSE)
 
   # RedrawSpecies resamples a community according to species abundances.
   RedrawSpecies<- function(SpeciesAbundances){
+    # Very simplified (for speed) version of rCommunity with BootstrapMethod="Marcon"
     stats::rmultinom(1, sum(SpeciesAbundances), SpeciesAbundances)
   }
 
@@ -35,15 +36,16 @@ function(q = 0, MC, Biased = TRUE, Correction = "Best", Tree = NULL, Normalize =
   ProgressBar <- utils::txtProgressBar(min=0, max=Simulations)
   RawSimulatedEntropy <- sapply(1:Simulations, SimulateEntropy)
   # Recenter entropy
-  SimulatedEntropy <- RawSimulatedEntropy+c(RealEst$TotalAlphaEntropy, RealEst$TotalBetaEntropy, RealEst$GammaEntropy)-apply(RawSimulatedEntropy ,1, mean)
+  SimulatedEntropy <- RawSimulatedEntropy+with(RealEst, c(TotalAlphaEntropy, TotalBetaEntropy, GammaEntropy))-apply(RawSimulatedEntropy, 1, mean)
   # Transform entropy to diversity
-  SimulatedDiversity <- SimulatedEntropy
   if (q == 1) { 
     SimulatedDiversity <- exp(SimulatedEntropy)
   } else {
+    SimulatedDiversity <- SimulatedEntropy
     SimulatedDiversity[1,] <- expq(SimulatedEntropy[1,] / Height, q) * Height
-    SimulatedDiversity[2,] <- expq(SimulatedEntropy[2,] / Height / (1 - (q-1)*SimulatedEntropy[2,]/Height), q) * Height
     SimulatedDiversity[3,] <- expq(SimulatedEntropy[3,] / Height, q) * Height
+    SimulatedDiversity[2,] <- SimulatedDiversity[3,] / SimulatedDiversity[1,]
+      # equals: expq(SimulatedEntropy[2,] / Height / (1 - (q-1)*SimulatedEntropy[1,]/Height), q) * Height
   }
   dimnames(SimulatedDiversity)[[1]] <- list("Alpha", "Beta", "Gamma")
 

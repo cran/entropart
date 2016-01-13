@@ -25,8 +25,9 @@ function(q = 1, MC, Biased = TRUE, Correction = "Best", Tree = NULL, Normalize =
   }
   # Total Diversities
   AlphaDiversity <- expq(AlphaEntropy$Total / Height, q) * Height
-  BetaDiversity  <- expq(BetaEntropy$Total / Height / (1 - (q-1)*AlphaEntropy$Total/Height), q) 
   GammaDiversity <- expq(GammaEntropy / Height, q) * Height
+  BetaDiversity  <- GammaDiversity / AlphaDiversity
+    # equals: expq(BetaEntropy$Total / Height / (1 - (q-1)*AlphaEntropy$Total/Height), q) 
   
   DivPart <- (list(
     MetaCommunity = deparse(substitute(MC)),

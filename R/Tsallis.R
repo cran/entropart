@@ -171,21 +171,18 @@ function(Ns, q = 1, Correction = "Best", CheckArguments = TRUE)
     # Calculate abundance distribution to obtain A
     DistN <- tapply(Ns, Ns, length)
     Singletons <- DistN["1"]
+    if (is.na(Singletons)) Singletons <- 0
     Doubletons <- DistN["2"]
+    if (is.na(Doubletons)) Doubletons <- 0
     # Calculate A
-    if (is.na(Doubletons)) {
-      Doubletons <- 0
-      if (is.na(Singletons)) {
-        A <- 1
-        Singletons <- 0
-      } else {
-        if (is.na(Singletons)) {
-          Singletons <- 0
-        }
-        A <- 2/((N-1)*(Singletons-1)+2)
-      }
-    } else {
+    if (Doubletons) {
       A <- 2*Doubletons/((N-1)*Singletons+2*Doubletons)
+    } else {
+      if (Singletons) {
+        A <- 2/((N-1)*(Singletons-1)+2)
+      } else {
+        A <- 1
+      }
     }
     # Eq 7d in Chao & Jost (2015). Terms for r in 1:(N-1) equal (-1)^r * w_v[r] * (A-1)^r. w_v is already available from ZhangGrabchak
     if (A == 1) {

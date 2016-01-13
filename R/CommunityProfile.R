@@ -10,8 +10,8 @@ function(FUN, NorP, q.seq = seq(0, 2, 0.1),
   Values <- vapply(q.seq, function(q) FUN(NorP, q, ..., CheckArguments = FALSE), 0)
   
   if (NumberOfSimulations > 0) {
-    NsInt <- as.integer(NorP)
-    if (any(NsInt != NorP)) warning("Evaluation of the confidence interval of community profiles require integer abundances in argument NorP. Abundances have been rounded.")
+    NsInt <- round(NorP)
+    if (any(abs(NsInt-NorP) > sum(NorP)*.Machine$double.eps)) warning("Evaluation of the confidence interval of community profiles requires integer abundances in argument NorP. Abundances have been rounded.")
     # Create a MetaCommunity made of simulated communities
     MCSim <- rCommunity(NumberOfSimulations, NorP=NsInt, BootstrapMethod=BootstrapMethod, CheckArguments = FALSE)
     # May return NA if the bootstrap method is not recognized

@@ -4,8 +4,8 @@ function (Ns, CheckArguments = TRUE)
   if (CheckArguments)
     CheckentropartArguments()
   
-  NsInt <- as.integer(Ns)
-  if (any(NsInt != Ns)) warning ("The abundance frequency count requires integer abundances. Abundances have been rounded.")
+  NsInt <- as.integer(round(Ns))
+  if (any(abs(NsInt-Ns) > sum(Ns)*.Machine$double.eps)) warning ("The abundance frequency count requires integer abundances. Abundances have been rounded.")
   
   # Eliminate 0
   Ns <- NsInt[NsInt > 0]

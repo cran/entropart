@@ -95,7 +95,7 @@ $\alpha$ and $\gamma$ diversities are underestimated by naive estimators \citep{
 $\beta$ diversity is severely biased too when sampling is not sufficient \citep{Beck2013}. 
 Bias-corrected estimators of phylodiversity have been developed by \cite{Marcon2014a}. 
 Estimators of similarity-based diversity were derived by \cite{Marcon2014e}. 
-The package includes them all \citep{Marcon2015}.
+The package includes them all \citep{Marcon2014c}.
 
 In summary, the framework supported by the package is as follows. 
 First, an information function is chosen to describe the amount of surprise brought by the observation of each individual.
@@ -480,7 +480,7 @@ The uncertainty of estimation is due to sampling: the distribution of the estima
 \code{DivProfile} calculates diversity profiles, \emph{i.e.}\ the value of diversity against its order (Figure~\ref{DivProfile}). 
 The result is a \code{DivProfile} object which can be summarized and plotted.
 <<DivProfile>>=
-dp <- DivProfile(seq(0, 2, 0.2), Paracou618.MC, Biased = FALSE)
+dp <- DivProfile(seq(0, 2, 0.2), Paracou618.MC, Biased = FALSE, NumberOfSimulations = 10)
 summary(dp)
 @
 
@@ -497,6 +497,8 @@ $\alpha$ and $\gamma$ diversity decrease from $q=0$ (number of species) to $q=2$
 \end{figure}
 
 Small orders of diversity give more weight to rare species. P018 can be considered more diverse than P006 because their profiles (Figure~\ref{DivProfile}, top right) do not cross \citep{Tothmeresz1995}: its diversity is systematically higher. The shape of the $\beta$ diversity profile shows that the communities are more diverse when their dominant species are considered.
+
+The bootstrap confidence intervals of the values of diversity \citep{Marcon2012, Marcon2014} are calculated if \code{NumberOfSimulations} is not 0.
 
 
 \subsubsection{Alternative functions}

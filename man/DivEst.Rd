@@ -66,7 +66,7 @@ is.DivEst(x)
   
   If \code{Tree} is provided, the phylogenetic diversity is calculated else if \code{Z} is not \code{NULL}, then similarity-based entropy is calculated.
   
-  Confidence intervals are calculated by Monte-Carlo simulations, drawing simulated communities from a multinomial law following observed frequencies (Marcon et al, 2012 ; 2014)
+  Bootstrap confidence intervals are calculated by drawing simulated communities from a multinomial distribution following the observed frequencies (Marcon et al, 2012; 2014).
 }
 \value{
   A \code{Divest} object which is a \code{\link{DivPart}} object with an additional item in its list:
@@ -80,8 +80,6 @@ is.DivEst(x)
   Marcon, E., Scotti, I., Herault, B., Rossi, V. and Lang, G. (2014). Generalization of the partitioning of Shannon diversity. \emph{PLOS One} 9(3): e90289.
 
   Marcon, E., Herault, B. (2015). Decomposing  Phylodiversity. \emph{Methods in Ecology and Evolution} 6(3): 333-339.
-
-  Marcon, E., Zhang, Z. and Herault, B. (2014). The decomposition of similarity-based diversity and its bias correction. \emph{HAL} hal-00989454(version 1).
 }
 \author{
   Eric Marcon <Eric.Marcon@ecofog.gf> and Bruno Herault <Bruno.Herault@ecofog.gf>

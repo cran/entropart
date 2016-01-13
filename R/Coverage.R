@@ -5,7 +5,7 @@ function(Ns, Estimator = "ZhangHuang", CheckArguments = TRUE)
     CheckentropartArguments()
   
   # Round values
-  Ns <- as.integer(Ns)
+  Ns <- as.integer(round(Ns))
   # Eliminate zeros
   Ns <- Ns[Ns>0]
   # Calculate abundance distribution

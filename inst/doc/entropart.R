@@ -155,7 +155,7 @@ plot(de)
 ###################################################
 ### code chunk number 23: DivProfile
 ###################################################
-dp <- DivProfile(seq(0, 2, 0.2), Paracou618.MC, Biased = FALSE)
+dp <- DivProfile(seq(0, 2, 0.2), Paracou618.MC, Biased = FALSE, NumberOfSimulations = 10)
 summary(dp)
 
 
