@@ -1,3 +1,16 @@
+  CHANGES IN entropart VERSION 1.4-5
+  ==================================
+
+USER-VISIBLE CHANGES
+
+  o Generalized Simpson's entropy and diversity added (GenSimpson and GenSimpsonD).
+  o Originality.Species() is deprecated because it is pointless. ade4::originality() allows calculating it for q=2. Leinster (2009) and Leinster and Meckes (2015) showed that Originality.Species() does not depend on the order of diversity.
+  
+IMPROVEMENTS
+
+  o ZhangGrabchak estimator of entropy is now calculated by the C code of EntropyEstimation::Tsallis.z/Entropy.z rather than the R code of bcTsallis(). This is much faster when the number of individual is high. Applies to ChaoWangJost (Best) estimator too.
+
+
   CHANGES IN entropart VERSION 1.4-4
   ==================================
 

@@ -1,6 +1,6 @@
-21d1043f2098b59a88d6e4d844ba92b1 *DESCRIPTION
-204919af4b6bd3d660ad33828f3dbbe9 *NAMESPACE
-1a681b8ac4f8627674c11133e0f8cd70 *NEWS
+6079b1bc1c461bdf56ef1688cc040106 *DESCRIPTION
+450f9fbfc34d35c0a24c2f85ec9703dd *NAMESPACE
+c5a01c5bdb196874a8b7121bf5f9b965 *NEWS
 d292bb7cdc143eab2a2f6649897355d1 *R/AbdFreqCount.R
 922bb379d3e5314972e05946e10c92c1 *R/AllenH.R
 03df89265c1000fe857cddbbf6c7cc5b *R/AlphaDiversity.R
@@ -9,7 +9,7 @@ d8a900cb9bed77764ec0f645fde6dd7c *R/AlphaEntropy.R
 922c0c32502a984939e916cd5c5afc67 *R/BetaEntropy.R
 d74504b4401a9270f019aa3cabd37eba *R/CEnvelope.R
 1bbc0c429e251f311f9ceb37fe26871a *R/ChaoPD.R
-911ac822072d162f69eb99b1b3488217 *R/CheckentropartArguments.R
+6c57c5c25666ce856874a369de309f41 *R/CheckentropartArguments.R
 6f8458ddee05b308ae740a559fc8c534 *R/CommunityProfile.R
 d8b65546aaba704b0f56608877391cb9 *R/Coverage.R
 c30d39d258d4bcd07e1a4a4faf24ec84 *R/DivEst.R
@@ -21,6 +21,8 @@ b5e0317b869301b21b6a1044d381a643 *R/Enq.R
 3898878da87faf29c6e330f2f040a2ef *R/EntropyCI.R
 b43efe8eb4a79c0dfbc1cac1e1e607b8 *R/GammaDiversity.R
 bb62dc27299da9c6001514830627fdec *R/GammaEntropy.R
+8c5ca434b300e0551975ec8fbe72b954 *R/GenSimpson.R
+aaf0cd61775545662589935b500ba262 *R/GenSimpsonD.R
 52f0222a0397f1fcfaf4240ba5a49d8f *R/Hqz.R
 f3cdd3807e80fab3242f44fbfa577fb5 *R/HqzBeta.R
 2a67a4dfda1223002018d83c91a807a3 *R/Hurlbert.R
@@ -32,7 +34,6 @@ bb9be773aeae152a8547f20b49d98160 *R/MergeC.R
 839d61bd11946dd1b266742b7c65f3db *R/MergeMC.R
 b8f98451bc64d5994a5335f8c37a7739 *R/MetaCommunity.R
 c95aca91db009a348c2913913d42d2f4 *R/Optimal.Similarity.R
-517266c2f79e821493e3b304351cc9f1 *R/Originality.Species.R
 0df4a6483d75be4b82882a1398f4c186 *R/PDFD.R
 187bfd437253774abdbb980c389df602 *R/PPtree.R
 38afe7a0255bbba0127d9ef7c7a1bb36 *R/PhyloApply.R
@@ -51,7 +52,7 @@ a965e671db3adff01ada59d718a2e5be *R/ShannonBeta.R
 45c95648a2c69c60b183c2250b04864c *R/Simpson.R
 6e6cec0f786abc0dbf77649d2bafb183 *R/SimpsonBeta.R
 20fb54736da5b3bc7647b492d9fe0871 *R/SpeciesDistribution.R
-5b3883379a9f36b8d0cbd8bf5548a3cf *R/Tsallis.R
+3c037122cd0acd550ddde48e96dba0f8 *R/Tsallis.R
 6fa58d71a33caa8f01ff50a7abb6b9d9 *R/TsallisBeta.R
 5d302fcfe5302be43234d7eb2e283c7b *R/expq.R
 ed89574ffeb3577278d2076787206473 *R/lnq.R
@@ -63,7 +64,7 @@ cef62cb3c69d561140f11cfc93b94d20 *build/vignette.rds
 9c68646cac7d82e9ced2c7314ff48466 *inst/CITATION
 efc70551be5a86b205943f3cfa3a4d0f *inst/doc/entropart.R
 d5ec8d5917f2525e667018f2dd68e2e1 *inst/doc/entropart.Rnw
-720cad58d6af27990ddf6703f8d0af06 *inst/doc/entropart.pdf
+7550fba816b8ba9e31dffa9a2eeb898e *inst/doc/entropart.pdf
 904b4fe1855bdece0fc3911a491ff9e8 *man/AbdFreqCount.Rd
 64a28b9c769b33db9831cfbf0dfe8a89 *man/AllenH.Rd
 cb67a5f61cffdc44dcc926a1a3cd8301 *man/AlphaDiversity.Rd
@@ -85,6 +86,7 @@ e771528d3c91599fe88f4674b5e2eaa7 *man/EightSpTree.Rd
 cc3469d96105a0c811263aa84d761294 *man/EntropyCI.Rd
 7cdabe42223195351205d5df4cd1d7a2 *man/GammaDiversity.Rd
 2eaea2d2ca7b02898dc7e4e2eb9eb90b *man/GammaEntropy.Rd
+7a8e806084073b6552613037467781b5 *man/GenSimpson.Rd
 2c9447b5c5e7cb24e0980e0d39955ecb *man/Hqz.Rd
 e8365282edd40c76ad2eb0e20abfbd3c *man/HqzBeta.Rd
 108632f0544ff9477eea4a6cc550adf7 *man/Hurlbert.Rd
@@ -94,7 +96,6 @@ aa49988ae8cd0f270d974314663b6d07 *man/MCentropy.Rd
 44f5f03f4e7e7143fcdafd6225f5e95c *man/MergeMC.Rd
 d9adaf216168869f3256bbb379dbf41f *man/MetaCommunity.Rd
 131dbf763bf94c2a6d12fb51e28651c9 *man/Optimal.Similarity.Rd
-83c98eec0c093a8153e269cc2cafa7e7 *man/Originality.Species.Rd
 6518d039011b2dc5e2a1e4a1b5cbadb0 *man/PDFD.Rd
 0eba23130f8f88207467893d96d35f93 *man/PPtree.Rd
 c28a5d453abcc53203715e4c6bb61b75 *man/Paracou618.Functional.Rd
@@ -107,7 +108,7 @@ aa53e6f1af8766ce04ae0ef36cf62b5e *man/PhyloDiversity.Rd
 03a643e6f8f09ec2d7195f99f5066daf *man/PhyloEntropy.Rd
 654f01d98dcd20faab026ef99257a0d2 *man/PhyloValue.Rd
 fd1b2f95a2da50fa2497cf6803cfdebc *man/Preprocess.MC.Rd
-ed7a4df8cdcbbe1c5e5e42e36e9c4976 *man/Preprocess.Tree.Rd
+9dd0939333a90da9063b2013f24da5cc *man/Preprocess.Tree.Rd
 b91cc4509ece6e2986b12665268833ef *man/Rao.Rd
 7136acd69123e7765c2e4cdd903e6478 *man/Richness.Rd
 c63ed3bf70ee516eb331f202c3ba15d1 *man/Shannon.Rd

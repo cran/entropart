@@ -104,8 +104,8 @@ function() {
     k <- eval(expression(k), parent.frame())
     if (!is.numeric(k) | length(k)!=1)
       ErrorMessage("k must be a number.", k)
-    if (k<2)
-      ErrorMessage("k must be at least 2.", k)
+    if (k < 1)
+      ErrorMessage("k must be at least 1.", k)
     if (as.integer(k) != k)
       ErrorMessage("k must be an integer.", k)
   }
@@ -250,7 +250,18 @@ function() {
     }
   }
   
-  # sd
+  # r
+  if (!is.na(names(Args["r"]))) {
+    r <- eval(expression(r), parent.frame())
+    if (!is.numeric(r) | length(r)!=1)
+      ErrorMessage("r must be a number.", r)
+    if (r < 1)
+      ErrorMessage("r must be at least 1.", r)
+    if (as.integer(r) != r)
+      ErrorMessage("r must be an integer.", r)
+  }
+
+    # sd
   if (!is.na(names(Args["sd"]))) {
     sd <- eval(expression(sd), parent.frame())
     if (!is.numeric(sd) | length(sd)!=1)
