@@ -15,7 +15,7 @@ function(MC, q = 1, Correction = "Best", Tree = NULL, Normalize = TRUE, Z = NULL
   # Calculate normalized entropy, Height will be addressed later
   AlphaEntropy <- AlphaEntropy(MC, q, Correction, ppTree, Z, Normalize=TRUE)
   Diversity <- list(
-    MetaCommunity = deparse(substitute(MC)),
+    MetaCommunity = ArgumentOriginalName(MC),
     Method = AlphaEntropy$Method,
     Type = "alpha",
     Order = q,
@@ -26,9 +26,9 @@ function(MC, q = 1, Correction = "Best", Tree = NULL, Normalize = TRUE, Z = NULL
     Total = expq(AlphaEntropy$Total, q)* Height
     )
   if(!is.null(Tree))
-    Diversity$Tree <- deparse(substitute(Tree)) 
+    Diversity$Tree <- ArgumentOriginalName(Tree)
   if(!is.null(Z))
-    Diversity$Z <- deparse(substitute(Z)) 
+    Diversity$Z <- ArgumentOriginalName(Z)
   class(Diversity) <- "MCdiversity"
   
   return(Diversity)  

@@ -17,8 +17,8 @@ function(NorP, NorPexp = NULL, q = 1, Tree, Normalize = TRUE, Correction = "Best
   Entropy <- PhyloApply(Tree, function(PandPexp, q, CheckArguments) TsallisBeta(PandPexp[, "Ps"], PandPexp[, "Pexp"], q, CheckArguments), PandPexp, Normalize, q=q, CheckArguments=FALSE)
   # Complete it
   Entropy$Function <- "PhyloBetaEntropy" 
-  Entropy$Distribution <- c(deparse(substitute(Ps)), "compared to", deparse(substitute(Pexp)))
-  Entropy$Tree <- deparse(substitute(Tree))
+  Entropy$Distribution <- c(ArgumentOriginalName(Ps), "compared to", ArgumentOriginalName(Pexp))
+  Entropy$Tree <- ArgumentOriginalName(Tree)
   Entropy$Type <- "beta"
   Entropy$Order <- q
   
@@ -104,8 +104,8 @@ function(Ns, Nexp, q = 1, Tree, Normalize = TRUE, Correction = "Best", CheckArgu
   Entropy <- PhyloApply(Tree, function(NandNexp, q, Correction, CheckArguments) bcTsallisBeta(NandNexp[, "Ns"], NandNexp[, "Nexp"], q, Correction, CheckArguments), NandNexp, Normalize, q=q, Correction=Correction, CheckArguments=FALSE)
   # Complete it
   Entropy$Function <- "PhyloEntropy" 
-  Entropy$Distribution <- deparse(substitute(Ps)) 
-  Entropy$Tree <- deparse(substitute(Tree))
+  Entropy$Distribution <- ArgumentOriginalName(Ns)
+  Entropy$Tree <- ArgumentOriginalName(Tree)
   Entropy$Type <- "beta"
   Entropy$Order <- q
   Entropy$Correction <- Correction

@@ -12,10 +12,10 @@ mergeandlabel(x, y)
 \arguments{
   \item{x}{
   A dataframe containing species abundances
-}
+  }
   \item{y}{
   A dataframe containing species abundances
-}
+  }
 }
 \details{
   Row names must contain species. The new dataframes keeps all species with abundance zero for species that were not found in orfginal communities. 

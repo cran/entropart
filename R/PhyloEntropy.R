@@ -22,8 +22,8 @@ function(NorP, q = 1, Tree, Normalize = TRUE, Correction = "Best", CheckArgument
   Entropy <- PhyloApply(Tree, Tsallis, NorP, Normalize, q=q, CheckArguments=FALSE)
   # Complete it
   Entropy$Function <- "PhyloEntropy" 
-  Entropy$Distribution <- deparse(substitute(NorP)) 
-  Entropy$Tree <- deparse(substitute(Tree))
+  Entropy$Distribution <- ArgumentOriginalName(NorP)
+  Entropy$Tree <- ArgumentOriginalName(Tree)
   Entropy$Type <- "alpha or gamma"
   Entropy$Order <- q
   
@@ -96,8 +96,8 @@ function(Ns, q = 1, Tree, Normalize = TRUE, Correction = "Best", CheckArguments 
   Entropy <- PhyloApply(Tree, bcTsallis, Ns, Normalize, q=q, Correction=Correction, CheckArguments=FALSE)
   # Complete it
   Entropy$Function <- "PhyloEntropy" 
-  Entropy$Distribution <- deparse(substitute(Ns)) 
-  Entropy$Tree <- deparse(substitute(Tree))
+  Entropy$Distribution <- ArgumentOriginalName(Ns)
+  Entropy$Tree <- ArgumentOriginalName(Tree)
   Entropy$Type <- "alpha or gamma"
   Entropy$Order <- q
   Entropy$Correction <- Correction

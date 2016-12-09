@@ -31,8 +31,8 @@ function(NorP, q = 1, Tree, Normalize = TRUE, Correction = "Best", CheckArgument
   Diversity$Total <- expq(Diversity$Total, q) * Height
   # Complete it
   Diversity$Function <- "PhyloDiversity" 
-  Diversity$Distribution <- deparse(substitute(NorP))
-  Diversity$Tree <- deparse(substitute(Tree))
+  Diversity$Distribution <- ArgumentOriginalName(NorP)
+  Diversity$Tree <- ArgumentOriginalName(Tree)
   Diversity$Type <- "alpha or gamma"
   Diversity$Order <- q
   Diversity$Normalized <- Normalize
@@ -116,8 +116,8 @@ function(Ns, q = 1, Tree, Normalize = TRUE, Correction = "Best", CheckArguments 
   Diversity$Total <- expq(Diversity$Total, q) * Height
   # Complete it
   Diversity$Function <- "bcPhyloDiversity" 
-  Diversity$Distribution <- deparse(substitute(Ns))
-  Diversity$Tree <- deparse(substitute(Tree))
+  Diversity$Distribution <- ArgumentOriginalName(Ns)
+  Diversity$Tree <- ArgumentOriginalName(Tree)
   Diversity$Type <- "alpha or gamma"
   Diversity$Order <- q
   Diversity$Correction <- Correction

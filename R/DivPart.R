@@ -30,7 +30,7 @@ function(q = 1, MC, Biased = TRUE, Correction = "Best", Tree = NULL, Normalize =
     # equals: expq(BetaEntropy$Total / Height / (1 - (q-1)*AlphaEntropy$Total/Height), q) 
   
   DivPart <- (list(
-    MetaCommunity = deparse(substitute(MC)),
+    MetaCommunity = ArgumentOriginalName(MC),
     Order = q, 
     Biased = Biased, 
     Correction = Correction,
@@ -46,12 +46,12 @@ function(q = 1, MC, Biased = TRUE, Correction = "Best", Tree = NULL, Normalize =
     CommunityBetaEntropies = BetaEntropy$Communities
     ))
   if(!is.null(Tree))
-    DivPart$Tree <- deparse(substitute(Tree)) 
+    DivPart$Tree <- ArgumentOriginalName(Tree)
   if(is.null(Z)) {
     DivPart$Method <- "HCDT"
   } else {
     DivPart$Method <- "Similarity-based"
-    DivPart$Z <- deparse(substitute(Z))  
+    DivPart$Z <- ArgumentOriginalName(Z)
   }
   class(DivPart) <- "DivPart"
   

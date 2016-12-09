@@ -11,7 +11,7 @@ function(MC, q = 1, Correction = "Best", Tree = NULL, Normalize = TRUE, Z = NULL
   AlphaEntropy <- AlphaEntropy(MC=MC, q=q, Correction=Correction, Tree=ppTree, Normalize=Normalize, Z=Z, CheckArguments=FALSE)
 
   Diversity <- list(
-    MetaCommunity = deparse(substitute(MC)),
+    MetaCommunity = ArgumentOriginalName(MC),
     Method = AlphaEntropy$Method,
     Type = "beta",
     Order = q,
@@ -21,9 +21,9 @@ function(MC, q = 1, Correction = "Best", Tree = NULL, Normalize = TRUE, Z = NULL
     Total = expq(BetaEntropy$Total / (1 - (q-1)*AlphaEntropy$Total), q)
   )
   if(!is.null(Tree))
-    Diversity$Tree <- deparse(substitute(Tree)) 
+    Diversity$Tree <- ArgumentOriginalName(Tree)
   if(!is.null(Z))
-    Diversity$Z <- deparse(substitute(Z)) 
+    Diversity$Z <- ArgumentOriginalName(Z)
   class(Diversity) <- "MCdiversity"
   
   return(Diversity)  

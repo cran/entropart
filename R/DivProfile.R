@@ -38,12 +38,12 @@ function(q.seq = seq(0, 2, .1), MC, Biased = TRUE, Correction = "Best", Tree = N
                      GammaEntropy =  unlist(Diversity.seq["GammaEntropy", ])
                     )
   if(!is.null(Tree))
-    DivProfile$Tree <- deparse(substitute(Tree)) 
+    DivProfile$Tree <- ArgumentOriginalName(Tree)
   if(is.null(Z)) {
     DivProfile$Method <- "HCDT"
   } else {
     DivProfile$Method <- "Similarity-based"
-    DivProfile$Z <- deparse(substitute(Z))  
+    DivProfile$Z <- ArgumentOriginalName(Z)
   }
   class(DivProfile) <- "DivProfile"
   

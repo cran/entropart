@@ -26,7 +26,7 @@ function(MC, q = 1, Correction = "Best", Tree = NULL, Normalize = TRUE, Z = NULL
   Total <- sum(Communities*MC$Wi)
   
   Entropy <- list(
-    MetaCommunity = deparse(substitute(MC)),
+    MetaCommunity = ArgumentOriginalName(MC),
     Method = Method,
     Type = "alpha",
     Order = q,
@@ -37,9 +37,9 @@ function(MC, q = 1, Correction = "Best", Tree = NULL, Normalize = TRUE, Z = NULL
     Total=Total
   )
   if(!is.null(Tree))
-    Entropy$Tree <- deparse(substitute(Tree)) 
+    Entropy$Tree <- ArgumentOriginalName(Tree)
   if(!is.null(Z))
-    Entropy$Z <- deparse(substitute(Z)) 
+    Entropy$Z <- ArgumentOriginalName(Z)
   class(Entropy) <- "MCentropy"
   
   return(Entropy)  
