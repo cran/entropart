@@ -6,23 +6,29 @@ function(Tree)
 
   # Tree must be either a phylog, phylo or a hclust object
   if (inherits(Tree, "phylog")) {
-    # build an hclust object to use cutree later. Distances in $Wdist are actually 2*sqrt(distance)
+    # Build an hclust object to use cutree later. 
+    # Distances in $Wdist are actually sqrt(2*distance)
+    # Caution: Distances in hclust count full branch lengths between species, i.e. twice the ultramtetric distance
+    # See ?as.phylo.hclust
     hTree <- stats::hclust(Tree$Wdist^2/2, "average")
     # build a phylo object
     phyTree <- ape::as.phylo.hclust(hTree)
-    # edge lengths are divided by 2 during the conversion. See ?as.phylo.hclust
+    # Double edge.lengths to correct as.phylo.hclust
     phyTree$edge.length <- 2*phyTree$edge.length
   } else {
     if (inherits(Tree, "phylo")) {
       phyTree <- Tree
-      # build an hclust object to use cutree later.
+      # Build an hclust object to use cutree later.
+      # Edge lengths are multiplied by 2 during the conversion. Divide by 2 before that.
+      Tree$edge.length <- Tree$edge.length/2
       hTree <- ape::as.hclust.phylo(Tree)
     } else {
       if (inherits(Tree, "hclust")) {
+        # Caution: Distances in hclust count full branch lengths between species, i.e. twice the ultramtetric distance
         hTree <- Tree
         # build a phylo object to use $droot later
         phyTree <- ape::as.phylo.hclust(Tree)
-        # edge lengths are divided by 2 during the conversion. See ?as.phylo.hclust
+        # Double edge.lengths to correct as.phylo.hclust
         phyTree$edge.length <- 2*phyTree$edge.length
       } else {
         stop("Tree must be an object of class phylo, phylog or hclust")

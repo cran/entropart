@@ -1,3 +1,18 @@
+  CHANGES IN entropart VERSION 1.4-8
+  ==================================
+
+BUG CORRECTION
+
+  o HqzBeta() returned erroneous values is a species probability was equal to zero.
+
+IMPROVEMENTS
+
+  o On GitHub now.
+  o Documentation updated: phylogenetic dendrograms can be of class phylo, phylog, hclust of PPtree whatever the function.
+  o The introduction vignette is HTML now.
+  o A new vignette is dedicated to phylogenies.
+
+
   CHANGES IN entropart VERSION 1.4-7
   ==================================
 

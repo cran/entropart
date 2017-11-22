@@ -33,7 +33,7 @@ function(Tree, FUN, NorP, Normalize = TRUE, ..., CheckArguments = TRUE)
   if (is.null(rownames(NorP))) {
     if (nrow(NorP) == length(ppTree$phyTree$tip.label)) {
       rownames(NorP) <- ppTree$phyTree$tip.label
-      warning("The abundance or frequency vector was not named. It was supposed to be order as the tree leaves.")
+      warning("The abundance or frequency vector was not named. It was supposed to be ordered as the tree leaves.")
     } else {
       stop("The abundance or frequency vector is not named and does not have the same number of elements as the tree. Abundances and species could not be related.")
     }
@@ -53,9 +53,9 @@ function(Tree, FUN, NorP, Normalize = TRUE, ..., CheckArguments = TRUE)
   }
   
   # Rounding errors in cutree: is.unsorted(hTree$height) may return TRUE even though height is sorted by construction
-  # Values are not sorted properly because of rounding errors, e.g. 4e-16 (2 * .Machine$double.eps) in a taxonomy where Cuts contains (1,2,3)
-  # Run sort so that is.unsorted returns FALSE.
+  # Values are may not be sorted properly because of rounding errors, e.g. 4e-16 (2 * .Machine$double.eps) in a taxonomy where Cuts contains (1,2,3)
   OriginalHeights <- ppTree$hTree$height
+  # Run sort so that is.unsorted returns FALSE.
   ppTree$hTree$height <- sort(OriginalHeights)
   # If there is no rounding error, add one (10 * .Machine$double.eps times the tree height) or cutree will miss some nodes.
   RoundingError <- max(ppTree$hTree$height) * 10 * .Machine$double.eps
