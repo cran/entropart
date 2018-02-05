@@ -12,42 +12,44 @@
   Calculates the Simpson beta entropy of a community belonging to a metacommunity.
 }
 \usage{
-SimpsonBeta(NorP, NorPexp = NULL, Correction = "Best", CheckArguments = TRUE, 
-  Ps = NULL, Ns = NULL, Pexp = NULL, Nexp = NULL)
+SimpsonBeta(NorP, NorPexp = NULL, \dots)
 bcSimpsonBeta(Ns, Nexp, Correction = "Best", CheckArguments = TRUE)
-\method{SimpsonBeta}{ProbaVector}(NorP, NorPexp = NULL, Correction = "Best", CheckArguments = TRUE, 
-  Ps = NULL, Ns = NULL, Pexp = NULL, Nexp = NULL)
-\method{SimpsonBeta}{AbdVector}(NorP, NorPexp = NULL, Correction = "Best", CheckArguments = TRUE, 
-  Ps = NULL, Ns = NULL, Pexp = NULL, Nexp = NULL)
-\method{SimpsonBeta}{integer}(NorP, NorPexp = NULL, Correction = "Best", CheckArguments = TRUE, 
-  Ps = NULL, Ns = NULL, Pexp = NULL, Nexp = NULL)
-\method{SimpsonBeta}{numeric}(NorP, NorPexp = NULL, Correction = "Best", CheckArguments = TRUE, 
-  Ps = NULL, Ns = NULL, Pexp = NULL, Nexp = NULL) 
+\method{SimpsonBeta}{ProbaVector}(NorP, NorPexp = NULL, \dots, 
+  CheckArguments = TRUE, Ps = NULL, Pexp = NULL)
+\method{SimpsonBeta}{AbdVector}(NorP, NorPexp = NULL, Correction = "Best", \dots, 
+  CheckArguments = TRUE, Ns = NULL, Nexp = NULL)
+\method{SimpsonBeta}{integer}(NorP, NorPexp = NULL, Correction = "Best", \dots, 
+  CheckArguments = TRUE, Ns = NULL, Nexp = NULL)
+\method{SimpsonBeta}{numeric}(NorP, NorPexp = NULL, Correction = "Best", \dots, 
+  CheckArguments = TRUE, Ps = NULL, Ns = NULL, Pexp = NULL, Nexp = NULL) 
 }
 \arguments{
   \item{Ps}{
-    The probability vector of species of the community.
+  The probability vector of species of the community.
   }
   \item{Pexp}{
-    The probability vector of species of the metacommunity.
+  The probability vector of species of the metacommunity.
   }
   \item{Ns}{
-    A numeric vector containing species abundances of the community.
+  A numeric vector containing species abundances of the community.
   }
   \item{Nexp}{
-    A numeric vector containing species abundances of the metacommunity.
+  A numeric vector containing species abundances of the metacommunity.
   }
   \item{NorP}{
-    A numeric vector, an integer vector, an abundance vector (\code{\link{AbdVector}}) or a probability vector (\code{\link{ProbaVector}}). Contains either abundances or probabilities of the community.
+  A numeric vector, an integer vector, an abundance vector (\code{\link{AbdVector}}) or a probability vector (\code{\link{ProbaVector}}). Contains either abundances or probabilities of the community.
   }
   \item{NorPexp}{
-    A numeric vector, an integer vector, an abundance vector (\code{\link{AbdVector}}) or a probability vector (\code{\link{ProbaVector}}). Contains either abundances or probabilities of the metacommunity.
+  A numeric vector, an integer vector, an abundance vector (\code{\link{AbdVector}}) or a probability vector (\code{\link{ProbaVector}}). Contains either abundances or probabilities of the metacommunity.
   }
   \item{Correction}{
-    A string containing one of the possible corrections: currently, only \code{"ChaoShen"}, identical to \code{"Best"}.
+  A string containing one of the possible corrections: currently, only \code{"ChaoShen"}, identical to \code{"Best"}.
+  }
+  \item{\dots}{
+  Additional arguments. Unused.
   }
   \item{CheckArguments}{
-    Logical; if \code{TRUE}, the function arguments are verified. Should be set to \code{FALSE} to save time when the arguments have been checked elsewhere.
+  Logical; if \code{TRUE}, the function arguments are verified. Should be set to \code{FALSE} to save time when the arguments have been checked elsewhere.
   }
 }
 \details{
@@ -74,22 +76,22 @@ bcSimpsonBeta(Ns, Nexp, Correction = "Best", CheckArguments = TRUE)
   \code{\link{Simpson}}, \code{\link{bcSimpsonBeta}}, \code{\link{BetaDiversity}}
 }
 \examples{
-  # Load Paracou data (number of trees per species in two 1-ha plot of a tropical forest)
-  data(Paracou618)
-  # Ps is the vector of probabilities
-  Ps <- as.ProbaVector(Paracou618.MC$Ps)
-  # Probability distribution of the first plot
-  Ps1 <- as.ProbaVector(Paracou618.MC$Psi[, 1])
+# Load Paracou data (number of trees per species in two 1-ha plot of a tropical forest)
+data(Paracou618)
+# Ps is the vector of probabilities
+Ps <- as.ProbaVector(Paracou618.MC$Ps)
+# Probability distribution of the first plot
+Ps1 <- as.ProbaVector(Paracou618.MC$Psi[, 1])
 
-  # Simpson beta entropy of the plot
-  SimpsonBeta(Ps1, Ps)
-  # Transform into diversity
-  expq(SimpsonBeta(Ps1, Ps)/(1-Simpson(Ps1)), 2)
-  
-  # Ns is the vector of abundances of the metacommunity
-  Ns <- as.AbdVector(Paracou618.MC$Ns)
-  # Abundances in the first plot
-  Ns1 <- as.AbdVector(Paracou618.MC$Nsi[, 1])
-  # Reduced-bias Shannon beta entropy of the plot
-  bcSimpsonBeta(Ns1, Ns)
+# Simpson beta entropy of the plot
+SimpsonBeta(Ps1, Ps)
+# Transform into diversity
+expq(SimpsonBeta(Ps1, Ps)/(1-Simpson(Ps1)), 2)
+
+# Ns is the vector of abundances of the metacommunity
+Ns <- as.AbdVector(Paracou618.MC$Ns)
+# Abundances in the first plot
+Ns1 <- as.AbdVector(Paracou618.MC$Nsi[, 1])
+# Reduced-bias Shannon beta entropy of the plot
+bcSimpsonBeta(Ns1, Ns)
 }

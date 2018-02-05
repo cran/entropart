@@ -1,12 +1,12 @@
 PhyloEntropy <-
-function(NorP, q = 1, Tree, Normalize = TRUE, Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns = NULL) 
+function(NorP, q = 1, Tree, Normalize = TRUE, ...) 
 {
   UseMethod("PhyloEntropy")
 }
 
 
 PhyloEntropy.ProbaVector <-
-function(NorP, q = 1, Tree, Normalize = TRUE, Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns = NULL) 
+function(NorP, q = 1, Tree, Normalize = TRUE, ..., CheckArguments = TRUE, Ps = NULL) 
 {
   if (missing(NorP)){
     if (!missing(Ps)) {
@@ -26,6 +26,7 @@ function(NorP, q = 1, Tree, Normalize = TRUE, Correction = "Best", CheckArgument
   Entropy$Tree <- ArgumentOriginalName(Tree)
   Entropy$Type <- "alpha or gamma"
   Entropy$Order <- q
+  Entropy$Correction <- names(Entropy$Total) <- "None"
   
   class(Entropy) <- c("PhyloEntropy", class(Entropy))
   
@@ -34,7 +35,7 @@ function(NorP, q = 1, Tree, Normalize = TRUE, Correction = "Best", CheckArgument
 
 
 PhyloEntropy.AbdVector <-
-function(NorP, q = 1, Tree, Normalize = TRUE, Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns = NULL) 
+function(NorP, q = 1, Tree, Normalize = TRUE, Correction = "Best", ..., CheckArguments = TRUE, Ns = NULL) 
 {
   if (missing(NorP)){
     if (!missing(Ns)) {
@@ -48,7 +49,7 @@ function(NorP, q = 1, Tree, Normalize = TRUE, Correction = "Best", CheckArgument
 
 
 PhyloEntropy.integer <-
-function(NorP, q = 1, Tree, Normalize = TRUE, Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns = NULL) 
+function(NorP, q = 1, Tree, Normalize = TRUE, Correction = "Best", ..., CheckArguments = TRUE, Ns = NULL) 
 {
   if (missing(NorP)){
     if (!missing(Ns)) {
@@ -62,7 +63,7 @@ function(NorP, q = 1, Tree, Normalize = TRUE, Correction = "Best", CheckArgument
 
 
 PhyloEntropy.numeric <-
-function(NorP, q = 1, Tree, Normalize = TRUE, Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns = NULL) 
+function(NorP, q = 1, Tree, Normalize = TRUE, Correction = "Best", ..., CheckArguments = TRUE, Ps = NULL, Ns = NULL) 
 {
   if (missing(NorP)){
     if (!missing(Ps)) {
@@ -87,19 +88,43 @@ function(NorP, q = 1, Tree, Normalize = TRUE, Correction = "Best", CheckArgument
 
 
 bcPhyloEntropy <-
-function(Ns, q = 1, Tree, Normalize = TRUE, Correction = "Best", CheckArguments = TRUE) 
+function(Ns, q = 1, Tree, Normalize = TRUE, Correction = "Best", SampleCoverage = NULL, CheckArguments = TRUE) 
 {
   if (CheckArguments)
     CheckentropartArguments()
   
+  # If SampleCoverage is a vector, prepare an argument dataframe for PhyloApply
+  if(is.null(SampleCoverage)) {
+    dfArgs <- NULL
+  } else {
+    dfArgs <- data.frame(SampleCoverage=SampleCoverage)
+  }
+  # If Correction is a vector, idem
+  if(length(Correction) > 1) {
+    if (is.null(dfArgs)) {
+      # Create a new dataframe...
+      dfArgs <- data.frame(Correction=Correction)
+    } else {
+      # ... or a a column
+      dfArgs <- cbind(dfArgs, data.frame(Correction=Correction))    
+    }
+  }
+  
   # Calculate the PhyloValue
-  Entropy <- PhyloApply(Tree, bcTsallis, Ns, Normalize, q=q, Correction=Correction, CheckArguments=FALSE)
+  if(length(Correction) == 1) {
+    # Call PhyloApply with an argument Correction
+    Entropy <- PhyloApply(Tree, FUN=bcTsallis, NorP=Ns, Normalize=Normalize, dfArgs=dfArgs, q=q, Correction=Correction, CheckArguments=FALSE)
+  } else {
+    # Call PhyloApply without an argument Correction since it is in dfArgs
+    Entropy <- PhyloApply(Tree, FUN=bcTsallis, NorP=Ns, Normalize=Normalize, dfArgs=dfArgs, q=q, CheckArguments=FALSE)
+  }
   # Complete it
   Entropy$Function <- "PhyloEntropy" 
   Entropy$Distribution <- ArgumentOriginalName(Ns)
   Entropy$Tree <- ArgumentOriginalName(Tree)
   Entropy$Type <- "alpha or gamma"
   Entropy$Order <- q
+  # Corrections. May be a vector.
   Entropy$Correction <- Correction
   
   class(Entropy) <- c("PhyloEntropy", class(Entropy))

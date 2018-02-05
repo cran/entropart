@@ -14,10 +14,10 @@ is.PPtree(x)
 }
 \arguments{
   \item{x}{
-    An object to be tested or plotted
+  An object to be tested or plotted
   }
   \item{\dots}{
-    Additional arguments to be passed to the generic methods.
+  Additional arguments to be passed to the generic methods.
   }
 }
 \value{
@@ -40,4 +40,13 @@ is.PPtree(x)
 
 \author{
   Eric Marcon <Eric.Marcon@ecofog.gf>
+}
+\examples{
+data(Paracou618)
+# Preprocess a phylog object
+ppt <- Preprocess.Tree(EightSpTree)
+# Is it a preprocessed tree?
+is.PPtree(ppt)
+# Plot it
+plot(ppt, hang=-1)
 }

@@ -6,28 +6,24 @@ data(Paracou618)
 Ns <- as.AbdVector(Paracou618.MC$Ns)
 # Species probabilities
 Ps <- as.ProbaVector(Paracou618.MC$Ns)
-# Taxonomy
-# Build an hclust object. Distances in $Wdist are actually 2*sqrt(distance)
-hTree <- stats::hclust(Paracou618.Taxonomy$Wdist^2/2, "average")
-# Build a phylo object
-phyTree <- ape::as.phylo.hclust(hTree)
-# Build a ppTree
+# Taxonomy: Build a ppTree
 ppTree <- Preprocess.Tree(Paracou618.Taxonomy)
+# Build a phylog
+phylogTree <- ade4::hclust2phylog(ppTree$hTree)
 
 
 # Check PhyloEntropy does not change with dendrogram format
 test_that("PhyloEntropy does not depend on tree format", {
-  # PPtree and hcluster
-  expect_equal(AlphaEntropy(Paracou618.MC, q=1, Tree = ppTree)$Total,
-               AlphaEntropy(Paracou618.MC, q=1, Tree = hTree)$Total)
+  skip_on_cran()
   # phylog and phylo
-  expect_equal(AlphaEntropy(Paracou618.MC, q=1, Tree = Paracou618.Taxonomy)$Total,
-               AlphaEntropy(Paracou618.MC, q=1, Tree = phyTree)$Total)
+  expect_equal(AlphaEntropy(Paracou618.MC, q=1, Tree = phylogTree)$Total,
+               AlphaEntropy(Paracou618.MC, q=1, Tree = Paracou618.Taxonomy)$Total)
 })
 
 
 # Check PhyloEntropy of order 2 equals Rao
 test_that("PhyloEntropy of order 2 equals Rao", {
+  skip_on_cran()
   # No correction
   expect_equal(as.numeric(PhyloEntropy(Ps, 2, Paracou618.Taxonomy, Normalize = FALSE)$Total), 
                as.numeric(Rao(Ps, Paracou618.Taxonomy)))
@@ -36,12 +32,13 @@ test_that("PhyloEntropy of order 2 equals Rao", {
                as.numeric(Rao(Ns, Paracou618.Taxonomy)))
   # HqZ
   expect_equal(as.numeric(PhyloEntropy(Ps, 2, Paracou618.Taxonomy, Normalize = TRUE)$Total), 
-               as.numeric(Hqz(Ps, 2, Z=1-as.matrix(Paracou618.Taxonomy$Wdist^2/6))))
+               as.numeric(Hqz(Ps, 2, Z=1-as.matrix(phylogTree$Wdist^2/6))))
 })
 
 
 # Check PhyloDiversity equals ChaoPD
 test_that("PhyloDiversity equals ChaoPD", {
+  skip_on_cran()
   # Order 2
   expect_equal(as.numeric(PhyloDiversity(Ps, 2, Paracou618.Taxonomy)$Total), 
                as.numeric(ChaoPD(Ps, 2, Paracou618.Taxonomy)))
@@ -61,6 +58,7 @@ PsStar <- c(BrockenStick[1], BrockenStick[2]-BrockenStick[1], 1-BrockenStick[2])
 names(PsStar) <- c("A", "B", "C")
 
 test_that("PhyloEntropy of order 2 of a star dendrogram equals Simpson", {
+  skip_on_cran()
   # PhyloEntropy vs Rao
   expect_equal(as.numeric(PhyloEntropy(PsStar, q=2, Tree=phyStar, Normalize = FALSE)$Total), 
                as.numeric(Rao(PsStar, phyStar)), tolerance = 100*sqrt(.Machine$double.eps))

@@ -1,12 +1,12 @@
 Tsallis <-
-function(NorP, q = 1, Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns = NULL) 
+function(NorP, q = 1, ...) 
 {
   UseMethod("Tsallis")
 }
 
 
 Tsallis.ProbaVector <-
-function(NorP, q = 1, Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns = NULL) 
+function(NorP, q = 1, ..., CheckArguments = TRUE, Ps = NULL) 
 {
   if (missing(NorP)){
     if (!missing(Ps)) {
@@ -30,7 +30,7 @@ function(NorP, q = 1, Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns 
 
 
 Tsallis.AbdVector <-
-function(NorP, q = 1, Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns = NULL) 
+function(NorP, q = 1, Correction = "Best", ..., CheckArguments = TRUE, Ns = NULL) 
 {
   if (missing(NorP)){
     if (!missing(Ns)) {
@@ -44,7 +44,7 @@ function(NorP, q = 1, Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns 
 
 
 Tsallis.integer <-
-function(NorP, q = 1, Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns = NULL)
+function(NorP, q = 1, Correction = "Best", ..., CheckArguments = TRUE, Ns = NULL)
 {
   if (missing(NorP)){
     if (!missing(Ns)) {
@@ -58,7 +58,7 @@ function(NorP, q = 1, Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns 
 
 
 Tsallis.numeric <-
-function(NorP, q = 1, Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns = NULL) 
+function(NorP, q = 1, Correction = "Best", ..., CheckArguments = TRUE, Ps = NULL, Ns = NULL) 
 {
   if (missing(NorP)){
     if (!missing(Ps)) {
@@ -83,7 +83,7 @@ function(NorP, q = 1, Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns 
 
 
 bcTsallis <-
-function(Ns, q = 1, Correction = "Best", CheckArguments = TRUE) 
+function(Ns, q = 1, Correction = "Best", SampleCoverage = NULL, CheckArguments = TRUE) 
 {
   if (CheckArguments)
     CheckentropartArguments()
@@ -104,19 +104,42 @@ function(Ns, q = 1, Correction = "Best", CheckArguments = TRUE)
 	    names(entropy) <- "Single Species"
 	    return (entropy)
 	  }
-  } else {
-    # Probabilities instead of abundances
-    if (N < 2) {
-      warning("Bias correction attempted with probability data. Correction forced to 'None'")
-      Correction <- "None"
+  } 
+  
+  # Meta-Community estimation (Ns may not be integers, SampleCoverage is given)
+  # SampleCoverage is between 0 and 1 (by CheckArguments), sum(Ns) must be an integer.
+  # Correction may be ChaoShen or Marcon (max(ChoShen, Grassberger))
+  if (!is.null(SampleCoverage) & is.IntValues(N) & (Correction == "ChaoShen" | Correction == "Marcon")) {
+    CPs <- SampleCoverage*Ns/N
+    ChaoShen <- -sum(CPs^q * lnq(CPs, q) /(1 - (1-CPs)^N))
+    if (Correction == "Marcon") {
+      # Calculate Grassberger's correction
+      if (q == 1) {
+        Grassberger <- sum(Ns/N*(log(N)-digamma(Ns)-(1-round(Ns)%%2*2)/(Ns+1)))
+      } else {
+        Grassberger <- (1-N^(-q)*sum(Enq(Ns, q)))/(q-1)
+      }
+    } else Grassberger <- 0
+    # Take the max
+    if (ChaoShen > Grassberger) {
+      entropy <- ChaoShen
+      names(entropy) <- "ChaoShen"
+    } else {
+      entropy <- Grassberger
+      names(entropy) <- "Grassberger"
     }
+    return (entropy)
   }
-
+  
   # No correction
   if (Correction == "None") {
-    entropy <- Tsallis.ProbaVector(Ns/sum(Ns), q, CheckArguments = FALSE)
-    names(entropy) <- Correction
-    return (entropy)
+    return (Tsallis.ProbaVector(Ns/sum(Ns), q, CheckArguments = FALSE))
+  } else {
+    if (!is.IntValues(Ns)) {
+      warning("Correction can't be applied to non-integer values.")
+      # Correction <- "None"
+      return (Tsallis.ProbaVector(Ns/sum(Ns), q, CheckArguments = FALSE))
+    }
   }
   
   
@@ -140,14 +163,20 @@ function(Ns, q = 1, Correction = "Best", CheckArguments = TRUE)
     if (Correction == "Marcon") {
       ChaoShen <- bcShannon(Ns, Correction="ChaoShen", CheckArguments=FALSE)
       Grassberger <- bcShannon(Ns, Correction="Grassberger", CheckArguments=FALSE)
-      entropy <- max(ChaoShen, Grassberger)
-      names(entropy) <- Correction
+      if (ChaoShen > Grassberger) {
+        entropy <- ChaoShen
+        names(entropy) <- "ChaoShen"
+      } else {
+        entropy <- Grassberger
+        names(entropy) <- "Grassberger"
+      }
       return (entropy)
     } else {
       if (Correction == "ZhangGrabchak") {
         # Weights. Useless if EntropyEstimation is used.
         # w_v <- 1/V
         # entropy <- sum(Ps*vapply(1:length(Ns), S_v, 0))
+        # Use EntropyEstimation instead
         entropy <- EntropyEstimation::Entropy.z(Ns)
         names(entropy) <- Correction
         return (entropy)
@@ -164,6 +193,7 @@ function(Ns, q = 1, Correction = "Best", CheckArguments = TRUE)
     # w_vi <- (i-q)/i
     # w_v <- cumprod(w_vi)
     # ZhangGrabchak <- sum(Ps*vapply(1:length(Ns), S_v, 0))/(1-q)
+    # Use EntropyEstimation instead
     if (q==0) ZhangGrabchak <- length(Ns)-1 else ZhangGrabchak <- EntropyEstimation::Tsallis.z(Ns, q)
     # ZhangGrabchak stops here, but ChaoWangJost adds an estimator of the bias
     if (Correction == "ZhangGrabchak") {
@@ -176,7 +206,7 @@ function(Ns, q = 1, Correction = "Best", CheckArguments = TRUE)
     if (is.na(Singletons)) Singletons <- 0
     Doubletons <- DistN["2"]
     if (is.na(Doubletons)) Doubletons <- 0
-    # Calculate A
+    # Calculate A (Chao & Jost, 2015, eq. 6b)
     if (Doubletons) {
       A <- 2*Doubletons/((N-1)*Singletons+2*Doubletons)
     } else {
@@ -187,8 +217,8 @@ function(Ns, q = 1, Correction = "Best", CheckArguments = TRUE)
       }
     }
     # Eq 7d in Chao & Jost (2015). Terms for r in 1:(N-1) equal (-1)^r * w_v[r] * (A-1)^r. w_v is already available from ZhangGrabchak
-    # Weights: here only if EntropyEstimation is used.
     i <- 1:N
+    # Weights: here only if EntropyEstimation is used. Else, they have been calculated above.
     w_vi <- (i-q)/i
     w_v <- cumprod(w_vi)
     if (A == 1) {
@@ -228,8 +258,13 @@ function(Ns, q = 1, Correction = "Best", CheckArguments = TRUE)
     return(Grassberger)
   }
   if (Correction == "Marcon") {
-    entropy <- max(ChaoShen, Grassberger)
-    names(entropy) <- Correction
+    if (ChaoShen > Grassberger) {
+      entropy <- ChaoShen
+      names(entropy) <- "ChaoShen"
+    } else {
+      entropy <- Grassberger
+      names(entropy) <- "Grassberger"
+    }
     return (entropy)
   }
   if (Correction == "Holste") {

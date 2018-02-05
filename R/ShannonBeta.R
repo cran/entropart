@@ -1,29 +1,58 @@
 ShannonBeta <-
-function(NorP, NorPexp = NULL, Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns = NULL, Pexp = NULL, Nexp = NULL) 
+function(NorP, NorPexp = NULL, ...) 
 {
   UseMethod("ShannonBeta")
 }
 
 
 ShannonBeta.ProbaVector <-
-function(NorP, NorPexp = NULL, Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns = NULL, Pexp = NULL, Nexp = NULL) 
+function(NorP, NorPexp = NULL, ..., CheckArguments = TRUE, Ps = NULL, Pexp = NULL) 
 {
   if (CheckArguments)
     CheckentropartArguments()
+  
+  if (missing(NorP)){
+    if (!missing(Ps)) {
+      NorP <- Ps
+    } else {
+      stop("An argument NorP or Ps must be provided.")
+    }
+  }
+  if (missing(NorPexp)){
+    if (!missing(Pexp)) {
+      NorPexp <- Pexp
+    } else {
+      stop("An argument NorPexp or Pexp must be provided.")
+    }
+  }
   
   return (TsallisBeta(NorP, NorPexp, q=1, CheckArguments=FALSE))
 }
 
 
 ShannonBeta.AbdVector <-
-function(NorP, NorPexp = NULL, Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns = NULL, Pexp = NULL, Nexp = NULL) 
+function(NorP, NorPexp = NULL, Correction = "Best", ..., CheckArguments = TRUE, Ns = NULL, Nexp = NULL) 
 {
+  if (missing(NorP)){
+    if (!missing(Ns)) {
+      NorP <- Ns
+    } else {
+      stop("An argument NorP or Ns must be provided.")
+    }
+  }
+  if (missing(NorPexp)){
+    if (!missing(Nexp)) {
+      NorPexp <- Nexp
+    } else {
+      stop("An argument NorPexp or Nexp must be provided.")
+    }
+  }
   return (bcShannonBeta(Ns=NorP, Nexp=NorPexp, Correction=Correction, CheckArguments=CheckArguments))
 }
 
 
 ShannonBeta.integer <-
-function(NorP, NorPexp = NULL, Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns = NULL, Pexp = NULL, Nexp = NULL) 
+function(NorP, NorPexp = NULL, Correction = "Best", ..., CheckArguments = TRUE, Ns = NULL, Nexp = NULL) 
 {
   if (missing(NorP)){
     if (!missing(Ns)) {
@@ -44,7 +73,7 @@ function(NorP, NorPexp = NULL, Correction = "Best", CheckArguments = TRUE, Ps = 
 
 
 ShannonBeta.numeric <-
-function(NorP, NorPexp = NULL, Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns = NULL, Pexp = NULL, Nexp = NULL) 
+function(NorP, NorPexp = NULL, Correction = "Best", ..., CheckArguments = TRUE, Ps = NULL, Ns = NULL, Pexp = NULL, Nexp = NULL) 
 {
   if (missing(NorP)){
     if (!missing(Ps)) {

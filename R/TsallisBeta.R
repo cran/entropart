@@ -1,16 +1,30 @@
 TsallisBeta <-
-function(NorP, NorPexp = NULL, q = 1, Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns = NULL, Pexp = NULL, Nexp = NULL) 
+function(NorP, NorPexp = NULL, q = 1, ...) 
 {
   UseMethod("TsallisBeta")
 }
 
 
 TsallisBeta.ProbaVector <-
-function(NorP, NorPexp = NULL, q = 1, Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns = NULL, Pexp = NULL, Nexp = NULL) 
+function(NorP, NorPexp = NULL, q = 1, ..., CheckArguments = TRUE, Ps = NULL, Pexp = NULL) 
 {
   if (CheckArguments)
     CheckentropartArguments()
   
+  if (missing(NorP)){
+    if (!missing(Ps)) {
+      NorP <- Ps
+    } else {
+      stop("An argument NorP or Ps must be provided.")
+    }
+  }
+  if (missing(NorPexp)){
+    if (!missing(Pexp)) {
+      NorPexp <- Pexp
+    } else {
+      stop("An argument NorPexp or Pexp must be provided.")
+    }
+  }
   if (length(NorP) != length(NorPexp)) {
     stop("NorP and NorPexp should have the same length.")
   }  
@@ -25,14 +39,29 @@ function(NorP, NorPexp = NULL, q = 1, Correction = "Best", CheckArguments = TRUE
 
 
 TsallisBeta.AbdVector <-
-function(NorP, NorPexp = NULL, q = 1, Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns = NULL, Pexp = NULL, Nexp = NULL) 
+function(NorP, NorPexp = NULL, q = 1, Correction = "Best", ..., CheckArguments = TRUE, Ns = NULL, Nexp = NULL) 
 {
+  if (missing(NorP)){
+    if (!missing(Ns)) {
+      NorP <- Ns
+    } else {
+      stop("An argument NorP or Ns must be provided.")
+    }
+  }
+  if (missing(NorPexp)){
+    if (!missing(Nexp)) {
+      NorPexp <- Nexp
+    } else {
+      stop("An argument NorPexp or Nexp must be provided.")
+    }
+  }
+  
   return (bcTsallisBeta(Ns=NorP, Nexp=NorPexp, q=q, Correction=Correction, CheckArguments=CheckArguments))
 }
 
 
 TsallisBeta.integer <-
-function(NorP, NorPexp = NULL, q = 1, Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns = NULL, Pexp = NULL, Nexp = NULL) 
+function(NorP, NorPexp = NULL, q = 1, Correction = "Best", ..., CheckArguments = TRUE, Ns = NULL, Nexp = NULL) 
 {
   if (missing(NorP)){
     if (!missing(Ns)) {
@@ -53,7 +82,7 @@ function(NorP, NorPexp = NULL, q = 1, Correction = "Best", CheckArguments = TRUE
 
 
 TsallisBeta.numeric <-
-function(NorP, NorPexp = NULL, q = 1, Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns = NULL, Pexp = NULL, Nexp = NULL) 
+function(NorP, NorPexp = NULL, q = 1, Correction = "Best", ..., CheckArguments = TRUE, Ps = NULL, Ns = NULL, Pexp = NULL, Nexp = NULL) 
 {
   if (missing(NorP)){
     if (!missing(Ps)) {

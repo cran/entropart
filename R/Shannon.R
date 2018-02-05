@@ -1,13 +1,16 @@
 Shannon <-
-function(NorP, Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns = NULL) 
+function(NorP, ...) 
 {
   UseMethod("Shannon")
 }
 
 
 Shannon.ProbaVector <-
-function(NorP, Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns = NULL) 
+function(NorP, ..., CheckArguments = TRUE, Ps = NULL) 
 {
+  if (CheckArguments)
+    CheckentropartArguments()
+
   if (missing(NorP)){
     if (!missing(Ps)) {
       NorP <- Ps
@@ -15,15 +18,13 @@ function(NorP, Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns = NULL)
       stop("An argument NorP or Ps must be provided.")
     }
   }
-  if (CheckArguments)
-    CheckentropartArguments()
   
   return (Tsallis.ProbaVector(NorP, q=1, CheckArguments=FALSE))
 }
 
 
 Shannon.AbdVector <-
-function(NorP, Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns = NULL) 
+function(NorP, Correction = "Best", ..., CheckArguments = TRUE, Ns = NULL) 
 {
   if (missing(NorP)){
     if (!missing(Ns)) {
@@ -37,7 +38,7 @@ function(NorP, Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns = NULL)
 
 
 Shannon.integer <-
-function(NorP, Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns = NULL)
+function(NorP, Correction = "Best", ..., CheckArguments = TRUE, Ns = NULL)
 {
   if (missing(NorP)){
     if (!missing(Ns)) {
@@ -51,7 +52,7 @@ function(NorP, Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns = NULL)
 
 
 Shannon.numeric <-
-function(NorP, Correction = "Best", CheckArguments = TRUE, Ps = NULL, Ns = NULL) 
+function(NorP, Correction = "Best", ..., CheckArguments = TRUE, Ps = NULL, Ns = NULL) 
 {
   if (missing(NorP)){
     if (!missing(Ps)) {
@@ -85,7 +86,7 @@ function(Ns, Correction = "Best", CheckArguments = TRUE)
   
   # Eliminate 0
   Ns <- Ns[Ns > 0]
-  N <- sum(Ns)
+
   # Exit if Ns contains no or a single species
   if (length(Ns) < 2) {
   	if (length(Ns) == 0) {
@@ -97,19 +98,20 @@ function(Ns, Correction = "Best", CheckArguments = TRUE)
   	  names(entropy) <- "Single Species"
   	  return (entropy)
   	}
-  } else {
-    # Probabilities instead of abundances
-    if (N < 2) {
-      warning("Bias correction attempted with probability data. Correction forced to 'None'")
-      Correction <- "None"
-    }
   }
-  
+
+  # Community estimation
+  N <- sum(Ns)
   # No correction
   if (Correction == "None") {
     return (Shannon.ProbaVector(Ns/sum(Ns), CheckArguments=FALSE))
+  } else {
+    if (!is.IntValues(Ns)) {
+      warning("Correction can't be applied to non-integer values.")
+      # Correction <- "None"
+      return (Shannon.ProbaVector(Ns/sum(Ns), CheckArguments=FALSE))
+    }
   }
-  
   
   if (Correction == "Miller") {
     return (Shannon(Ns/sum(Ns), CheckArguments=FALSE) + (length(Ns)-1)/2/N)  
@@ -180,7 +182,7 @@ function(Ns, Correction = "Best", CheckArguments = TRUE)
     if (is.na(Singletons)) Singletons <- 0
     Doubletons <- DistN["2"]
     if (is.na(Doubletons)) Doubletons <- 0
-    # Calculate A
+    # Calculate A (Chao & Jost, 2015, eq. 6b)
     if (Doubletons) {
       A <- 2*Doubletons/((N-1)*Singletons+2*Doubletons)
     } else {
@@ -190,7 +192,9 @@ function(Ns, Correction = "Best", CheckArguments = TRUE)
         A <- 1
       }
     }
+    # Chao, Wang & Jost 2013, eq. 7. Equals EntropyEstimation::Entropy.z(Ns).
     ChaoWangJost <- sum(Ns/N*(digamma(N)-digamma(Ns)))
+    # Add Chao-Jost correction to that of Zhang-Grabchak
     if (A != 1) {
       Part2 <- vapply(1:(N-1), function(r) 1/r*(1-A)^r, 0) 
       ChaoWangJost <- as.numeric(ChaoWangJost + Singletons/N*(1-A)^(1-N)*(-log(A)-sum(Part2)))

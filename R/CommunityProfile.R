@@ -1,6 +1,7 @@
 CommunityProfile <-
 function(FUN, NorP, q.seq = seq(0, 2, 0.1), 
-         NumberOfSimulations = 0, Alpha = 0.05, BootstrapMethod = "Chao2015", ..., CheckArguments = TRUE) 
+         NumberOfSimulations = 0, Alpha = 0.05, BootstrapMethod = "Chao2015", 
+         size = 1, ..., CheckArguments = TRUE) 
 {
   if (CheckArguments) {
     CheckentropartArguments()
@@ -10,10 +11,12 @@ function(FUN, NorP, q.seq = seq(0, 2, 0.1),
   Values <- vapply(q.seq, function(q) FUN(NorP, q, ..., CheckArguments = FALSE), 0)
   
   if (NumberOfSimulations > 0) {
+    if (!is.IntValues(NorP)) warning("Evaluation of the confidence interval of community profiles requires integer abundances in argument NorP. Abundances have been rounded.")
     NsInt <- round(NorP)
-    if (any(abs(NsInt-NorP) > sum(NorP)*.Machine$double.eps)) warning("Evaluation of the confidence interval of community profiles requires integer abundances in argument NorP. Abundances have been rounded.")
     # Create a MetaCommunity made of simulated communities
-    MCSim <- rCommunity(NumberOfSimulations, NorP=NsInt, BootstrapMethod=BootstrapMethod, CheckArguments = FALSE)
+    if (size == 1) size=sum(NsInt)
+    # The simulated communities may be of arbitrary size to obtain the confidence interval of the diversity of a smaller community
+    MCSim <- rCommunity(NumberOfSimulations, size=size, NorP=NsInt, BootstrapMethod=BootstrapMethod, CheckArguments = FALSE)
     # May return NA if the bootstrap method is not recognized
     if (any(is.na(MCSim))) stop("Communities could not be simulated.")
     ProgressBar <- utils::txtProgressBar(min=0, max=NumberOfSimulations)
@@ -21,7 +24,7 @@ function(FUN, NorP, q.seq = seq(0, 2, 0.1),
     # Loops are required for the progress bar, instead of:
     # Sims <- apply(MCSim$Nsi, 2, function(Nsi) CommunityProfile(FUN, Nsi, q.seq, ...)$y)
     for (i in 1:NumberOfSimulations) {
-      # Parralelize. Do not allow more forks in PhyloApply()
+      # Parallelize. Do not allow more forks in PhyloApply()
       ProfileAsaList <- parallel::mclapply(q.seq, function(q) FUN(MCSim$Nsi[, i], q, ..., CheckArguments=FALSE), mc.allow.recursive=FALSE)
       Sims[i, ] <- simplify2array(ProfileAsaList)
       utils::setTxtProgressBar(ProgressBar, i)

@@ -1,5 +1,5 @@
 PhyloApply <-
-function(Tree, FUN, NorP, Normalize = TRUE, ..., CheckArguments = TRUE)
+function(Tree, FUN, NorP, Normalize = TRUE, dfArgs = NULL, ..., CheckArguments = TRUE)
 {
   if (CheckArguments)
     CheckentropartArguments()
@@ -14,7 +14,7 @@ function(Tree, FUN, NorP, Normalize = TRUE, ..., CheckArguments = TRUE)
   if (!ape::is.ultrametric(ppTree$phyTree))
     stop("The tree must be ultrametric to apply a function over it.")
 
-  # NorP may be a vector or a matrix. If it is a vector, double it into a matrix to simplify the code (use rownames)
+  # NorP may be a vector or a matrix.
   if (is.vector(NorP) | is.SpeciesDistribution(NorP)) {
     NorPisVector <- TRUE
   } else {
@@ -25,17 +25,18 @@ function(Tree, FUN, NorP, Normalize = TRUE, ..., CheckArguments = TRUE)
     } 
   }
   # Save the name of NorP before manipulating it
-  NorPName <- deparse(substitute(NorP))
+  NorPName <- ArgumentOriginalName(NorP)
+  # If NorP is a vector, double it into a matrix to simplify the code (use rownames)
   if (NorPisVector) {
     NorP <- matrix(NorP, nrow = length(NorP), ncol = 2, dimnames = list(names(NorP), c("NorP", "Dummy")))
   }
-  # NorP should be named. If it is not, but has the same number of elements as the tree, just warn.
+  # NorP rows should be named. If they are not, but are the same number of elements as the tree, just warn.
   if (is.null(rownames(NorP))) {
     if (nrow(NorP) == length(ppTree$phyTree$tip.label)) {
       rownames(NorP) <- ppTree$phyTree$tip.label
       warning("The abundance or frequency vector was not named. It was supposed to be ordered as the tree leaves.")
     } else {
-      stop("The abundance or frequency vector is not named and does not have the same number of elements as the tree. Abundances and species could not be related.")
+      stop("The abundance or frequency vector is not named and does not have the same number of elements as the tree. Abundances and species could not be linked.")
     }
   }
 
@@ -70,10 +71,34 @@ function(Tree, FUN, NorP, Normalize = TRUE, ..., CheckArguments = TRUE)
   if (NorPisVector) {
     DatedN <- lapply(DatedN, function(m) m[,1])
   }
-  # Apply Function to each slice.
-  DatedResult <- unlist(parallel::mclapply(DatedN, FUN, ..., CheckArguments = FALSE))
+  
+  # Apply Function to each slice. A list is returned
+  if (is.null(dfArgs)) {
+    # Simple way: apply FUN to DatedN
+    DatedResult <- parallel::mclapply(DatedN, FUN, ..., CheckArguments=FALSE)
+  } else {
+    # Complicated way: each call of FUN has specific values of arguments passed to FUN
+    # Ex.: bcTsallis with Marcon correction requires argument SampleCoverage whose value changes along the tree.
+    FUNArglist <- function(i, ...) {
+      # Prepare the call to FUN
+      # NorP : first argument: a vector of abundances. Not named.
+      FUNNorP <- as.numeric(unlist(DatedN[i]))
+      # Arguments passed by dfArgs. Named.
+      FUNdfArgs <- dfArgs[i, ]
+      names(FUNdfArgs) <- colnames(dfArgs)
+      # Make a list of all arguments, includings the ...
+      return(c(list(FUNNorP), as.list(FUNdfArgs), ..., list(CheckArguments=FALSE)))
+    }
+    DatedResult <- parallel::mclapply(1:length(DatedN), function(i) do.call(FUN, FUNArglist(i, ...)))
+    # Debug: print the arguments instead of doing the call
+    # sapply(1:length(DatedN), function(i) print(FUNArglist(i, ...))); stop("Code not run, calls are printed.")
+  }
+  # Read the corrections
+  Corrections <- sapply(DatedResult, function(x) names(x))
+  # Unlist DatedResult to a vector
+  DatedResult <- unlist(DatedResult)
   # Names of slices should be the cut time, without the rounding error
-  names(DatedResult) <- ppTree$Cuts
+  names(DatedResult) <- names(Corrections) <- ppTree$Cuts
   # Normalization
   if (Normalize) {
     Normalization <- sum(ppTree$Intervals)
@@ -82,11 +107,12 @@ function(Tree, FUN, NorP, Normalize = TRUE, ..., CheckArguments = TRUE)
   }
   # Return a weighted average of the results in each slice
   Value <- list(
-    Distribution = NorPName,
+    Distribution = substitute(NorPName),
     Function = deparse(substitute(FUN)),
     Tree = deparse(substitute(Tree)),
     Normalized = Normalize,
-    Cuts = DatedResult, 
+    Cuts = DatedResult,
+    Corrections = Corrections,
     Total = sum(DatedResult * ppTree$Intervals / Normalization)
   )
   class(Value) <- "PhyloValue"

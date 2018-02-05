@@ -16,13 +16,13 @@ ShuffleMC(MClist, Weights = rep(1, length(MClist)), CheckArguments = TRUE)
 \arguments{
   \item{MClist}{
   A list of \code{MetaCommunity} objects.
-}
+  }
   \item{Weights}{
   A vector of numbers containing the weight of each metacommunity of the list. It does not have to be normalized to sum to 1.
-}
+  }
   \item{CheckArguments}{
-    Logical; if \code{TRUE}, the function arguments are verified. Should be set to \code{FALSE} to save time when the arguments have been checked elsewhere.
-}
+  Logical; if \code{TRUE}, the function arguments are verified. Should be set to \code{FALSE} to save time when the arguments have been checked elsewhere.
+  }
 }
 \details{
   \code{MergeMC} is used for hierarchical partitioning of diversity. The gamma diversity of communities of the list becomes alpha diversity of the merged meta-community.
@@ -57,4 +57,6 @@ MC2 <- MetaCommunity(Abundances = df, Weights = w)
 plot(MergeC(list(MC1, MC2)), main="Merged communities")
 # Merge metacommunities
 plot(MergeMC(list(MC1, MC2)), main="Merged meta-communities")
+smc <- ShuffleMC(list(MC1, MC2))
+plot(MergeMC(smc), main="Shuffled, then Merged meta-communities")
 }
