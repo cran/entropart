@@ -24,7 +24,7 @@ function(NorP, ..., CheckArguments = TRUE, Ps = NULL)
 
 
 Shannon.AbdVector <-
-function(NorP, Correction = "Best", ..., CheckArguments = TRUE, Ns = NULL) 
+function(NorP, Correction = "Best", Level = NULL, PCorrection = "Chao2015", Unveiling = "geom", RCorrection = "Rarefy", ..., CheckArguments = TRUE, Ns = NULL) 
 {
   if (missing(NorP)){
     if (!missing(Ns)) {
@@ -33,12 +33,16 @@ function(NorP, Correction = "Best", ..., CheckArguments = TRUE, Ns = NULL)
       stop("An argument NorP or Ns must be provided.")
     }
   }
-  return (bcShannon(Ns=NorP, Correction=Correction, CheckArguments=CheckArguments))
+  if (is.null(Level)) {
+    return (bcShannon(Ns=NorP, Correction=Correction, CheckArguments=CheckArguments))
+  } else {
+    return (Shannon.numeric(NorP, Correction=Correction, Level=Level, PCorrection=PCorrection, Unveiling=Unveiling, RCorrection=RCorrection, CheckArguments=CheckArguments))
+  }
 }
 
 
 Shannon.integer <-
-function(NorP, Correction = "Best", ..., CheckArguments = TRUE, Ns = NULL)
+function(NorP, Correction = "Best", Level = NULL, PCorrection = "Chao2015", Unveiling = "geom", RCorrection = "Rarefy", ..., CheckArguments = TRUE, Ns = NULL)
 {
   if (missing(NorP)){
     if (!missing(Ns)) {
@@ -47,12 +51,16 @@ function(NorP, Correction = "Best", ..., CheckArguments = TRUE, Ns = NULL)
       stop("An argument NorP or Ns must be provided.")
     }
   }
-  return (bcShannon(Ns=NorP, Correction=Correction, CheckArguments=CheckArguments))
+  if (is.null(Level)) {
+    return (bcShannon(Ns=NorP, Correction=Correction, CheckArguments=CheckArguments))
+  } else {
+    return (Shannon.numeric(NorP, Correction=Correction, Level=Level, PCorrection=PCorrection, Unveiling=Unveiling, RCorrection=RCorrection, CheckArguments=CheckArguments))
+  }
 }
 
 
 Shannon.numeric <-
-function(NorP, Correction = "Best", ..., CheckArguments = TRUE, Ps = NULL, Ns = NULL) 
+function(NorP, Correction = "Best", Level = NULL, PCorrection = "Chao2015", Unveiling = "geom", RCorrection = "Rarefy", ..., CheckArguments = TRUE, Ps = NULL, Ns = NULL) 
 {
   if (missing(NorP)){
     if (!missing(Ps)) {
@@ -65,13 +73,49 @@ function(NorP, Correction = "Best", ..., CheckArguments = TRUE, Ps = NULL, Ns = 
       }
     }
   }
+  if (CheckArguments)
+    CheckentropartArguments()
   
   if (abs(sum(NorP) - 1) < length(NorP)*.Machine$double.eps) {
     # Probabilities sum to 1, allowing rounding error
     return (Shannon.ProbaVector(NorP, CheckArguments=CheckArguments))
+  } 
+  # Abundances
+  if (is.null(Level)) {
+    return (bcShannon(Ns=NorP, Correction=Correction, CheckArguments=FALSE))
+  } 
+  # Eliminate 0
+  NorP <- NorP[NorP > 0]
+  N <- sum(NorP)
+  if (Level == sum(NorP)) {
+    # No interpolation/extrapolation needed: estimate with no correction
+    return(Shannon.ProbaVector(NorP/N, CheckArguments=FALSE))
+  }
+  # If Level is coverage, get size
+  if (Level < 1) 
+    Level <- Coverage2Size(NorP, SampleCoverage=Level, CheckArguments=FALSE)
+  if (Level <= N) {
+    # Interpolation. Obtain Abundance Frequence Count
+    afc <- AbdFreqCount(NorP, Level=Level, CheckArguments=FALSE)
+    entropy <- -(sum((1:Level)/Level * log((1:Level)/Level) * afc[, 2]))
+    names(entropy) <- attr(afc, "Estimator")
+    return (entropy)
   } else {
-    # Abundances
-    return (Shannon.AbdVector(NorP, Correction=Correction, CheckArguments=CheckArguments))
+    # Extrapolation. Estimate the asymptotic entropy
+    if (PCorrection == "None") {
+      # Don't unveil the asymptotic distribution, use the asymptotic estimator
+      Hinf <- bcShannon(Ns=NorP, Correction=Correction, CheckArguments=FALSE)
+    } else {
+      # Unveil so that the estimation of H is similar to that of non-integer entropy
+      PsU <- as.ProbaVector.numeric(NorP, Correction=PCorrection, Unveiling=Unveiling, RCorrection=RCorrection, q=1, CheckArguments=FALSE)
+      Hinf <- Shannon.ProbaVector(PsU, CheckArguments=FALSE)
+    }
+    # Estimate observed entropy
+    Hn <- Shannon.ProbaVector(NorP/N, CheckArguments=FALSE)
+    # Interpolation
+    entropy <- N/Level*Hn + (Level-N)/Level*Hinf
+    names(entropy) <- Correction
+    return (entropy)  
   }
 }
 
@@ -82,7 +126,7 @@ function(Ns, Correction = "Best", CheckArguments = TRUE)
   if (CheckArguments)
     CheckentropartArguments()
   
-  if (Correction == "Best") Correction <- "ChaoWangJost"
+  if (Correction == "Best") Correction <- "UnveilJ"
   
   # Eliminate 0
   Ns <- Ns[Ns > 0]
@@ -132,11 +176,9 @@ function(Ns, Correction = "Best", CheckArguments = TRUE)
     names(ChaoShen) <- Correction
     return (ChaoShen)  
   } 
-  if (Correction == "Grassberger") {
+  if (Correction == "Grassberger" | Correction == "Marcon") {
     # (-1)^n is problematic for long vectors (returns NA for large values). It is replaced by 1-n%%2*2 (Ns is rounded if is not an integer)
     Grassberger <- sum(Ns/N*(log(N)-digamma(Ns)-(1-round(Ns)%%2*2)/(Ns+1)))
-  }
-  if (Correction == "Grassberger") {
     names(Grassberger) <- Correction
     return(Grassberger)
   }
@@ -175,7 +217,7 @@ function(Ns, Correction = "Best", CheckArguments = TRUE)
       return (entropy)
     }
   }
-  if (Correction == "ChaoWangJost") {
+  if (Correction == "ChaoWangJost" | Correction == "ChaoJost") {
     # Calculate abundance distribution
     DistN <- tapply(Ns, Ns, length)
     Singletons <- DistN["1"]
@@ -199,7 +241,7 @@ function(Ns, Correction = "Best", CheckArguments = TRUE)
       Part2 <- vapply(1:(N-1), function(r) 1/r*(1-A)^r, 0) 
       ChaoWangJost <- as.numeric(ChaoWangJost + Singletons/N*(1-A)^(1-N)*(-log(A)-sum(Part2)))
     }
-    names(ChaoWangJost) <- Correction
+    names(ChaoWangJost) <- "ChaoJost"
     return(ChaoWangJost)  
   }
   if (Correction == "ZhangHz") {

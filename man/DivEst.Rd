@@ -2,6 +2,7 @@
 \alias{DivEst}
 \alias{is.DivEst}
 \alias{plot.DivEst}
+\alias{autoplot.DivEst}
 \alias{summary.DivEst}
 \title{
   Diversity Estimation of a metacommunity
@@ -11,9 +12,12 @@
 }
 \usage{
 DivEst(q = 0, MC, Biased = TRUE, Correction = "Best", Tree = NULL, 
-  Normalize = TRUE, Z = NULL, Simulations = 100, CheckArguments = TRUE)
+  Normalize = TRUE, Z = NULL, Simulations = 100, 
+  ShowProgressBar = TRUE, CheckArguments = TRUE)
 is.DivEst(x)
 \method{plot}{DivEst}(x, \dots, main = NULL, Which = "All")
+\method{autoplot}{DivEst}(object, \dots, main = NULL, Which = "All",
+  labels = NULL, font.label = list(size=11, face="plain"))
 \method{summary}{DivEst}(object, \dots)
 }
 \arguments{
@@ -42,6 +46,9 @@ is.DivEst(x)
   \item{Simulations}{
   The number of simulations to build confidence intervals.
   }
+  \item{ShowProgressBar}{
+  If \code{TRUE} (default), a progress bar is shown.
+  }
   \item{CheckArguments}{
   Logical; if \code{TRUE}, the function arguments are verified. Should be set to \code{FALSE} to save time when the arguments have been checked elsewhere.
   }
@@ -54,8 +61,14 @@ is.DivEst(x)
   \item{Which}{
   May be \code{"Alpha"}, \code{"Beta"} or \code{"Gamma"} to respectively plot the metacommunity's alpha, beta or gamma diversity. If \code{"All"} (default), all three plots are shown.
   }
+  \item{labels}{
+  Vector of labels to be added to multiple plots. \code{"auto"} is the same as \code{c("a", "b", "c", "d)"}.
+  }
+  \item{font.label}{
+  A list of arguments to customize labels. See \code{\link{ggarrange}}.
+  }
   \item{object}{
-  A \code{MCdiversity} object to be summarized.
+  A \code{MCdiversity} object to be summarized or plotted.
   }
   \item{\dots}{
   Additional arguments to be passed to the generic methods.

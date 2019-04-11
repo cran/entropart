@@ -1,5 +1,5 @@
 DivProfile <-
-function(q.seq = seq(0, 2, .1), MC, Biased = TRUE, Correction = "Best", Tree = NULL, Normalize = TRUE, Z = NULL, NumberOfSimulations = 0, Alpha = 0.05, CheckArguments = TRUE) 
+function(q.seq = seq(0, 2, .1), MC, Biased = TRUE, Correction = "Best", Tree = NULL, Normalize = TRUE, Z = NULL, NumberOfSimulations = 0, Alpha = 0.05, ShowProgressBar = TRUE, CheckArguments = TRUE) 
 {
   if (CheckArguments)
     CheckentropartArguments()
@@ -67,14 +67,16 @@ function(q.seq = seq(0, 2, .1), MC, Biased = TRUE, Correction = "Best", Tree = N
       # Very simplified (for speed) version of rCommunity with BootstrapMethod="Marcon"
       MetaCommunity(stats::rmultinom(NumberOfSimulations, sum(SpeciesAbundances), SpeciesAbundances))
     }
-    utils::setTxtProgressBar(ProgressBar, -2)
+    if(ShowProgressBar & interactive()) 
+      utils::setTxtProgressBar(ProgressBar, -2)
     # Resample each community according to species abundances
     ResampledCs <- apply(MC$Nsi, 2, function(Ns) RedrawSpecies(SpeciesAbundances=Ns))
-    utils::setTxtProgressBar(ProgressBar, -1)
+    if(interactive()) utils::setTxtProgressBar(ProgressBar, -1)
     # Each MC of this list is a simulation set of each original community
     # Build simulated MCs by picking simulated communities
     SimMC <- lapply(1:NumberOfSimulations, function(i) MetaCommunity(sapply(ResampledCs, function(mc) mc$Nsi[, i]), Weights=MC$Wi))
-    utils::setTxtProgressBar(ProgressBar, -0)
+    if(ShowProgressBar & interactive()) 
+      utils::setTxtProgressBar(ProgressBar, -0)
     
     ## Calculate alpha, beta and gamma of each simulated MC, at each q
     # Prepare a matrix to store envelopes.
@@ -113,8 +115,10 @@ function(q.seq = seq(0, 2, .1), MC, Biased = TRUE, Correction = "Best", Tree = N
       Envelopes["GammaDiversityLow", qi] <- stats::quantile(GammaDiversity, probs=Alpha, na.rm=TRUE)
       Envelopes["GammaDiversityHigh", qi] <- stats::quantile(GammaDiversity, probs=1-Alpha, na.rm=TRUE)
       # Progressbar
-      utils::setTxtProgressBar(ProgressBar, qi)
+      if(ShowProgressBar & interactive()) 
+        utils::setTxtProgressBar(ProgressBar, qi)
     }
+    close(ProgressBar)
     
     # Integrate the envelopes into the object
     DivProfile$TotalAlphaEntropyLow <- Envelopes["TotalAlphaEntropyLow", ]
@@ -158,7 +162,7 @@ function (x, ..., main = NULL, xlab = "Order of Diversity", ylab = NULL, Which =
     if (!(is.null(x$TotalAlphaDiversityHigh) | is.null(x$TotalAlphaDiversityLow))) {
       # Shaded polygon (adapted from Didzis Elferts, 
       # http://stackoverflow.com/questions/14069629/plotting-confidence-intervals)
-      graphics::polygon(c(x$Order, rev(x$Order)), c(pmax(x$TotalAlphaDiversityLow, graphics::par('usr')[3]), pmin(rev(x$TotalAlphaDiversityHigh), par('usr')[4])), col = ShadeColor, border = FALSE)
+      graphics::polygon(c(x$Order, rev(x$Order)), c(pmax(x$TotalAlphaDiversityLow, graphics::par('usr')[3]), pmin(rev(x$TotalAlphaDiversityHigh), graphics::par('usr')[4])), col = ShadeColor, border = FALSE)
       # Add red lines on borders of polygon
       graphics::lines(x$Order, x$TotalAlphaDiversityHigh, col=BorderColor, lty=2)
       graphics::lines(x$Order, x$TotalAlphaDiversityLow, col=BorderColor, lty=2)
@@ -184,7 +188,7 @@ function (x, ..., main = NULL, xlab = "Order of Diversity", ylab = NULL, Which =
     if (!(is.null(x$TotalBetaDiversityHigh) | is.null(x$TotalBetaDiversityLow))) {
       # Shaded polygon (adapted from Didzis Elferts, 
       # http://stackoverflow.com/questions/14069629/plotting-confidence-intervals)
-      graphics::polygon(c(x$Order, rev(x$Order)), c(pmax(x$TotalBetaDiversityLow, graphics::par('usr')[3]), pmin(rev(x$TotalBetaDiversityHigh), par('usr')[4])), col = ShadeColor, border = FALSE)
+      graphics::polygon(c(x$Order, rev(x$Order)), c(pmax(x$TotalBetaDiversityLow, graphics::par('usr')[3]), pmin(rev(x$TotalBetaDiversityHigh), graphics::par('usr')[4])), col = ShadeColor, border = FALSE)
       # Add red lines on borders of polygon
       graphics::lines(x$Order, x$TotalBetaDiversityHigh, col=BorderColor, lty=2)
       graphics::lines(x$Order, x$TotalBetaDiversityLow, col=BorderColor, lty=2)
@@ -198,7 +202,7 @@ function (x, ..., main = NULL, xlab = "Order of Diversity", ylab = NULL, Which =
     if (!(is.null(x$GammaDiversityHigh) | is.null(x$GammaDiversityLow))) {
       # Shaded polygon (adapted from Didzis Elferts, 
       # http://stackoverflow.com/questions/14069629/plotting-confidence-intervals)
-      graphics::polygon(c(x$Order, rev(x$Order)), c(pmax(x$GammaDiversityLow, graphics::par('usr')[3]), pmin(rev(x$GammaDiversityHigh), par('usr')[4])), col = ShadeColor, border = FALSE)
+      graphics::polygon(c(x$Order, rev(x$Order)), c(pmax(x$GammaDiversityLow, graphics::par('usr')[3]), pmin(rev(x$GammaDiversityHigh), graphics::par('usr')[4])), col = ShadeColor, border = FALSE)
       # Add red lines on borders of polygon
       graphics::lines(x$Order, x$GammaDiversityHigh, col=BorderColor, lty=2)
       graphics::lines(x$Order, x$GammaDiversityLow, col=BorderColor, lty=2)
@@ -209,6 +213,94 @@ function (x, ..., main = NULL, xlab = "Order of Diversity", ylab = NULL, Which =
   if (Which == "All") {
     graphics::par(op)
   }
+}
+
+
+autoplot.DivProfile <- 
+function (object, ..., main = NULL, xlab = "Order of Diversity", ylab = NULL, Which = "All", 
+          ShadeColor = "grey75", alpha = 0.3, BorderColor = "red", labels = NULL, font.label = list(size=11, face="plain"))
+{
+  if (Which == "All" | (Which == "Alpha" & is.null(main))) main <- "Total Alpha Diversity"
+  if (Which == "All" | (Which == "Alpha" & is.null(ylab))) ylab <- expression(paste(alpha, " diversity"))
+  if (Which == "All" | Which == "Alpha") {
+    theData <- data.frame(object$Order, object$TotalAlphaDiversity)
+    if (!(is.null(object$TotalAlphaDiversityHigh) | is.null(object$TotalAlphaDiversityLow))) {
+      theData$TotalAlphaDiversityLow <- object$TotalAlphaDiversityLow
+      theData$TotalAlphaDiversityHigh <- object$TotalAlphaDiversityHigh
+    }
+    AlphaPlot <- ggplot2::ggplot(theData, ggplot2::aes_(x=~object.Order, y=~object.TotalAlphaDiversity))
+    if (!(is.null(object$TotalAlphaDiversityHigh) | is.null(object$TotalAlphaDiversityLow))) {
+      AlphaPlot <- AlphaPlot +
+        ggplot2::geom_ribbon(ggplot2::aes_(ymin=~TotalAlphaDiversityLow, ymax=~TotalAlphaDiversityHigh), fill=ShadeColor, alpha=alpha) +
+        # Add red lines on borders of polygon
+        ggplot2::geom_line(ggplot2::aes_(y=~TotalAlphaDiversityLow), colour=BorderColor, linetype=2) +
+        ggplot2::geom_line(ggplot2::aes_(y=~TotalAlphaDiversityHigh), colour=BorderColor, linetype=2)
+    }
+    AlphaPlot <- AlphaPlot +
+      ggplot2::geom_line() +
+      ggplot2::labs(main=main, x=xlab, y=ylab)
+  }
+  if (Which == "Alpha")
+    return(AlphaPlot)
+  
+  if (Which == "All" | (Which == "Communities" & is.null(main))) main <- "Alpha Diversity of Communities"
+  if (Which == "All" | (Which == "Communities" & is.null(ylab))) ylab <- expression(paste(alpha, " diversity"))
+  if (Which == "All" | Which == "Communities") {
+    theData <- reshape2::melt(cbind(data.frame(object$Order), object$CommunityAlphaDiversities), id.vars="object.Order", variable.name = "Community")
+    CommunitiesPlot <- ggplot2::ggplot(theData, ggplot2::aes_(x=~object.Order, y=~value, colour=~Community)) +
+      ggplot2::geom_line()
+  }
+  if (Which == "Communities")
+    return(CommunitiesPlot)
+  
+  if (Which == "All" | (Which == "Beta" & is.null(main))) main <- "Beta Diversity"
+  if (Which == "All" | (Which == "Beta" & is.null(ylab))) ylab <- expression(paste(beta, " diversity"))
+  if (Which == "All" | Which == "Beta") {
+    theData <- data.frame(object$Order, object$TotalBetaDiversity)
+    if (!(is.null(object$TotalBetaDiversityHigh) | is.null(object$TotalBetaDiversityLow))) {
+      theData$TotalBetaDiversityLow <- object$TotalBetaDiversityLow
+      theData$TotalBetaDiversityHigh <- object$TotalBetaDiversityHigh
+    }
+    BetaPlot <- ggplot2::ggplot(theData, ggplot2::aes_(x=~object.Order, y=~object.TotalBetaDiversity))
+    if (!(is.null(object$TotalBetaDiversityHigh) | is.null(object$TotalBetaDiversityLow))) {
+      BetaPlot <- BetaPlot +
+        ggplot2::geom_ribbon(ggplot2::aes_(ymin=~TotalBetaDiversityLow, ymax=~TotalBetaDiversityHigh), fill=ShadeColor, alpha=alpha) +
+        # Add red lines on borders of polygon
+        ggplot2::geom_line(ggplot2::aes_(y=~TotalBetaDiversityLow), colour=BorderColor, linetype=2) +
+        ggplot2::geom_line(ggplot2::aes_(y=~TotalBetaDiversityHigh), colour=BorderColor, linetype=2)
+    }
+    BetaPlot <- BetaPlot +
+      ggplot2::geom_line() +
+      ggplot2::labs(main=main, x=xlab, y=ylab)
+  }
+  if (Which == "Beta")
+    return(BetaPlot)
+    
+  if (Which == "All" | (Which == "Gamma" & is.null(main))) main <- "Gamma Diversity"
+  if (Which == "All" | (Which == "Gamma" & is.null(ylab))) ylab <- expression(paste(gamma, " diversity"))
+  if (Which == "All" | Which == "Gamma") {
+    theData <- data.frame(object$Order, object$GammaDiversity)
+    if (!(is.null(object$GammaDiversityHigh) | is.null(object$GammaDiversityLow))) {
+      theData$GammaDiversityLow <- object$GammaDiversityLow
+      theData$GammaDiversityHigh <- object$GammaDiversityHigh
+    }
+    GammaPlot <- ggplot2::ggplot(theData, ggplot2::aes_(x=~object.Order, y=~object.GammaDiversity))
+    if (!(is.null(object$GammaDiversityHigh) | is.null(object$GammaDiversityLow))) {
+      GammaPlot <- GammaPlot +
+        ggplot2::geom_ribbon(ggplot2::aes_(ymin=~GammaDiversityLow, ymax=~GammaDiversityHigh), fill=ShadeColor, alpha=alpha) +
+        # Add red lines on borders of polygon
+        ggplot2::geom_line(ggplot2::aes_(y=~GammaDiversityLow), colour=BorderColor, linetype=2) +
+        ggplot2::geom_line(ggplot2::aes_(y=~GammaDiversityHigh), colour=BorderColor, linetype=2)
+    }
+    GammaPlot <- GammaPlot +
+      ggplot2::geom_line() +
+      ggplot2::labs(main=main, x=xlab, y=ylab)
+  }
+  if (Which == "Gamma")
+    return(GammaPlot)
+  
+  # Which == "All": return a multiple plot
+  return(ggpubr::ggarrange(AlphaPlot, CommunitiesPlot, BetaPlot, GammaPlot, ncol = 2, nrow = 2, labels=labels, font.label=font.label))
 }
 
 

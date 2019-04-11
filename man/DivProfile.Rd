@@ -2,6 +2,7 @@
 \alias{DivProfile}
 \alias{is.DivProfile}
 \alias{plot.DivProfile}
+\alias{autoplot.DivProfile}
 \alias{summary.DivProfile}
 \title{
   Diversity Profile of a metacommunity
@@ -12,11 +13,15 @@
 \usage{
 DivProfile(q.seq = seq(0, 2, 0.1), MC, Biased = TRUE, Correction = "Best", 
   Tree = NULL, Normalize = TRUE, Z = NULL, 
-  NumberOfSimulations = 0, Alpha = 0.05, CheckArguments = TRUE)
+  NumberOfSimulations = 0, Alpha = 0.05, 
+  ShowProgressBar = TRUE, CheckArguments = TRUE)
 is.DivProfile(x)
 \method{plot}{DivProfile}(x, \dots, main = NULL, xlab = "Order of Diversity",
   ylab = NULL, Which = "All", 
   LineWidth = 2, ShadeColor = "grey75", BorderColor = "red")
+\method{autoplot}{DivProfile}(object, \dots, main = NULL, xlab = "Order of Diversity",
+  ylab = NULL, Which = "All", ShadeColor = "grey75", alpha = 0.3, BorderColor = "red", 
+  labels = NULL, font.label = list(size=11, face="plain"))
 \method{summary}{DivProfile}(object, \dots)
 }
 \arguments{
@@ -50,6 +55,9 @@ is.DivProfile(x)
   \item{Alpha}{
   The risk level, 5\% by default.
   }
+  \item{ShowProgressBar}{
+  If \code{TRUE} (default), a progress bar is shown.
+  }
   \item{CheckArguments}{
   Logical; if \code{TRUE}, the function arguments are verified. Should be set to \code{FALSE} to save time when the arguments have been checked elsewhere.
   }
@@ -77,8 +85,17 @@ is.DivProfile(x)
   \item{BorderColor}{
   The color of the bounds of the confidence envelope.
   }
+  \item{alpha}{
+  Opacity of the confidence enveloppe, between 0 and 1.
+  }
+  \item{labels}{
+  Vector of labels to be added to multiple plots. \code{"auto"} is the same as \code{c("a", "b", "c", "d)"}.
+  }
+  \item{font.label}{
+  A list of arguments to customize labels. See \code{\link{ggarrange}}.
+  }
   \item{object}{
-  A \code{MCdiversity} object to be summarized.
+  A \code{MCdiversity} object to be summarized or plotted.
   }
   \item{\dots}{
   Additional arguments to be passed to the generic methods.
@@ -137,5 +154,6 @@ data(Paracou618)
 # Estimate diversity.
 Profile <- DivProfile(q.seq = seq(0, 2, 0.1), Paracou618.MC, Biased = FALSE)
 plot(Profile)
+autoplot(Profile)
 summary(Profile)
 }

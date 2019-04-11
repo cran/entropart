@@ -23,7 +23,7 @@ function(NorP, ..., CheckArguments = TRUE, Ps = NULL)
 
 
 Simpson.AbdVector <-
-function(NorP, Correction="Lande", ..., CheckArguments = TRUE, Ns = NULL) 
+function(NorP, Correction="Best", Level = NULL, ..., CheckArguments = TRUE, Ns = NULL) 
 {
   if (missing(NorP)){
     if (!missing(Ns)) {
@@ -32,12 +32,16 @@ function(NorP, Correction="Lande", ..., CheckArguments = TRUE, Ns = NULL)
       stop("An argument NorP or Ns must be provided.")
     }
   }
-  return (bcSimpson(Ns=NorP, Correction=Correction, CheckArguments=CheckArguments))
+  if (is.null(Level)) {
+    return (bcSimpson(Ns=NorP, Correction=Correction, CheckArguments=CheckArguments))
+  } else {
+    return (Simpson.numeric(NorP, Correction=Correction, Level=Level, CheckArguments=CheckArguments))
+  }
 }
 
 
 Simpson.integer <-
-function(NorP, Correction="Lande", ..., CheckArguments = TRUE, Ns = NULL)
+function(NorP, Correction="Best", Level = NULL, ..., CheckArguments = TRUE, Ns = NULL)
 {
   if (missing(NorP)){
     if (!missing(Ns)) {
@@ -46,12 +50,16 @@ function(NorP, Correction="Lande", ..., CheckArguments = TRUE, Ns = NULL)
       stop("An argument NorP or Ns must be provided.")
     }
   }
-  return (bcSimpson(Ns=NorP, Correction=Correction, CheckArguments=CheckArguments))
+  if (is.null(Level)) {
+    return (bcSimpson(Ns=NorP, Correction=Correction, CheckArguments=CheckArguments))
+  } else {
+    return (Simpson.numeric(NorP, Correction=Correction, Level=Level, CheckArguments=CheckArguments))
+  }
 }
 
 
 Simpson.numeric <-
-function(NorP, Correction="Lande", ..., CheckArguments = TRUE, Ps = NULL, Ns = NULL) 
+function(NorP, Correction="Best", Level = NULL, ..., CheckArguments = TRUE, Ps = NULL, Ns = NULL) 
 {
   if (missing(NorP)){
     if (!missing(Ps)) {
@@ -64,23 +72,50 @@ function(NorP, Correction="Lande", ..., CheckArguments = TRUE, Ps = NULL, Ns = N
       }
     }
   }
+  if (CheckArguments)
+    CheckentropartArguments()
   
   if (abs(sum(NorP) - 1) < length(NorP)*.Machine$double.eps) {
     # Probabilities sum to 1, allowing rounding error
-    return (Simpson.ProbaVector(NorP, CheckArguments=CheckArguments))
+    return (Simpson.ProbaVector(NorP, CheckArguments=FALSE))
+  }
+  # Abundances
+  if (is.null(Level)) {
+    return (bcSimpson(Ns=NorP, Correction=Correction, CheckArguments=FALSE))
+  }
+  # Eliminate 0
+  NorP <- NorP[NorP > 0]
+  N <- sum(NorP)
+  # If Level is coverage, get size
+  if (Level < 1) Level <- Coverage2Size(NorP, SampleCoverage=Level, CheckArguments=FALSE)
+  if (Level == sum(NorP)) {
+    # No interpolation/extrapolation needed: estimate with no correction
+    return(Simpson.ProbaVector(NorP/N, CheckArguments=FALSE))
+  }
+  # Exit if Ns contains no or a single species
+  if (length(NorP) < 2) {
+    if (length(NorP) == 0) {
+      return(NA)
+    } else {
+      return(0)
+    }
   } else {
-    # Abundances
-    return (Simpson.AbdVector(NorP, Correction=Correction, CheckArguments=CheckArguments))
+    # Valid interpolation and extrapolation
+    entropy <- 1 - 1/Level - (1-1/Level)*sum(NorP*(NorP-1))/N/(N-1)
+    names(entropy) <- "Chao2014"
+    return (entropy)
   }
 }
 
 
 bcSimpson <-
-function(Ns, Correction="Lande", CheckArguments = TRUE) 
+function(Ns, Correction="Best", CheckArguments = TRUE) 
 {
   if (CheckArguments)
     CheckentropartArguments()
 
+  if (Correction == "Best") Correction <- "Lande"
+  
   # Eliminate 0
   Ns <- Ns[Ns > 0]
   N <- sum(Ns)
@@ -100,7 +135,7 @@ function(Ns, Correction="Lande", CheckArguments = TRUE)
   }
 
   if (Correction == "Lande" | Correction == "Best") {
-    entropy <- N/(N-1)*Tsallis(as.ProbaVector(Ns), 2, CheckArguments=FALSE)
+    entropy <- 1 - sum(Ns*(Ns-1)/N/(N-1))
     names(entropy) <- Correction
     return (entropy)
   } else {

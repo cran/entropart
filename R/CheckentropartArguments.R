@@ -23,7 +23,7 @@ function() {
   ErrorMessage <- function(Message, Argument) {
     cat(deparse(substitute(Argument)), "cannot be:\n")
     print(utils::head(Argument))
-    cat(paste(ErrorFunction, Message))
+    cat(paste(ErrorFunction, Message, "\n"))
     stop("Check the function arguments.", call. = FALSE)
   }
 
@@ -32,6 +32,12 @@ function() {
     Correction <- eval(expression(Correction), parent.frame())
     if (!is.character(Correction))
       ErrorMessage("Correction must be a string.", Correction)
+  }
+  # PCorrection 
+  if (!is.na(names(Args["PCorrection"]))) {
+    PCorrection <- eval(expression(PCorrection), parent.frame())
+    if (!is.character(PCorrection))
+      ErrorMessage("PCorrection must be a string.", PCorrection)
   }
   # RCorrection 
   if (!is.na(names(Args["RCorrection"]))) {
@@ -109,6 +115,21 @@ function() {
       ErrorMessage("CEstimator must be a string.", CEstimator)
   }
   
+  # Level
+  if (!is.na(names(Args["Level"]))) {
+    Level <- eval(expression(Level), parent.frame())
+    if (!is.null(Level)) {
+      if (!is.numeric(Level) | length(Level)!=1)
+        ErrorMessage("Level must be a number.", Level)
+      if (Level <=0)
+        ErrorMessage("Level must be positive", Level)
+      if (Level > 1)
+        # Level is an abundance
+        if (as.integer(Level) != Level)
+          ErrorMessage("Level must be an integer.", Level)
+    }
+  }
+
   # k
   if (!is.na(names(Args["k"]))) {
     k <- eval(expression(k), parent.frame())
@@ -119,7 +140,7 @@ function() {
     if (as.integer(k) != k)
       ErrorMessage("k must be an integer.", k)
   }
-
+  
   # mean
   if (!is.na(names(Args["mean"]))) {
     mean <- eval(expression(mean), parent.frame())
@@ -365,6 +386,14 @@ function() {
     }
   }
   
+  # ShowProgressBar 
+  if (!is.na(names(Args["ShowProgressBar"]))) {
+    ShowProgressBar <- eval(expression(ShowProgressBar), parent.frame())
+    if (!is.logical(ShowProgressBar))
+      ErrorMessage("ShowProgressBar must be TRUE or FALSE.", ShowProgressBar)
+  }
+  
+  
   # SimulatedValues
   if (!is.na(names(Args["SimulatedValues"]))) {
     SimulatedValues <- eval(expression(SimulatedValues), parent.frame())
@@ -383,6 +412,14 @@ function() {
       ErrorMessage("size must be an integer.", size)
   }
   
+  # Unveiling 
+  if (!is.na(names(Args["Unveiling"]))) {
+    Unveiling <- eval(expression(Unveiling), parent.frame())
+    if (!is.character(Unveiling))
+      ErrorMessage("Unveiling must be a string.", Unveiling)
+  }
+  
+  
   # Weights
   if (!is.na(names(Args["Weights"]))) {
     Weights <- eval(expression(Weights), parent.frame())
@@ -399,6 +436,13 @@ function() {
       ErrorMessage("xy must be a numeric vector of length 2.", xy)
   }
 
+  # ylog 
+  if (!is.na(names(Args["ylog"]))) {
+    ylog <- eval(expression(ylog), parent.frame())
+    if (!is.logical(ylog))
+      ErrorMessage("ylog must be TRUE or FALSE.", ylog)
+  }
+  
   # Z
   if (!is.na(names(Args["Z"]))) {
     Z <- eval(expression(Z), parent.frame())

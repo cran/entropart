@@ -30,7 +30,7 @@ function(NorP, q = 1, ..., CheckArguments = TRUE, Ps = NULL)
 
 
 Tsallis.AbdVector <-
-function(NorP, q = 1, Correction = "Best", ..., CheckArguments = TRUE, Ns = NULL) 
+function(NorP, q = 1, Correction = "Best", Level = NULL, PCorrection="Chao2015", Unveiling="geom", RCorrection="Rarefy", ..., CheckArguments = TRUE, Ns = NULL) 
 {
   if (missing(NorP)){
     if (!missing(Ns)) {
@@ -39,12 +39,16 @@ function(NorP, q = 1, Correction = "Best", ..., CheckArguments = TRUE, Ns = NULL
       stop("An argument NorP or Ns must be provided.")
     }
   }
-  return (bcTsallis(Ns=NorP, q=q, Correction=Correction, CheckArguments=CheckArguments))
+  if (is.null(Level)) {
+    return (bcTsallis(Ns=NorP, q=q, Correction=Correction, CheckArguments=CheckArguments))
+  } else {
+    return (Tsallis.numeric(NorP, q=q, Correction=Correction, Level=Level, PCorrection=PCorrection, Unveiling=Unveiling, RCorrection=RCorrection, CheckArguments=CheckArguments))
+  }
 }
 
 
 Tsallis.integer <-
-function(NorP, q = 1, Correction = "Best", ..., CheckArguments = TRUE, Ns = NULL)
+function(NorP, q = 1, Correction = "Best", Level = NULL, PCorrection="Chao2015", Unveiling="geom", RCorrection="Rarefy", ..., CheckArguments = TRUE, Ns = NULL)
 {
   if (missing(NorP)){
     if (!missing(Ns)) {
@@ -53,12 +57,16 @@ function(NorP, q = 1, Correction = "Best", ..., CheckArguments = TRUE, Ns = NULL
       stop("An argument NorP or Ns must be provided.")
     }
   }
-  return(bcTsallis(Ns=NorP, q=q, Correction=Correction, CheckArguments=CheckArguments))
+  if (is.null(Level)) {
+    return(bcTsallis(Ns=NorP, q=q, Correction=Correction, CheckArguments=CheckArguments))
+  } else {
+    return (Tsallis.numeric(NorP, q=q, Correction=Correction, Level=Level, PCorrection=PCorrection, Unveiling=Unveiling, RCorrection=RCorrection, CheckArguments=CheckArguments))
+  }
 }
 
 
 Tsallis.numeric <-
-function(NorP, q = 1, Correction = "Best", ..., CheckArguments = TRUE, Ps = NULL, Ns = NULL) 
+function(NorP, q = 1, Correction = "Best", Level = NULL, PCorrection = "Chao2015", Unveiling = "geom", RCorrection = "Rarefy", ..., CheckArguments = TRUE, Ps = NULL, Ns = NULL) 
 {
   if (missing(NorP)){
     if (!missing(Ps)) {
@@ -71,13 +79,65 @@ function(NorP, q = 1, Correction = "Best", ..., CheckArguments = TRUE, Ps = NULL
       }
     }
   }
+  if (CheckArguments)
+    CheckentropartArguments()
   
   if (abs(sum(NorP) - 1) < length(NorP)*.Machine$double.eps) {
     # Probabilities sum to 1, allowing rounding error
-    return(Tsallis.ProbaVector(NorP, q=q, CheckArguments=CheckArguments))
+    return(Tsallis.ProbaVector(NorP, q=q, CheckArguments=FALSE))
   } else {
     # Abundances
-    return(Tsallis.AbdVector(NorP, q=q, Correction=Correction, CheckArguments=CheckArguments))
+    if (is.null(Level)) {
+      return(bcTsallis(Ns=NorP, q=q, Correction=Correction, CheckArguments=FALSE))
+    }
+    # Eliminate 0
+    NorP <- NorP[NorP > 0]
+    N <- sum(NorP)
+    if (Level == sum(NorP)) {
+      # No interpolation/extrapolation needed: estimate with no correction
+      return(Tsallis.ProbaVector(NorP/N, q=q, CheckArguments=FALSE))
+    }
+    # Interpolation or extrapolation
+    if (q==0) {
+      # Richness-1. Same result as general formula but faster
+      return(Richness.numeric(NorP, Correction=Correction, Level=Level, PCorrection=PCorrection, Unveiling=Unveiling, RCorrection=RCorrection, CheckArguments=FALSE) - 1)
+    } 
+    if (q==1) {
+      # Shannon. General formula is not defined at q=1
+      return(Shannon.numeric(NorP, Correction=Correction, Level=Level, PCorrection=PCorrection, Unveiling=Unveiling, RCorrection=RCorrection, CheckArguments=CheckArguments))
+    } 
+    if (q==2) {
+      # Simpson. No optional estimator: the uniased estimator is used.
+      return(Simpson.numeric(NorP, Level=Level, CheckArguments=FALSE))
+    }
+    # non integer q
+    # If Level is coverage, get size
+    if (Level < 1) 
+      Level <- Coverage2Size(NorP, SampleCoverage=Level, CheckArguments=FALSE)
+    if (Level <= N) {
+      # Obtain Abundance Frequence Count
+      afc <- AbdFreqCount(NorP, Level=Level, CheckArguments=FALSE)
+      # Calculate entropy (Chao et al., 2014, eq. 6)
+      entropy <- (sum(((1:Level)/Level)^q * afc[, 2]) - 1)/(1-q)
+      names(entropy) <- attr(afc, "Estimator")
+      return (entropy)
+    } else {
+      # Extrapolation.
+      if (length(NorP) == 1) {
+        # Single species: general formula won't work: log(1-PsU)
+        entropy <- 0
+        names(entropy) <- "Single Species"
+      } else {
+        # Unveil the full distribution that rarefies to the observed entropy
+        PsU <- as.ProbaVector(NorP, Correction=PCorrection, Unveiling=Unveiling, RCorrection=RCorrection, q=q, CheckArguments=FALSE)
+        # AbdFreqCount at Level (Chao et al., 2014, eq. 5)
+        Slevel <- sapply(1:Level, function(nu) sum(exp(lchoose(Level, nu) + nu*log(PsU) + (Level-nu)*log(1-PsU))))
+        # Estimate entropy (Chao et al., 2014, eq. 6)
+        entropy <- (sum(((1:Level)/Level)^q * Slevel) - 1) / (1-q)
+        names(entropy) <- RCorrection
+      }
+      return (entropy)
+    }
   }
 }
 
@@ -88,7 +148,7 @@ function(Ns, q = 1, Correction = "Best", SampleCoverage = NULL, CheckArguments =
   if (CheckArguments)
     CheckentropartArguments()
   
-  if (Correction == "Best") Correction <- "ChaoWangJost"
+  if (Correction == "Best") Correction <- "UnveilJ"
   
   # Eliminate 0
   Ns <- Ns[Ns > 0]
@@ -144,7 +204,7 @@ function(Ns, q = 1, Correction = "Best", SampleCoverage = NULL, CheckArguments =
   
   
   # Common code for ZhangGrabchak. Useless if EntropyEstimation is used.
-  # if (Correction == "ZhangGrabchak" | Correction == "ChaoWangJost") {
+  # if (Correction == "ZhangGrabchak" | Correction == "ChaoWangJost" | Correction == "ChaoJost") {
   #   Ps <- Ns/N
   #   V <- 1:(N-1)
   #   # p_V_Ns is an array, containing (1 - (n_s-1)/(n-j)) for each species (lines) and all j from 1 to n-1
@@ -187,7 +247,7 @@ function(Ns, q = 1, Correction = "Best", SampleCoverage = NULL, CheckArguments =
   }
   
   # Not Shannon
-  if (Correction == "ZhangGrabchak" | Correction == "ChaoWangJost") {
+  if (Correction == "ZhangGrabchak" | Correction == "ChaoWangJost" | Correction == "ChaoJost") {
     # Weights. Useless here if EntropyEstimation is used, but weights are necessary for ChaoWangJost
     # i <- 1:N
     # w_vi <- (i-q)/i

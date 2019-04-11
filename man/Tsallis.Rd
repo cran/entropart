@@ -17,11 +17,14 @@ bcTsallis(Ns, q = 1, Correction = "Best", SampleCoverage = NULL,
   CheckArguments = TRUE)
 \method{Tsallis}{ProbaVector}(NorP, q = 1, \dots, 
   CheckArguments = TRUE, Ps = NULL)
-\method{Tsallis}{AbdVector}(NorP, q = 1, Correction = "Best", \dots, 
+\method{Tsallis}{AbdVector}(NorP, q = 1, Correction = "Best", Level = NULL,
+  PCorrection="Chao2015", Unveiling="geom", RCorrection="Rarefy", \dots, 
   CheckArguments = TRUE, Ns = NULL)
-\method{Tsallis}{integer}(NorP, q = 1, Correction = "Best", \dots, 
+\method{Tsallis}{integer}(NorP, q = 1, Correction = "Best", Level = NULL,
+  PCorrection="Chao2015", Unveiling="geom", RCorrection="Rarefy", \dots, 
   CheckArguments = TRUE, Ns = NULL)
-\method{Tsallis}{numeric}(NorP, q = 1, Correction = "Best", \dots, 
+\method{Tsallis}{numeric}(NorP, q = 1, Correction = "Best", Level = NULL,
+  PCorrection="Chao2015", Unveiling="geom", RCorrection="Rarefy", \dots, 
   CheckArguments = TRUE, Ps = NULL, Ns = NULL) 
 }
 \arguments{
@@ -38,7 +41,19 @@ bcTsallis(Ns, q = 1, Correction = "Best", SampleCoverage = NULL,
   A number: the order of entropy. Some corrections allow only a positive number. Default is 1 for Shannon entropy.
   }
   \item{Correction}{
-  A string containing one of the possible corrections: \code{"None"} (no correction), \code{"ChaoShen"}, \code{"GenCov"}, \code{"Grassberger"}, \code{"Holste"}, \code{"Bonachela"}, \code{"ZhangGrabchak"}, or \code{"ChaoWangJost"}, \code{"Marcon"}, \code{"UnveilC"}, \code{"UnveiliC"}, \code{"UnveilJ"} or \code{"Best"}, the default value.  Currently, \code{"Best"} is \code{"ChaoWangJost"}.
+  A string containing one of the possible asymptotic estimators: \code{"None"} (no correction), \code{"ChaoShen"}, \code{"GenCov"}, \code{"Grassberger"}, \code{"Holste"}, \code{"Bonachela"}, \code{"ZhangGrabchak"}, or \code{"ChaoJost"}, \code{"Marcon"}, \code{"UnveilC"}, \code{"UnveiliC"}, \code{"UnveilJ"} or \code{"Best"}, the default value.  Currently, \code{"Best"} is \code{"UnveilJ"}.
+  }
+  \item{Level}{
+  The level of interpolation or extrapolation. It may be an a chosen sample size (an integer) or a sample coverage (a number between 0 and 1).
+  }
+  \item{PCorrection}{
+  A string containing one of the possible corrections to estimate a probability distribution in \code{\link{as.ProbaVector}}: \code{"Chao2015"} is the default value. Used only for extrapolation.
+  }
+  \item{Unveiling}{
+  A string containing one of the possible unveiling methods to estimate the probabilities of the unobserved species in \code{\link{as.ProbaVector}}: \code{"geom"} (the unobserved species distribution is geometric) is the default value. Used only for extrapolation.
+  }
+  \item{RCorrection}{
+  A string containing a correction recognized by \code{\link{Richness}} to evaluate the total number of species in \code{\link{as.ProbaVector}}. \code{"Rarefy"} is the default value to estimate the number of species such that the entropy of the asymptotic distribution rarefied to the observed sample size equals the observed entropy of the data. Used only for extrapolation.
   }
   \item{SampleCoverage}{
   The sample coverage of \code{Ns} calculated elsewhere. Used to calculate the gamma diversity of meta-communities, see details. 
@@ -53,21 +68,39 @@ bcTsallis(Ns, q = 1, Correction = "Best", SampleCoverage = NULL,
 \details{
   Tsallis (Havrda and Charvat, 1967; Daroczy, 1970; Tsallis, 1988) generalized entropy is a generalized measure of diversity (Jost, 2006).
   
-  Bias correction requires the number of individuals to estimate sample \code{\link{Coverage}}. Use \code{bcTsallis} and choose the \code{Correction}.
+  Bias correction requires the number of individuals to estimate sample \code{\link{Coverage}}.
+  
   Correction techniques are from Chao and Shen (2003), Grassberger (1988), Holste \emph{et al.} (1998), Bonachela \emph{et al.} (2008), (Marcon \emph{et al.}, 2014), which is actually the max value of \code{"ChaoShen"} and \code{"Grassberger"}, Zhang and Grabchak (2014), Chao and Jost (2015) and Marcon (2015).
   
-  Currently, the \code{"Best"} correction is \code{"ChaoWangJost"} (Chao, Wang and Jost, 2013 for \eqn{q=1}; Chao and Jost, 2015). This estimator contains an unbiased part concerning observed species, equal to that of Zhang and Grabchak (2014), and a (biased) estimator of the remaining bias based on the estimation of the species-accumulation curve. It is very efficient but very slow if the number of individuals is more than a few hundreds.
+  The \code{"ChaoJost"} (Chao, Wang and Jost, 2013 for \eqn{q=1}; Chao and Jost, 2015) estimator contains an unbiased part concerning observed species, equal to that of Zhang and Grabchak (2014), and a (biased) estimator of the remaining bias based on the estimation of the species-accumulation curve. 
+  It is very efficient but very slow if the number of individuals is more than a few hundreds. 
+  This estimator was named "ChaoWangJost" in previous versions of the package; its old name is still supported for backward compatibility.
 
-  The unveiled estimators rely on Chao \emph{et al.} (2015), completed by Marcon (2015). The actual probabilities of observed species are estimated and completed by a geometric distribution of the probabilities of unobserved species. The number of unobserved species is estimated by the Chao1 estimator (\code{"UnveilC"}), following Chao \emph{et al.} (2015), or by the iChao1 (\code{"UnveiliC"}) or the jacknife (\code{"UnveilJ"}). The \code{"UnveilJ"} correction often has a lower bias but a greater variance (Marcon, 2015).
+  The unveiled estimators rely on Chao \emph{et al.} (2015), completed by Marcon (2015). 
+  The actual probabilities of observed species are estimated and completed by a geometric distribution of the probabilities of unobserved species. 
+  The number of unobserved species is estimated by the Chao1 estimator (\code{"UnveilC"}), following Chao \emph{et al.} (2015), or by the iChao1 (\code{"UnveiliC"}) or the jacknife (\code{"UnveilJ"}). 
+  The \code{"UnveilJ"} correction often has a lower bias but a greater variance (Marcon, 2015). 
+  It is a good first choice thanks to the versatility of the jacknife estimator of richness.
   
-  The functions are designed to be used as simply as possible. \code{Tsallis} is a generic method. If its first argument is an abundance vector, an integer vector or a numeric vector which does not sum to 1, the bias corrected function \code{bcTsallis} is called. Explicit calls to \code{bcTsallis} (with bias correction) or to \code{Tsallis.ProbaVector} (without correction) are possible to avoid ambiguity. The \code{.integer} and \code{.numeric} methods accept \code{Ps} or \code{Ns} arguments instead of \code{NorP} for backward compatibility.
+  The functions are designed to be used as simply as possible. 
+  \code{Tsallis} is a generic method. If its first argument is an abundance vector, an integer vector or a numeric vector which does not sum to 1, the bias corrected function \code{bcTsallis} is called.
   
-  The size of a metacommunity (see \code{\link{MetaCommunity}}) is unknown so it has to be set according to a rule which does not ensure that its abundances are integer values. Then, classical bias-correction methods do not apply. Providing the \code{SampleCoverage} argument allows applying the \code{"ChaoShen"} and \code{"Grassberger"} corrections to estimate quite well the entropy. \code{\link{DivPart}} and \code{\link{GammaEntropy}} functions use this tweak.
+  The size of a metacommunity (see \code{\link{MetaCommunity}}) is unknown so it has to be set according to a rule which does not ensure that its abundances are integer values. 
+  Then, classical bias-correction methods do not apply. 
+  Providing the \code{SampleCoverage} argument allows applying the \code{"ChaoShen"} and \code{"Grassberger"} corrections to estimate quite well the entropy. 
+  \code{\link{DivPart}} and \code{\link{GammaEntropy}} functions use this tweak.
+  
+  Entropy can be estimated at a specified level of interpolation or extrapolation, either a chosen sample size or sample coverage (Chao et al., 2014), rather than its asymptotic value.
+  Special cases $q$ equals 0, 1 or 2 are treated by \code{\link{Richness}}, \code{\link{Shannon}} and \code{\link{Simpson}} functions.
+  For extrapolation of entropy of other values of $q$, the asymptotic distribution of the community must be estimated by \code{\link{as.ProbaVector}}.
+  The default arguments allow joining smoothly the extrapolated entropy and the observed entropy by estimating the number of unobserved species so that the entropy of the observed distribution equals the entropy of the asymptotic distribution rarefied to the actual sample size.
 }
 \value{
   A named number equal to the calculated entropy. The name is that of the bias correction used.
 }
 \references{
+  Chao, A., Gotelli, N. J., Hsieh, T. C., Sander, E. L., Ma, K. H., Colwell, R. K., Ellison, A. M (2014). Rarefaction and extrapolation with Hill numbers: A framework for sampling and estimation in species diversity studies.  \emph{Ecological Monographs}, 84(1): 45-67.
+
   Chao, A. and Jost, L. (2015) Estimating diversity and entropy profiles via discovery rates of new species. \emph{Methods in Ecology and Evolution} 6(8): 873-882.
 
   Chao, A., Hsieh, T. C., Chazdon, R. L., Colwell, R. K., Gotelli, N. J. (2015) Unveiling the Species-Rank Abundance Distribution by Generalizing Good-Turing Sample Coverage Theory. \emph{Ecology} 96(5): 1189-1201.

@@ -1,7 +1,7 @@
 CommunityProfile <-
 function(FUN, NorP, q.seq = seq(0, 2, 0.1), 
          NumberOfSimulations = 0, Alpha = 0.05, BootstrapMethod = "Chao2015", 
-         size = 1, ..., CheckArguments = TRUE) 
+         size = 1, ..., ShowProgressBar = TRUE, CheckArguments = TRUE) 
 {
   if (CheckArguments) {
     CheckentropartArguments()
@@ -14,7 +14,7 @@ function(FUN, NorP, q.seq = seq(0, 2, 0.1),
     if (!is.IntValues(NorP)) warning("Evaluation of the confidence interval of community profiles requires integer abundances in argument NorP. Abundances have been rounded.")
     NsInt <- round(NorP)
     # Create a MetaCommunity made of simulated communities
-    if (size == 1) size=sum(NsInt)
+    if (size == 1) size <- sum(NsInt)
     # The simulated communities may be of arbitrary size to obtain the confidence interval of the diversity of a smaller community
     MCSim <- rCommunity(NumberOfSimulations, size=size, NorP=NsInt, BootstrapMethod=BootstrapMethod, CheckArguments = FALSE)
     # May return NA if the bootstrap method is not recognized
@@ -27,8 +27,10 @@ function(FUN, NorP, q.seq = seq(0, 2, 0.1),
       # Parallelize. Do not allow more forks in PhyloApply()
       ProfileAsaList <- parallel::mclapply(q.seq, function(q) FUN(MCSim$Nsi[, i], q, ..., CheckArguments=FALSE), mc.allow.recursive=FALSE)
       Sims[i, ] <- simplify2array(ProfileAsaList)
-      utils::setTxtProgressBar(ProgressBar, i)
+      if(ShowProgressBar & interactive()) 
+        utils::setTxtProgressBar(ProgressBar, i)
     }
+    close(ProgressBar)
     # Recenter simulated values
     Means <- apply(Sims, 2, mean)
     Sims <- t(t(Sims)-Means+Values)
@@ -109,3 +111,24 @@ function(x, ..., main = NULL,
   CEnvelope(x, LineWidth=LineWidth, ShadeColor=ShadeColor, BorderColor=BorderColor)
 }
 
+
+
+autoplot.CommunityProfile <- 
+  function(object, ..., main = NULL, 
+           xlab = "Order of Diversity", ylab = "Diversity", 
+           ShadeColor = "grey75", alpha = 0.3, BorderColor = "red")
+{  
+  thePlot <- ggplot2::ggplot(as.data.frame.list(object), ggplot2::aes_(x=~x, y=~y))
+  if (!(is.null(object$high) | is.null(object$low))) {
+    thePlot <- thePlot +
+      ggplot2::geom_ribbon(ggplot2::aes_(ymin=~low, ymax=~high), fill=ShadeColor, alpha=alpha) +
+      # Add red lines on borders of polygon
+      ggplot2::geom_line(ggplot2::aes_(y=~low), colour=BorderColor, linetype=2) +
+      ggplot2::geom_line(ggplot2::aes_(y=~high), colour=BorderColor, linetype=2)
+  }
+  thePlot <- thePlot +
+    ggplot2::geom_line() +
+    ggplot2::labs(main=main, x=xlab, y=ylab)
+  
+  return(thePlot)
+}

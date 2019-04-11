@@ -5,6 +5,7 @@
 \alias{as.SpeciesDistribution.integer}
 \alias{as.SpeciesDistribution.numeric}
 \alias{is.SpeciesDistribution}
+\alias{autoplot.SpeciesDistribution}
 \alias{plot.SpeciesDistribution}
 \alias{AbdVector}
 \alias{as.AbdVector}
@@ -29,17 +30,19 @@ as.SpeciesDistribution(x, \dots)
 \method{as.SpeciesDistribution}{data.frame}(x, \dots)
 \method{as.SpeciesDistribution}{integer}(x, \dots)
 \method{as.SpeciesDistribution}{numeric}(x, \dots)
+\method{autoplot}{SpeciesDistribution}(object, \dots, Distribution = NULL, 
+         ylog = TRUE, main = NULL, xlab = "Rank", ylab = NULL)
 \method{plot}{SpeciesDistribution}(x, \dots, Distribution = NULL, 
          type = "b", log = "y", main = NULL, xlab = "Rank", ylab = NULL)
 is.SpeciesDistribution(x)
 as.ProbaVector(x, \dots)
 \method{as.ProbaVector}{data.frame}(x, \dots)
 \method{as.ProbaVector}{integer}(x, Correction = "None", Unveiling = "None", 
-          RCorrection = "Chao1", JackOver = FALSE, CEstimator = "ZhangHuang", 
-          \dots, CheckArguments = TRUE)
+          RCorrection = "Jackknife", JackOver = FALSE, CEstimator = "ZhangHuang", 
+          q = 0, \dots, CheckArguments = TRUE)
 \method{as.ProbaVector}{numeric}(x, Correction = "None", Unveiling = "None", 
-          RCorrection = "Chao1", JackOver = FALSE, CEstimator = "ZhangHuang", 
-          \dots, CheckArguments = TRUE)
+          RCorrection = "Jackknife", JackOver = FALSE, CEstimator = "ZhangHuang",
+          q = 0, \dots, CheckArguments = TRUE)
 is.ProbaVector(x)
 as.AbdVector(x, \dots)
 \method{as.AbdVector}{data.frame}(x, Round = TRUE, \dots)
@@ -51,6 +54,9 @@ is.AbdVector(x)
   \item{x}{
   An object.
   }
+  \item{object}{
+  An object.
+  }
   \item{Distribution}{
   The distribution to fit on the plot. May be \code{"lnorm"} (log-normal), \code{"lseries"} (log-series), \code{"geom"} (geometric) or \code{"bstick"} (broken stick). If \code{NULL}, no distribution is fitted. See \code{\link{rCommunity}} for the description of these distributions.
   }
@@ -58,19 +64,22 @@ is.AbdVector(x)
   If \code{TRUE} (by default), values of \code{x} are set to integer to create an \code{AbdVector}. This is useful if original abundances are not integers (this is often the case for \code{\link{MetaCommunity}} abundances which are the product of probabilities by the number of individuals) and integer values are required (for example to calculate the bootstrap confidence interval of a community profile).
   }
   \item{Correction}{
-  A string containing one of the possible corrections to estimate a probability distribution: \code{"None"} (no correction, the default value), \code{"Chao2013"}, \code{"Chao2015"} or \code{"ChaoShen"}.
+  A string containing one of the possible corrections to estimate a probability distribution: \code{"None"} (no correction, the default value), or \code{"Chao2013"}, \code{"Chao2015"}, \code{"ChaoShen"} to estimate the probability of the observed species in the asymptotic distribution.
   }
   \item{Unveiling}{
   A string containing one of the possible unveiling methods to estimate the probabilities of the unobserved species: \code{"None"} (default, no species is added), \code{"unif"} (uniform: all unobserved species have the same probability) or \code{"geom"} (geometric: the unobserved species distribution is geometric).
   }
   \item{RCorrection}{
-  A string containing a correction recognized by \code{\link{Richness}} to evaluate the total number of species. \code{"Chao1"} is  the default value.
+  A string containing a correction recognized by \code{\link{Richness}} to evaluate the total number of species. \code{"Jackknife"} is the default value. An alternative is \code{"Rarefy"} to estimate the number of species such that the entropy of order \code{q} of the asymptotic distribution rarefied to the observed sample size equals the actual entropy of the data.
   }
   \item{JackOver}{
   If \code{TRUE}, retain the jackknife order immediately superior to the optimal one, usually resulting in the overestimation of the number of species. Default is \code{FALSE}. Ignored if \code{RCorrection} is not \code{"Jackknife"}.
   }
   \item{CEstimator}{
   A string containing an estimator recognized by \code{\link{Coverage}} to evaluate the sample coverage. \code{"ZhangHuang"} is the default value.
+  }
+  \item{q}{
+  A number: the order of entropy. Default is 0 for richness. Used only to estimate asymptotic probability distributions with \code{RCorrection} equal to \code{"Rarefy"}. Then, the number of unobserved species is fitted so that the entropy of order \code{q} of the asymptotic probability distribution at the observed sample size equals the actual entropy of the data.
   }
  \item{type}{
   The plot type, see \code{\link{plot}}.
@@ -86,6 +95,9 @@ is.AbdVector(x)
   }
   \item{ylab}{
   The Y axis label. if \code{NULL} (by default), "Probability" or "Abundance" is chosen according to the object class.
+  }
+  \item{ylog}{
+  Logical; if \code{TRUE} (by default), the Y-axis of the plot is log scaled.
   }
   \item{\dots}{
   Additional arguments to be passed to \code{\link{plot}}. Unused elsewhere.
@@ -123,7 +135,7 @@ is.AbdVector(x)
   Gregorius H.-R. (2010) Linking Diversity and Differentiation. \emph{Diversity} 2(3): 370-394.
 }
 \seealso{
-  \code{\link{rgeom}}, \code{\link{rlnorm}}, \code{\link{rCommunity}}
+  \code{\link{rgeom}}, \code{\link{rlnorm}}, \code{\link{rCommunity}}, \code{\link{RAClnorm}}
 }
 \examples{
 # Load Paracou data (number of trees per species in two 1-ha plot of a tropical forest)
@@ -132,4 +144,6 @@ data(Paracou618)
 Ns <- as.AbdVector(Paracou618.MC$Ns)
 # Whittaker plot, poorly fitted by a log-normal distribution
 plot(Ns, Distribution = "lnorm")
+# ggplot version
+autoplot(Ns, Distribution = "lnorm")
 }
