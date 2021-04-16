@@ -74,7 +74,7 @@ function(q.seq = seq(0, 2, .1), MC, Biased = TRUE, Correction = "Best", Tree = N
     if(interactive()) utils::setTxtProgressBar(ProgressBar, -1)
     # Each MC of this list is a simulation set of each original community
     # Build simulated MCs by picking simulated communities
-    SimMC <- lapply(1:NumberOfSimulations, function(i) MetaCommunity(sapply(ResampledCs, function(mc) mc$Nsi[, i]), Weights=MC$Wi))
+    SimMC <- lapply(seq_len(NumberOfSimulations), function(i) MetaCommunity(vapply(ResampledCs, function(mc) mc$Nsi[, i], FUN.VALUE=rep(0, MC$Nspecies)), Weights=MC$Wi))
     if(ShowProgressBar & interactive()) 
       utils::setTxtProgressBar(ProgressBar, -0)
     
@@ -87,8 +87,8 @@ function(q.seq = seq(0, 2, .1), MC, Biased = TRUE, Correction = "Best", Tree = N
                              "TotalAlphaDiversityLow", "TotalAlphaDiversityHigh", 
                              "TotalBetaDiversityLow", "TotalBetaDiversityHigh",
                              "GammaDiversityLow", "GammaDiversityHigh")
-    for (qi in 1:Q) {
-      # Calculate diversites. Parallelize.
+    for (qi in seq_len(Q)) {
+      # Calculate diversities. Parallelize.
       Diversity.qi <- simplify2array(parallel::mclapply(SimMC, function(mc) DivPart(q=q.seq[qi], MC=mc, Biased=Biased, Correction=Correction, Tree=ppTree, Normalize=Normalize, Z=Z, CheckArguments=FALSE)))
       # Put alpha and gamma simulated entropies into vectors
       TotalAlphaEntropy <-  unlist(Diversity.qi["TotalAlphaEntropy", ])
@@ -174,11 +174,11 @@ function (x, ..., main = NULL, xlab = "Order of Diversity", ylab = NULL, Which =
   if (Which == "All" | Which == "Communities") {
     Palette <- grDevices::palette(grDevices::rainbow(ncol(x$CommunityAlphaDiversities)))
     graphics::plot(x$CommunityAlphaDiversities[, 1] ~ x$Order, type="n", xlim=c(min(x$Order), max(x$Order)), ylim=c(min(x$CommunityAlphaDiversities), max(x$CommunityAlphaDiversities)), main=main, xlab=xlab, ylab=ylab, ...)
-    for (Community in (1:ncol(x$CommunityAlphaDiversities))) {
+    for (Community in seq_len(ncol(x$CommunityAlphaDiversities))) {
       graphics::lines(x=x$Order, y=x$CommunityAlphaDiversities[, Community], lty=Community, col=Palette[Community])
     }  
     if (Which == "Communities") {
-      graphics::legend("topright", colnames(x$CommunityAlphaDiversities), lty=1:ncol(x$CommunityAlphaDiversities), col=Palette, inset=0.01)
+      graphics::legend("topright", colnames(x$CommunityAlphaDiversities), lty=seq_len(ncol(x$CommunityAlphaDiversities)), col=Palette, inset=0.01)
     }
   }
   if (Which == "All" | (Which == "Beta" & is.null(main))) main <- "Beta Diversity"
@@ -218,7 +218,10 @@ function (x, ..., main = NULL, xlab = "Order of Diversity", ylab = NULL, Which =
 
 autoplot.DivProfile <- 
 function (object, ..., main = NULL, xlab = "Order of Diversity", ylab = NULL, Which = "All", 
-          ShadeColor = "grey75", alpha = 0.3, BorderColor = "red", labels = NULL, font.label = list(size=11, face="plain"))
+          ShadeColor = "grey75", alpha = 0.3, BorderColor = "red", labels = NULL, font.label = list(size=11, face="plain"),
+          col = ggplot2::GeomLine$default_aes$colour,
+          lty = ggplot2::GeomLine$default_aes$linetype,
+          lwd = ggplot2::GeomLine$default_aes$size)
 {
   if (Which == "All" | (Which == "Alpha" & is.null(main))) main <- "Total Alpha Diversity"
   if (Which == "All" | (Which == "Alpha" & is.null(ylab))) ylab <- expression(paste(alpha, " diversity"))
@@ -237,7 +240,7 @@ function (object, ..., main = NULL, xlab = "Order of Diversity", ylab = NULL, Wh
         ggplot2::geom_line(ggplot2::aes_(y=~TotalAlphaDiversityHigh), colour=BorderColor, linetype=2)
     }
     AlphaPlot <- AlphaPlot +
-      ggplot2::geom_line() +
+      ggplot2::geom_line(colour=col, linetype=lty, size=lwd) +
       ggplot2::labs(title=main, x=xlab, y=ylab)
   }
   if (Which == "Alpha")
@@ -271,7 +274,7 @@ function (object, ..., main = NULL, xlab = "Order of Diversity", ylab = NULL, Wh
         ggplot2::geom_line(ggplot2::aes_(y=~TotalBetaDiversityHigh), colour=BorderColor, linetype=2)
     }
     BetaPlot <- BetaPlot +
-      ggplot2::geom_line() +
+      ggplot2::geom_line(colour=col, linetype=lty, size=lwd) +
       ggplot2::labs(title=main, x=xlab, y=ylab)
   }
   if (Which == "Beta")
@@ -294,7 +297,7 @@ function (object, ..., main = NULL, xlab = "Order of Diversity", ylab = NULL, Wh
         ggplot2::geom_line(ggplot2::aes_(y=~GammaDiversityHigh), colour=BorderColor, linetype=2)
     }
     GammaPlot <- GammaPlot +
-      ggplot2::geom_line() +
+      ggplot2::geom_line(colour=col, linetype=lty, size=lwd) +
       ggplot2::labs(title=main, x=xlab, y=ylab)
   }
   if (Which == "Gamma")

@@ -15,14 +15,17 @@
 CommunityProfile(FUN, NorP, q.seq = seq(0, 2, 0.1), 
     NumberOfSimulations = 0, Alpha = 0.05, BootstrapMethod = "Chao2015", 
     size = 1, \dots, ShowProgressBar = TRUE, CheckArguments = TRUE)
-as.CommunityProfile(x, y, low = NULL, high = NULL)
+as.CommunityProfile(x, y, low = NULL, high = NULL, mid = NULL)
 is.CommunityProfile(x)
 \method{plot}{CommunityProfile}(x, \dots, main = NULL, 
           xlab = "Order of Diversity", ylab = "Diversity", ylim = NULL,
           LineWidth = 2, ShadeColor = "grey75", BorderColor = "red")
 \method{autoplot}{CommunityProfile}(object, \dots, main = NULL, 
           xlab = "Order of Diversity", ylab = "Diversity",
-          ShadeColor = "grey75", alpha = 0.3, BorderColor = "red")
+          ShadeColor = "grey75", alpha = 0.3, BorderColor = "red",
+          col = ggplot2::GeomLine$default_aes$colour,
+          lty = ggplot2::GeomLine$default_aes$linetype,
+          lwd = ggplot2::GeomLine$default_aes$size)
 CEnvelope(Profile, LineWidth = 2, ShadeColor = "grey75", BorderColor = "red", \dots)
 }
 \arguments{
@@ -62,6 +65,9 @@ CEnvelope(Profile, LineWidth = 2, ShadeColor = "grey75", BorderColor = "red", \d
   \item{high}{
   Entropy or diversity higher bound of the confidence envelope, corresponding to \code{x} values.
   }
+  \item{mid}{
+  Entropy or diversity center value (usually the mean) of the confidence envelope, corresponding to \code{x} values.
+  }
   \item{Profile}{
   An \code{CommunityProfile} to be plotted.
   }
@@ -92,6 +98,15 @@ CEnvelope(Profile, LineWidth = 2, ShadeColor = "grey75", BorderColor = "red", \d
   \item{alpha}{
   Opacity of the confidence enveloppe, between 0 and 1.
   }
+  \item{col}{
+  The color of the geom objects. See "Color Specification" in \code{\link{par}}.
+  }
+  \item{lty}{
+  The type of the lines. See \code{\link{lines}}.
+  }
+  \item{lwd}{
+  The width of the lines. See \code{\link{lines}}.
+  }
   \item{ShowProgressBar}{
   If \code{TRUE} (default), a progress bar is shown.
   }
@@ -100,12 +115,19 @@ CEnvelope(Profile, LineWidth = 2, ShadeColor = "grey75", BorderColor = "red", \d
   }
 }
 \details{
-  The function \code{CommunityProfile} is used to calculate diversity or entropy profiles based on community functions such as \code{\link{Tsallis}} or \code{\link{ChaoPD}}. The first two arguments of the function must be a probability or abundance vector and a number (\eqn{q}).
-  Additional arguments cannot be checked. Unexpected results may be returned if \code{FUN} is not used properly.
+  The function \code{CommunityProfile} is used to calculate diversity or entropy profiles based on community functions such as \code{\link{Tsallis}} or \code{\link{ChaoPD}}. 
+  The first two arguments of the function must be a probability or abundance vector and a number (\eqn{q}).
+  Additional arguments cannot be checked. 
+  Unexpected results may be returned if \code{FUN} is not used properly.
   
-  If \code{NumberOfSimulations} is greater than 0, a bootstrap confidence interval is produced by simulating communities with \code{\link{rCommunity}} and calculating their profiles. The size of those communities may be that of the actual community or specified by \code{size}.
+  If \code{NumberOfSimulations} is greater than 0, a bootstrap confidence interval is produced by simulating communities with \code{\link{rCommunity}} and calculating their profiles. 
+  The size of those communities may be that of the actual community or specified by \code{size}.
+  Simulating communities implies a downward bias in the estimation: rare species of the actual community may have abundance zero in simulated communities.
+  Simulated diversity values are recentered if `size = 1` so that their mean is that of the actual community.
+  Else, it is assumed that the bias is of interest and must not be corrected.
   
-  \code{CommunityProfile} objects can be plotted. They can also be added to the current plot by \code{CEnvelope}.
+  \code{CommunityProfile} objects can be plotted. 
+  They can also be added to the current plot by \code{CEnvelope}.
 }
 \value{
   A \code{CommunityProfile}, which is a list:

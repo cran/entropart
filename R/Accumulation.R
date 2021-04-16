@@ -1,4 +1,4 @@
-EntAC <- function(Ns, q = 0, n.seq = 1:sum(Ns), PCorrection = "Chao2015", Unveiling = "geom", RCorrection = "Rarefy", 
+EntAC <- function(Ns, q = 0, n.seq = seq_len(sum(Ns)), PCorrection = "Chao2015", Unveiling = "geom", RCorrection = "Rarefy", 
                   NumberOfSimulations = 0, Alpha = 0.05, ShowProgressBar = TRUE, CheckArguments = TRUE)
 {
   if (CheckArguments)
@@ -84,10 +84,10 @@ EntAC <- function(Ns, q = 0, n.seq = 1:sum(Ns), PCorrection = "Chao2015", Unveil
           # General case: q is not 0, 1 or 2 
           for(Level in n.seqExt) {
             # Abundance frequence count at Level (Chao et al., 2014, eq. 5)
-            Snu <- sapply(1:Level, function(nu) sum(exp(lchoose(Level, nu) + nu*log(PsU) + (Level-nu)*log(1-PsU))))
+            Snu <- vapply(seq_len(Level), function(nu) sum(exp(lchoose(Level, nu) + nu*log(PsU) + (Level-nu)*log(1-PsU))), FUN.VALUE=0.0)
             # Estimate entropy (Chao et al., 2014, eq. 6)
             i <- which(n.seq==Level)
-            Entropy[i]  <- (sum(((1:Level)/Level)^q * Snu) - 1) / (1-q)
+            Entropy[i]  <- (sum((seq_len(Level)/Level)^q * Snu) - 1) / (1-q)
             if(ShowProgressBar & interactive()) 
               utils::setTxtProgressBar(ProgressBar, i)
           }
@@ -137,7 +137,7 @@ EntAC <- function(Ns, q = 0, n.seq = 1:sum(Ns), PCorrection = "Chao2015", Unveil
 }
 
 
-DivAC <- function(Ns, q = 0, n.seq = 1:sum(Ns), PCorrection = "Chao2015", Unveiling = "geom", RCorrection = "Rarefy", 
+DivAC <- function(Ns, q = 0, n.seq = seq_len(sum(Ns)), PCorrection = "Chao2015", Unveiling = "geom", RCorrection = "Rarefy", 
                   NumberOfSimulations = 0, Alpha = 0.05, ShowProgressBar = TRUE, CheckArguments = TRUE)
 {
   if (CheckArguments)
@@ -192,7 +192,6 @@ function (x)
 }
 
 
-
 plot.AccumCurve <- 
 function(x, ..., main = NULL, 
          xlab = "Sample Size", ylab = NULL, ylim = NULL,
@@ -234,11 +233,13 @@ function(x, ..., main = NULL,
 }
 
 
-
 autoplot.AccumCurve <- 
 function(object, ..., main = NULL, 
          xlab = "Sample Size", ylab = NULL, 
-         ShadeColor = "grey75", alpha = 0.3, BorderColor = "red")
+         ShadeColor = "grey75", alpha = 0.3, BorderColor = "red",
+         col = ggplot2::GeomLine$default_aes$colour,
+         lty = ggplot2::GeomLine$default_aes$linetype,
+         lwd = ggplot2::GeomLine$default_aes$size)
 {  
   thePlot <- ggplot2::ggplot(as.data.frame.list(object), ggplot2::aes_(x=~x, y=~y))
   if (!(is.null(object$high) | is.null(object$low))) {
@@ -258,7 +259,7 @@ function(object, ..., main = NULL,
     }
   }
   thePlot <- thePlot +
-    ggplot2::geom_line() +
+    ggplot2::geom_line(colour=col, linetype=lty, size=lwd) +
     ggplot2::labs(title=main, x=xlab, y=ylab)
   
   # Actual value

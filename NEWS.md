@@ -1,3 +1,21 @@
+# entropart 1.6-7
+
+## Bug correction
+
+- argument `main` in `autoplot()` was ignored.
+
+## Improvements
+
+- Continuous integration by GitHub Actions.
+- `CommunityProfile()` does not recenter simulated diversity values if simulated community size is not that of the actual community. `$mid` can store mean simulated values.
+- CodeFactor recommendations applied.
+- `col`, `pch`, `cex` and `lty` arguments in `autoplot`s.
+- The first column of a dataframe passed to `MetaCommunity()` with species names may be characters instead of factors.
+- tibbles are accepted by `MetaCommunity()`.
+- Empty communities are detected by `Metacommunity()` and raise an error with an explicit message rather than returning obscure error messages when used by `DivPart()` and others.
+- Suggests rmarkdown (https://github.com/yihui/knitr/issues/1864)
+
+
 # entropart 1.6-6
 
 ## Bug correction
