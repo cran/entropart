@@ -1,6 +1,7 @@
 # Entropy Partitioning to Measure Diversity <img src="man/figures/logo.png" align="right" alt="" width="120" />
 
 [![CRAN version](http://www.r-pkg.org/badges/version/entropart)](https://cran.r-project.org/package=entropart)
+[![](http://cranlogs.r-pkg.org/badges/grand-total/entropart)](https://cran.r-project.org/package=entropart)
 [![](http://cranlogs.r-pkg.org/badges/entropart)](https://cran.r-project.org/package=entropart)
 ![R-CMD-check](https://github.com/EricMarcon/entropart/workflows/R-CMD-check/badge.svg)
 [![codecov](https://codecov.io/github/EricMarcon/entropart/branch/master/graphs/badge.svg)](https://codecov.io/github/EricMarcon/entropart)
@@ -37,7 +38,7 @@ Similarity-based diversity is calculated with *Dqz*, based on a similarity matri
 A quick [introduction](https://ericmarcon.github.io/entropart/articles/entropart.html) is in `vignette("entropart")`.
 
 A full documentation is available online, in the "Articles" section of the web site of the vignette.
-It is a continuous update of the paper published in the Journal of Statistical Software ([Marcon & Hérault, 2015](https://www.jstatsoft.org/article/view/v067i08)).
+It is a continuous update of the paper published in the Journal of Statistical Software ([Marcon & Hérault, 2015](https://doi.org/10.18637/jss.v067.i08)).
 
 The [development version documentation](https://EricMarcon.github.io/entropart/dev/) is also available.
 

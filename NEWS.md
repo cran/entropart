@@ -1,3 +1,14 @@
+# entropart 1.6-9
+
+## Bug correction
+
+- `Coverage2Size` raised an error when the distribution had no singletons. 
+
+## Improvements
+
+- entropart no longer depends on ggplot2.
+
+
 # entropart 1.6-8
 
 ## Bug correction
