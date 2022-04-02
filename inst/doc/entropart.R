@@ -76,9 +76,9 @@ summary(p)
 de <- DivEst(q = 1, Paracou618.MC, Simulations = 50)
 # Margin adjustment required for this vignette html output
 par(mar=c(1,1,2.2,1))
-plot(de)
+autoplot(de)
 
 ## ----DivProfile, fig.width=6, fig.height=6------------------------------------
-dp <- DivProfile(, Paracou618.MC)
+dp <- DivProfile(q.seq = seq(0, 2, 0.1), Paracou618.MC)
 autoplot(dp)
 
