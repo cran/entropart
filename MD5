@@ -1,6 +1,6 @@
-bd5511e34d44fe29d6bdf63050b74578 *DESCRIPTION
+dea67ffe4415c8d1e4b957fcf40f9ca9 *DESCRIPTION
 188f346c77f04b8cafc7c9ed814c7a6a *NAMESPACE
-6a39aa6df333cb4102def2dc8f4cce0a *NEWS.md
+ace23c02cb5b052374d708c120754487 *NEWS.md
 d1fe75f3ca4c8036559de8b45b984bf1 *R/AbdFreqCount.R
 4eb6581331cf83cfa16df9681a83acec *R/Accumulation.R
 2f89ba16519944dce0c7e1e3bb504426 *R/AllenH.R
@@ -61,12 +61,12 @@ da6569e5fd0a7dc80928123f4a4e9761 *R/SimpsonBeta.R
 f248647ae9707a03017f77dd285e9c87 *R/mergeandlabel.R
 f856a2c019350ef542861d1f87d7ae9f *R/rCommunity.R
 bafa5ebed7a91e9952cd814a37b52c03 *README.md
-960030426413c19cc1bf17996471f0a2 *build/vignette.rds
+c65ecf958a44d4c932dfdbf542867d57 *build/vignette.rds
 ee3ee8b213d3d153217a7ab68f85c844 *data/Paracou618.RData
 9c68646cac7d82e9ced2c7314ff48466 *inst/CITATION
 23e3d4cc2577db15d0a87cea8d306e30 *inst/doc/entropart.R
 74aa52ed8e6272573d87d68ae7149817 *inst/doc/entropart.Rmd
-d231c41ee2bcd11801fba9e5f497ca02 *inst/doc/entropart.html
+765432188a5b5a4d41200c6ca701c901 *inst/doc/entropart.html
 39c1c9687c293000c2fab0454979b7e4 *man/AbdFreqCount.Rd
 f35848643c14229f2ee46f04e27803f9 *man/Accumulation.Rd
 44020009419fc8f8ac44dc5c487ca2da *man/AllenH.Rd
