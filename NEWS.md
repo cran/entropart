@@ -1,3 +1,14 @@
+# entropart 1.6-13
+
+## Bug correction
+
+- `PhyloApply()` sometimes raised an "Error in m[, 1] : incorrect number of dimensions" due to the automatic conversion of a single-row matrix to a vector by `lapply()`. This happened when the tree's upper slice contained a single species.
+
+## User-visible changes
+
+- pkgdown site is now built with the bootstrap 5 template.
+
+
 # entropart 1.6-12
 
 ## Bug correction

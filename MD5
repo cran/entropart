@@ -1,6 +1,6 @@
-67fd8467ab0157fddca34309301cb5a7 *DESCRIPTION
+d6f629d58940effea06870fdbaa6d638 *DESCRIPTION
 188f346c77f04b8cafc7c9ed814c7a6a *NAMESPACE
-b397c1be54845bd4bbc8e7977c2e960a *NEWS.md
+526bc4ea6bbc400e66147d3b83c76354 *NEWS.md
 d1fe75f3ca4c8036559de8b45b984bf1 *R/AbdFreqCount.R
 4eb6581331cf83cfa16df9681a83acec *R/Accumulation.R
 2f89ba16519944dce0c7e1e3bb504426 *R/AllenH.R
@@ -38,7 +38,7 @@ e1d53c333a39f4676d155fa533069ec0 *R/MergeC.R
 c95aca91db009a348c2913913d42d2f4 *R/Optimal.Similarity.R
 0df4a6483d75be4b82882a1398f4c186 *R/PDFD.R
 187bfd437253774abdbb980c389df602 *R/PPtree.R
-7231a6b6320a3ebe4f53c12cc8ef5419 *R/PhyloApply.R
+f255dd7d35f94f9e473d92fa2b04fdb4 *R/PhyloApply.R
 9e8ed08d8a4c8409e61969132d72bd00 *R/PhyloBetaEntropy.R
 f42602b6702c1bafe52a16030d5bc172 *R/PhyloDiversity.R
 7f07a048857e6e4a8b2c07c5ad621321 *R/PhyloEntropy.R
@@ -61,12 +61,12 @@ bfb5531ced65dd6cdb4ddaf0ace9e465 *R/SpeciesDistribution.R
 f248647ae9707a03017f77dd285e9c87 *R/mergeandlabel.R
 f856a2c019350ef542861d1f87d7ae9f *R/rCommunity.R
 18345693b22565704e5db14e480a8f9a *README.md
-7fd2dfe58a4741504aa7a223b99e1908 *build/vignette.rds
+482b5325c980bf974cdff2f9fe632b82 *build/vignette.rds
 ee3ee8b213d3d153217a7ab68f85c844 *data/Paracou618.RData
 9c68646cac7d82e9ced2c7314ff48466 *inst/CITATION
 23e3d4cc2577db15d0a87cea8d306e30 *inst/doc/entropart.R
 9f2e03de6530ca63d32df8f4041331ab *inst/doc/entropart.Rmd
-2f9d690eec249e41f43767703c9b002b *inst/doc/entropart.html
+afdb1d0096e9ff60be8692356c7178e0 *inst/doc/entropart.html
 39c1c9687c293000c2fab0454979b7e4 *man/AbdFreqCount.Rd
 f35848643c14229f2ee46f04e27803f9 *man/Accumulation.Rd
 44020009419fc8f8ac44dc5c487ca2da *man/AllenH.Rd
@@ -125,9 +125,9 @@ bf83707496fc186e491dd771a3c89ff7 *man/ShannonBeta.Rd
 67c9f32c135c151be808bf7672406a19 *man/Tsallis.Rd
 b25f189202164bb695fe6d8a339fdb20 *man/TsallisBeta.Rd
 bfdf3d626101f41aba8da17355a787b2 *man/entropart-package.Rd
-ebe0ed85968b2c2b74ad180e098aeb5b *man/expq.Rd
+eafef9aae4e8fe70d8f2e2a4fd1cc70a *man/expq.Rd
 8342d9837de884f5b29d119f00cab657 *man/figures/logo.png
-e214a751802d5325562cd3c8792fe8cf *man/lnq.Rd
+5023bf242cb197127c66768279cc4717 *man/lnq.Rd
 cf87d0de3a32a67225ab67c4141c4b92 *man/mergeandlabel.Rd
 9a015b691a962aa560a01fca8316b0af *man/rCommunity.Rd
 88097ada44b1170abb2efa7c912b0dfb *man/reexports.Rd
