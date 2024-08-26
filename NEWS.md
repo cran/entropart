@@ -1,4 +1,4 @@
-# entropart 1.6-13
+# entropart 1.6-15
 
 ## Bug correction
 

@@ -4,14 +4,14 @@
   Preprocessing of a phylogenetic tree
 }
 \description{
-  Calculates cuts and intervals of a phylogenetic tree and make it available both in \code{\link{hclust}} and \code{\link{phylo}} formats.
+  Calculates cuts and intervals of a phylogenetic tree and make it available both in \code{\link{hclust}} and "phylo" (see \code{\link[ape]{read.tree}}) formats.
 }
 \usage{
 Preprocess.Tree(Tree)
 }
 \arguments{
   \item{Tree}{
-  An object of class \code{\link{hclust}}, \code{\link{phylo}} or \code{\link[ade4]{phylog}}. The tree must be ultrametric.
+  An object of class \code{\link{hclust}}, "phylo" (see \code{\link[ape]{read.tree}}) or \code{\link[ade4]{phylog}}. The tree must be ultrametric.
   }
 }
 \details{
